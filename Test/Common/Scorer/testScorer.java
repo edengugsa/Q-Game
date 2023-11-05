@@ -4,7 +4,6 @@ import org.junit.Test;
 import java.util.*;
 
 import Common.GameBoard.GameBoard;
-import Common.Scorer.Scorer;
 import Common.Tiles.Coordinate;
 import Common.Tiles.Placement;
 import Common.Tiles.QColor;
@@ -62,6 +61,8 @@ public class testScorer {
     map.put(new Coordinate(2,0), new Tile(QColor.RED, QShape.diamond));
     map.put(new Coordinate(3,0), new Tile(QColor.YELLOW, QShape.diamond));
     map.put(new Coordinate(4,0), new Tile(QColor.PURPLE, QShape.diamond));
+    map.put(new Coordinate(5,0), new Tile(QColor.GREEN, QShape.diamond));
+    map.put(new Coordinate(6,0), new Tile(QColor.GREEN, QShape.diamond));
 
     Queue<Placement> placements = new ArrayDeque<>();
     placements.add(new Placement(new Coordinate(5,0), new Tile(QColor.GREEN, QShape.diamond)));
@@ -70,7 +71,7 @@ public class testScorer {
     Scorer scorer = new Scorer();
     scorer.setPTS_PER_CONTIG_TILE(2);
     scorer.scorePlacement(placements, new GameBoard(map), false);
-    assertEquals(0, scorer.ptsForContiguity());
+    assertEquals(14, scorer.ptsForContiguity());
   }
 
   @Test
@@ -81,6 +82,8 @@ public class testScorer {
     map.put(new Coordinate(2,0), new Tile(QColor.RED, QShape.diamond));
     map.put(new Coordinate(3,0), new Tile(QColor.YELLOW, QShape.diamond));
     map.put(new Coordinate(4,0), new Tile(QColor.PURPLE, QShape.diamond));
+    map.put(new Coordinate(5,0), new Tile(QColor.GREEN, QShape.diamond));
+    map.put(new Coordinate(6,0), new Tile(QColor.GREEN, QShape.diamond));
 
     Queue<Placement> placements = new ArrayDeque<>();
     placements.add(new Placement(new Coordinate(5,0), new Tile(QColor.GREEN, QShape.diamond)));
@@ -100,11 +103,10 @@ public class testScorer {
     map.put(new Coordinate(3,0), new Tile(QColor.YELLOW, QShape.diamond));
     map.put(new Coordinate(4,0), new Tile(QColor.PURPLE, QShape.diamond));
     map.put(new Coordinate(5,0), new Tile(QColor.BLUE, QShape.diamond));
-    map.put(new Coordinate(6,0), new Tile(QColor.GREEN, QShape.diamond));
 
     Queue<Placement> placements = new ArrayDeque<>();
     placements.add(new Placement(new Coordinate(5,0), new Tile(QColor.BLUE, QShape.diamond)));
-    placements.add(new Placement(new Coordinate(6,0), new Tile(QColor.GREEN, QShape.diamond)));
+    placements.add(new Placement(new Coordinate(4,0), new Tile(QColor.PURPLE, QShape.diamond)));
 
     Scorer scorer = new Scorer();
     scorer.scorePlacement(placements, new GameBoard(map), false);

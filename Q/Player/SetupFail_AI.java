@@ -1,8 +1,9 @@
-package Player.Strategy;
+package Player;
 import java.util.List;
 
 import Common.GameBoard.GameBoard;
 import Common.Tiles.Tile;
+import Player.Strategy.Strategy;
 import Player.playerImpl;
 
 /**

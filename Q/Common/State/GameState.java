@@ -269,6 +269,24 @@ public class GameState {
     return this.players.peek();
   }
 
+  public List<Tile> getHand(String name) {
+    for (PlayerState ps : this.players()) {
+      if (ps.name().equals(name)) {
+        return new ArrayList<>(ps.getHand());
+      }
+    }
+    throw new IllegalArgumentException("No such player");
+  }
+
+  public void removePlayer(String name) {
+    for (PlayerState ps : this.players()) {
+      if (ps.name().equals(name)) {
+        this.players.remove(ps);
+      }
+    }
+    throw new IllegalArgumentException("No such player");
+  }
+
 
   /**
    * Initializes a new State with Players and a GameBoard.
@@ -288,6 +306,10 @@ public class GameState {
       names.add(p.name());
     }
     return names;
+  }
+
+  public void addToRefDeck(List<Tile> tiles) {
+    this.deck.addAll(tiles);
   }
 
 

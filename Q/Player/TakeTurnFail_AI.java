@@ -1,7 +1,8 @@
-package Player.Strategy;
+package Player;
 
 import Common.GameCommands.QGameCommand;
 import Common.State.ActivePlayerKnowledge;
+import Player.Strategy.Strategy;
 import Player.playerImpl;
 
 /**

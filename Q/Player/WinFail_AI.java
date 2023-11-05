@@ -1,5 +1,6 @@
-package Player.Strategy;
+package Player;
 
+import Player.Strategy.Strategy;
 import Player.playerImpl;
 
 /**
@@ -13,6 +14,6 @@ public class WinFail_AI extends playerImpl {
 
   @Override
   public void win(boolean w) {
-    throw new IllegalStateException("whoops!");
+    throw new IllegalStateException("win exception");
   }
 }

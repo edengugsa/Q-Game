@@ -23,15 +23,15 @@ import Player.player;
 import Player.playerImpl;
 import Player.Strategy.DagStrategy;
 import Player.Strategy.LdasgStrategy;
-import Player.Strategy.NewTilesFail_AI;
-import Player.Strategy.SetupFail_AI;
+import Player.NewTilesFail_AI;
+import Player.SetupFail_AI;
 import Player.Strategy.Strategy;
-import Player.Strategy.TakeTurnFail_AI;
-import Player.Strategy.WinFail_AI;
+import Player.TakeTurnFail_AI;
+import Player.WinFail_AI;
 
 public class JsonUtils {
 
-  static JsonArray NamesToJNames(List<String> names) {
+  public static JsonArray NamesToJNames(List<String> names) {
     JsonArray jNames = new JsonArray();
     for (String name : names) {
       jNames.add(name);
@@ -65,12 +65,12 @@ public class JsonUtils {
     }
     List<player> players = new ArrayList<>();
     for (JsonElement JActorSpec : JActors) {
-      players.add(JActorSpecToAIPlayer(JActorSpec.getAsJsonArray()));
+      players.add(JActorSpecToPlayer(JActorSpec.getAsJsonArray()));
     }
     return players;
   }
 
-  private static player JActorSpecToAIPlayer(JsonArray JActorSpec) throws IllegalArgumentException {
+  private static player JActorSpecToPlayer(JsonArray JActorSpec) throws IllegalArgumentException {
     if (JActorSpec.size() >= 2) {
       String name = JActorSpec.get(0).getAsString();
       Strategy strategy = jsonToStrategy(JActorSpec.get(1).getAsString());
@@ -161,7 +161,7 @@ public class JsonUtils {
    * Converts the given JMap to a HashMap<Coordinate, Tile> tiles that represents the map of this game.
    */
   protected static Map<Coordinate, Tile> JMapToHashmap(JsonArray jMap) {
-    HashMap<Coordinate, Tile> tiles = new HashMap<>();
+    Map<Coordinate, Tile> tiles = new HashMap<>();
     for (JsonElement jRowElement : jMap) {
       JsonArray jRow = jRowElement.getAsJsonArray();
       int rowIdx = jRow.get(0).getAsInt();

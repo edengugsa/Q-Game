@@ -28,7 +28,7 @@ public class PassCommand implements QGameCommand {
     if (obj == null) {
       return false;
     }
-    if (!(obj instanceof PassCommand other)) {
+    if (!(obj instanceof PassCommand)) {
       return false;
     }
     return true;

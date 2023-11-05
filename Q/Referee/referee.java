@@ -10,13 +10,14 @@ import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 
 import Common.GameCommands.QGameCommand;
+import Common.Rendering.RenderGameState;
 import Common.RuleBook.QRuleBook;
 import Common.RuleBook.RuleBook;
 import Common.Scorer.Scorer;
 import Common.State.GameState;
 import Common.State.PlayerState;
 import Common.State.PlayerStateImpl;
-import Player.playerImpl;
+import Player.player;
 
 /**
  * A Referee operates the ongoings of a game, from setup/initialization to taking turns, and from
@@ -36,13 +37,13 @@ public class Referee {
   private final QRuleBook ruleBook;
   private final Scorer scorer;
   public GameState game; // TODO PRIVATE
-  private Map<String, playerImpl> players;
+  private Map<String, player> players;
   private final List<String> disqualifiedPlayers;
 
   /**
    * FOR TESTING. Resumes a Game from a previous state.
    */
-  public Referee(List<playerImpl> players, GameState game) {
+  public Referee(List<player> players, GameState game) {
     if (players.size() != game.numPlayers()) {
       throw new IllegalStateException("Players and State aren't consistent");
     }
@@ -54,10 +55,8 @@ public class Referee {
     this.configureAI();
   }
 
-  public Referee(List<playerImpl> players, QRuleBook ruleBook) {
-    if (players.size() != game.numPlayers()) {
-      throw new IllegalStateException("Players and State aren't consistent");
-    }
+  public Referee(List<player> players, QRuleBook ruleBook) {
+
     this.ruleBook = ruleBook;
     this.scorer = new Scorer();
     this.disqualifiedPlayers = new ArrayList<>();
@@ -77,35 +76,40 @@ public class Referee {
   }
 
   private void runGameHelper() {
-//    RenderGameState renderedGame = game.render();
-//    catchBreath(0);
+    RenderGameState renderedGame = game.render();
+    catchBreath(0);
     while (!ruleBook.gameOver(game)) {
-      try {
         this.currentPlayerTakeTurn();
         if (ruleBook.gameOver(game)) {
           break;
         }
         game.bump();
-      }
-      catch (Exception e) {
-        disqualify();
-      }
-//      renderedGame.repaint();
-//      catchBreath(1);
+      renderedGame.repaint();
+      catchBreath(1);
     }
-//    renderedGame.repaint();
+    renderedGame.repaint();
   }
 
-  private void currentPlayerTakeTurn() throws Exception {
-    QGameCommand cmd = currentPlayer().takeTurn(game.getActivePlayerKnowledge());
-    if (cmd.isLegal(ruleBook, game)) {
-      game.execute(cmd);
-      game.score(cmd, this.scorer);
-      updateAI();
+
+
+  private void currentPlayerTakeTurn(){
+    try {
+      QGameCommand cmd = currentPlayer().takeTurn(game.getActivePlayerKnowledge());
+      if (cmd.isLegal(ruleBook, game)) {
+        game.execute(cmd);
+        game.score(cmd, this.scorer);
+        updateAI();
+      }
+      else {
+        disqualify();
+      }
     }
-    else {
+    catch (Exception e) {
       disqualify();
     }
+
+
+
   }
 
   /**
@@ -115,7 +119,7 @@ public class Referee {
     this.currentPlayer().newTiles(game.currentPlayerTiles());
   }
 
-  private playerImpl currentPlayer() {
+  private player currentPlayer() {
     return players.get(game.currentPlayerName());
   }
 
@@ -123,10 +127,12 @@ public class Referee {
    * Tell AIPlayers if they won or not.
    */
   private void tellPlayersGameResult(List<String> winners) {
-    for (playerImpl p : this.players.values()) {
+    for (player p : this.players.values()) {
       try {p.win(winners.contains(p.name()));}
       catch (Exception e) {
-//        winners.remove(p.name()); TODO: is a Player who throws in win() still considered a winner?
+        winners.remove(p.name());
+        disqualify(p.name());
+
       }
     }
   }
@@ -143,10 +149,10 @@ public class Referee {
   /**
    * Sets this Referee's storage of player into a name->player map using the given list of player.
    */
-  private List<String> setPlayers(List<playerImpl> players) {
+  private List<String> setPlayers(List<player> players) {
     this.players = new HashMap<>();
     List<String> names = new ArrayList<>();
-    for (playerImpl p : players) {
+    for (player p : players) {
       this.players.put(p.name(), p);
       names.add(p.name());
     }
@@ -157,7 +163,7 @@ public class Referee {
    * Configures all AIPlayers with the initial game board and the tiles they own.
    */
   private void configureAI() {
-    for (playerImpl p : this.players.values()) {
+    for (player p : this.players.values()) {
       try {
         p.setup(game.getGameBoard(), game.currentPlayerTiles());
         game.bump();
@@ -174,7 +180,7 @@ public class Referee {
    */
   private void setGame() {
     Queue<PlayerState> playerStates = new ArrayDeque<>();
-    for (playerImpl p : this.players.values()) {
+    for (player p : this.players.values()) {
       playerStates.add(new PlayerStateImpl(p.name()));
     }
     this.game = new GameState(playerStates);
@@ -185,9 +191,18 @@ public class Referee {
    * Disqualifies the current player. Goes to the next Player in State.
    */
   private void disqualify() {
+    game.addToRefDeck(game.currentPlayerTiles());
     disqualifiedPlayers.add(game.currentPlayerName());
     game.removeCurrentPlayer();
   }
+
+  private void disqualify(String playerName) {
+    game.addToRefDeck(game.getHand(playerName));
+    disqualifiedPlayers.add(playerName);
+    game.removePlayer(playerName);
+  }
+
+
 
   /**
    * Pauses runtime for a given number of seconds.

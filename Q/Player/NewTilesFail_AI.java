@@ -1,8 +1,8 @@
-package Player.Strategy;
+package Player;
 import java.util.List;
 
 import Common.Tiles.Tile;
-import Player.playerImpl;
+import Player.Strategy.Strategy;
 
 /**
  * Represents a faulty player that throws an error when the newTiles() method is called

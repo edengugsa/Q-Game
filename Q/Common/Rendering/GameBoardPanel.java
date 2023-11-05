@@ -13,7 +13,7 @@ public class GameBoardPanel extends JPanel {
 
   private GameBoard board;
 
-  GameBoardPanel(GameBoard board) {
+  public GameBoardPanel(GameBoard board) {
     this.board = board;
   }
 
