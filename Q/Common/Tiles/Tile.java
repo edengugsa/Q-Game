@@ -1,8 +1,12 @@
+package Common.Tiles;
+
 import com.google.gson.JsonElement;
 
 import java.awt.*;
 import java.util.Comparator;
 import java.util.Objects;
+
+import Common.JsonUtils;
 
 /**
  * Represents a tile in The Q Game. A tile has two attributes: Color and QShape.

@@ -1,8 +1,15 @@
+package Common.Rendering;
+
 import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.*;
+
+import Common.GameBoard.GameBoard;
+import Common.State.PlayerState;
+import Common.Tiles.Coordinate;
+import Common.Tiles.Tile;
 
 /**
  * Renders a Player's name, score, and the Tiles they have.

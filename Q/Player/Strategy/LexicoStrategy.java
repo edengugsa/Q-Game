@@ -1,7 +1,18 @@
+package Player.Strategy;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+
+import Common.GameBoard.GameBoard;
+import Common.GameCommands.ExchangeCommand;
+import Common.GameCommands.PassCommand;
+import Common.GameCommands.PlacementCommand;
+import Common.GameCommands.QGameCommand;
+import Common.RuleBook.QRuleBook;
+import Common.State.ActivePlayerKnowledge;
+import Common.Tiles.Placement;
+import Common.Tiles.Tile;
 
 /**
  * This abstract class represents a lexicographic approach to forming a QGameCommand. It will choose

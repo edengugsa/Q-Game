@@ -1,4 +1,12 @@
+package Common.Scorer;
+
 import java.util.*;
+
+import Common.GameBoard.GameBoard;
+import Common.Tiles.Placement;
+import Common.Tiles.QColor;
+import Common.Tiles.QShape;
+import Common.Tiles.Tile;
 
 /**
  * Represents the rules and functionality for scoring a PlacementCommand.
@@ -37,35 +45,35 @@ public class Scorer {
   }
 
   /**
-   * Updates this Scorer's number of points rewarded for placing a single tile.
+   * Updates this Common.Scorer.Scorer's number of points rewarded for placing a single tile.
    */
   public void setPTS_PER_TILE(int amt) {
     this.PTS_PER_TILE = amt;
   }
 
   /**
-   * Updates this Scorer's number of points rewarded for placing a contiguous tile.
+   * Updates this Common.Scorer.Scorer's number of points rewarded for placing a contiguous tile.
    */
   public void setPTS_PER_CONTIG_TILE(int amt) {
     this.PTS_PER_CONTIG_TILE = amt;
   }
 
   /**
-   * Updates this Scorer's number of points rewarded for completing a Q
+   * Updates this Common.Scorer.Scorer's number of points rewarded for completing a Q
    */
   public void setQ_PTS(int amt) {
     this.Q_PTS = amt;
   }
 
   /**
-   * Updates this Scorer's number of points rewarded for placing all tiles in a hand.
+   * Updates this Common.Scorer.Scorer's number of points rewarded for placing all tiles in a hand.
    */
   public void setPTS_FOR_PLACING_ALL(int amt) {
     this.PTS_FOR_PLACING_ALL = amt;
   }
 
   /**
-   * @return the number of points this Scorer rewards for a given placement
+   * @return the number of points this Common.Scorer.Scorer rewards for a given placement
    */
   public int scorePlacement(Queue<Placement> placements, GameBoard board, boolean placedAll) {
     this.placements = placements;
@@ -148,8 +156,5 @@ public class Scorer {
     }
     return false;
   }
-
-
-
 
 }

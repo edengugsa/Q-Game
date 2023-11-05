@@ -1,3 +1,8 @@
+package Player.Strategy;
+
+import Common.GameCommands.QGameCommand;
+import Common.State.ActivePlayerKnowledge;
+
 /**
  * Represents a strategy for selecting a GameCommand for the Q Game. The GameCommand is selected
  * based on a Player's tiles and the public knowledge about the game.

@@ -1,47 +1,38 @@
+package Player;
 import java.util.List;
 
+import Common.GameBoard.GameBoard;
+import Common.GameCommands.QGameCommand;
+import Common.State.ActivePlayerKnowledge;
+import Common.State.QGameBoardState;
+import Common.Tiles.Tile;
 
-public class AIPlayerImpl implements AIPlayer {
+public interface player {
 
-  protected final String name;
-  protected List<Tile> hand;
-  protected QGameBoardState board;
-  private final Strategy strategy;
+    /**
+     * @return this Player's name
+     */
+    String name();
 
-  public AIPlayerImpl(String name, Strategy strategy) {
-    this.name = name;
-    this.strategy = strategy;
-  }
+    /**
+     * Configures this player with the state of the game board and its tiles.
+     */
+    void setup(GameBoard board, List<Tile> hand);
 
-  @Override
-  public void newTiles(List<Tile> tiles) {
-    this.hand = tiles;
-  }
+    /**
+     * @return this player's requested QGameCommand based on the given knowledge about the game.
+     */
+    QGameCommand takeTurn(ActivePlayerKnowledge knowledge);
 
-  @Override
-  public String name() {
-    return this.name;
-  }
+    /**
+     * Represents this player's reaction to winning (or losing) the game.
+     * @param w true if this player won the game
+     */
+    void win(boolean w);
 
-  @Override
-  public void setup(QGameBoardState board, List<Tile> hand) {
-    this.board = board;
-    this.hand = hand;
-  }
+    /**
+     * Tells this player what Tiles they have.
+     */
+    void newTiles(List<Tile> tiles);
 
-  @Override
-  public QGameCommand takeTurn(ActivePlayerKnowledge apk) {
-    return strategy.compute(apk);
-  }
-
-
-  @Override
-  public void win(boolean w) {
-    if (w) {
-//      System.out.println(name + ": Winnner");
-    }
-    else {
-//      System.out.println(name + ": Loser");
-    }
-  }
 }

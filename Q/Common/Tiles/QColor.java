@@ -1,3 +1,5 @@
+package Common.Tiles;
+
 import java.awt.*;
 import java.util.Comparator;
 

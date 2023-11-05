@@ -1,3 +1,4 @@
+package Common.Rendering;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
@@ -7,6 +8,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
+
+import Common.Tiles.Coordinate;
+import Common.Tiles.Tile;
 
 /**
  * Contains the rendering functionality required for displaying a game-board as a viewable image.

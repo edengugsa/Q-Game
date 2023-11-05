@@ -1,5 +1,11 @@
+package Common.GameCommands;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+
+import Common.RuleBook.QRuleBook;
+import Common.Scorer.Scorer;
+import Common.State.GameState;
 
 /**
  * Represents the Pass Action where the active PlayerState chooses to do nothing.

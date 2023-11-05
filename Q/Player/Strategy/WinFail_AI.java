@@ -1,7 +1,11 @@
+package Player.Strategy;
+
+import Player.playerImpl;
+
 /**
- * Represents a faulty AIPlayer that throws an error when the win() method is called
+ * Represents a faulty player that throws an error when the win() method is called
  */
-public class WinFail_AI extends AIPlayerImpl {
+public class WinFail_AI extends playerImpl {
 
   public WinFail_AI(String name, Strategy strategy) {
     super(name, strategy);

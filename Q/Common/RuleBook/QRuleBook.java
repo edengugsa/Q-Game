@@ -1,4 +1,14 @@
+package Common.RuleBook;
+
 import java.util.List;
+
+import Common.GameBoard.GameBoard;
+import Common.GameCommands.ExchangeCommand;
+import Common.GameCommands.PassCommand;
+import Common.GameCommands.PlacementCommand;
+import Common.State.GameState;
+import Common.State.PlayerState;
+import Common.State.QGameBoardState;
 
 /**
  * Represents the rules for the game 'Qwirkle'.
@@ -8,7 +18,7 @@ public interface QRuleBook {
   /**
    * @return true if this QRuleBook allows the given PlacementCommand to be executed on the current QGameBoardState.
    */
-  boolean allows(PlacementCommand cmd, QGameBoardState board);
+  boolean allows(PlacementCommand cmd, GameBoard board);
 
   /**
    * @return true if this QRuleBook allows an ExchangeCommand to be executed given the ActivePlayerKnowledge.
@@ -27,7 +37,7 @@ public interface QRuleBook {
    *    * 2. a player has placed all tiles in its possession
    *    * 3. there are no players left after a turn
    */
-  boolean gameOver (GameState g);
+  boolean gameOver(GameState g);
 
   boolean roundComplete(GameState game);
 

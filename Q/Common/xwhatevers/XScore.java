@@ -1,10 +1,18 @@
+package Common.xwhatevers;
+
 import com.google.gson.JsonStreamParser;
+import Common.GameBoard.GameBoard;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Queue;
+import Common.JsonUtils;
+import Common.Tiles.Placement;
+
+import Common.Scorer.Scorer;
 
 /**
  * Consumes two JSON inputs from STDIN: a JMAP object and a JPlacements array. Computes the score (a natural
@@ -12,7 +20,6 @@ import java.util.Queue;
  */
 public class XScore {
 
-    private static final JsonUtils utils = new JsonUtils(); // utility class for transforming JSON objects to game representations
     public static void main(String[] args) throws IOException {
 
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -20,9 +27,9 @@ public class XScore {
 
     while (jsonStreamParser.hasNext()) {
       try {
-        Queue<Placement> placements = utils.JPlacementsToPlacements(jsonStreamParser.next().getAsJsonArray());
-        Map<Coordinate, Tile> map = utils.JMapToHashmap(jsonStreamParser.next().getAsJsonArray());
-        System.out.println(new Scorer().scorePlacement(placements, new GameBoard(map), false));
+        Queue<Placement> placements = JsonUtils.JPlacementsToPlacements(jsonStreamParser.next().getAsJsonArray());
+        GameBoard gm = JsonUtils.JMapToGameBoard(jsonStreamParser.next().getAsJsonArray());
+        System.out.println(new Scorer().scorePlacement(placements, gm, false));
       } catch (Exception e) {
         System.out.println(e.getMessage());
       }

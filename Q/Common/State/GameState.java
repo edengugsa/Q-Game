@@ -1,4 +1,19 @@
+package Common.State;
+
 import java.util.*;
+
+import Common.GameBoard.GameBoard;
+import Common.GameCommands.QGameCommand;
+import Common.PublicKnowledge;
+import Common.Rendering.RenderGameState;
+import Common.RuleBook.QRuleBook;
+import Common.RuleBook.RuleBook;
+import Common.Scorer.Scorer;
+import Common.Tiles.Coordinate;
+import Common.Tiles.Placement;
+import Common.Tiles.QColor;
+import Common.Tiles.QShape;
+import Common.Tiles.Tile;
 
 /**
  * Represents the state of The Q Game. Provides functionality for initializing
@@ -10,11 +25,11 @@ public class GameState {
   private GameBoard board;
   private Deque<Tile> deck; // dealer's deck of tiles
   private final QRuleBook rules = new RuleBook();
-  Stack<QGameCommand> roundHistory; // store all the commands in the current round
-  boolean playerPlacedAllTiles;
+  public Stack<QGameCommand> roundHistory; // store all the commands in the current round TOOD REMOVE!!!!
+  public boolean playerPlacedAllTiles;
 
   /**
-   * Public constructor for the GameState. Prepares the game for playing
+   * Public constructor for the State. Prepares the game for playing
    * by building the deck and the game board, and handing each player a given amount of tiles.
    * @param players the queue of players in turn order.
    */
@@ -29,7 +44,7 @@ public class GameState {
   }
 
   /**
-   * Private constructor used to produce a new GameState once a
+   * Private constructor used to produce a new State once a
    * QGameAction has been executed.
    */
   public GameState(Queue<PlayerState> players, GameBoard board,
@@ -57,6 +72,8 @@ public class GameState {
     this.roundHistory.add(command);
     this.currentPlayer().incrementTurnsCompleted();
   }
+
+
 
   public void score(QGameCommand command, Scorer scorer) {
     command.score(this, scorer);
@@ -91,7 +108,7 @@ public class GameState {
   }
 
   /**
-   * @return a copy of this GameState's current PlayerStates.
+   * @return a copy of this State's current PlayerStates.
    */
   public List<PlayerState> players() {
     return new ArrayList<>(this.players);
@@ -102,7 +119,7 @@ public class GameState {
   }
 
   /**
-   * Updates the score of this GameState's current player with the given number of points.
+   * Updates the score of this State's current player with the given number of points.
    */
   public void updateScore(int points) {
     this.currentPlayer().reward(points);
@@ -110,7 +127,7 @@ public class GameState {
 
   /**
    * @return PublicPlayerKnowledge ->
-   * (All the information about this GameState that the active player is allowed to know)
+   * (All the information about this State that the active player is allowed to know)
    */
   public PublicKnowledge publicKnowledge() {
     return new PublicKnowledge(
@@ -121,7 +138,7 @@ public class GameState {
 
   /**
    * @return ActivePlayerKnowledge ->
-   * (All the information about this GameState that the active player is allowed to know)
+   * (All the information about this State that the active player is allowed to know)
    */
   public ActivePlayerKnowledge getActivePlayerKnowledge() {
     return new ActivePlayerKnowledge(
@@ -132,7 +149,7 @@ public class GameState {
   }
 
   /**
-   * Opens up a window displaying an image representing this GameState. The image shows
+   * Opens up a window displaying an image representing this State. The image shows
    * the current state of the map, all the players' scores and Tiles, and the number of Referee
    * tiles left.
    */
@@ -151,7 +168,7 @@ public class GameState {
   }
 
   /**
-   * @return the map of this GameState's game board
+   * @return the map of this State's game board
    */
   public Map<Coordinate, Tile> board() {
     return this.board.getMap();
@@ -167,10 +184,10 @@ public class GameState {
 
 
   /**
-   * @return the given amount of tiles from this GameState's deck
+   * @return the given amount of tiles from this State's deck
    * @throws IllegalStateException if the number of tiles in the deck is fewer than the requested amount
    */
-  protected List<Tile> getFromDeck(int amt) throws IllegalStateException {
+  public List<Tile> getFromDeck(int amt) throws IllegalStateException {
     if (amt > deck.size()) {
       throw new IllegalStateException("Requested " + amt + " tiles from deck, " +
               "but deck only has " + deck.size() + " tiles remaining.");
@@ -254,7 +271,7 @@ public class GameState {
 
 
   /**
-   * Initializes a new GameState with Players and a GameBoard.
+   * Initializes a new State with Players and a GameBoard.
    * Used primarily in TESTING.
    */
   public GameState(Queue<PlayerState> players, GameBoard board) {

@@ -1,6 +1,19 @@
+package Common.RuleBook;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+
+import Common.GameBoard.GameBoard;
+import Common.GameCommands.ExchangeCommand;
+import Common.GameCommands.PassCommand;
+import Common.GameCommands.PlacementCommand;
+import Common.GameCommands.QGameCommand;
+import Common.State.GameState;
+import Common.State.PlayerState;
+import Common.State.QGameBoardState;
+import Common.Tiles.Coordinate;
+import Common.Tiles.Placement;
+import Common.Tiles.Tile;
 
 /**
  * Represents a set of rules for the Q Game.
@@ -22,10 +35,10 @@ public class RuleBook implements QRuleBook {
    * rules of this RuleBook. See class header for placement rules.
    */
   @Override
-  public boolean allows(PlacementCommand cmd, QGameBoardState board) {
+  public boolean allows(PlacementCommand cmd, GameBoard board) {
     this.mock = new GameBoard(board.getMap());
-    if (!contiguous(cmd.placements)) {return false;}
-    for (Placement p : cmd.placements) {
+    if (!contiguous(cmd.placements())) {return false;}
+    for (Placement p : cmd.placements()) {
       if (!this.matchesNeighbors(p)) {return false;}
       try {this.mock.extend(p.coordinate(), p.tile());}
       catch (Exception e){return false;}

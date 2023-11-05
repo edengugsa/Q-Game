@@ -14,28 +14,28 @@
 //
 //  @Before
 //  public void initRef() {
-//    List<AIPlayer> players = new ArrayList<>();
-//    players.add(new AIPlayerImpl("Allen", new LdasgStrategy(new RuleBook())));
-//    players.add(new AIPlayerImpl("Bethany", new DagStrategy(new RuleBook())));
-//    players.add(new AIPlayerImpl("Cindy", new LdasgStrategy(new RuleBook())));
+//    List<player> players = new ArrayList<>();
+//    players.add(new playerImpl("Allen", new LdasgStrategy(new RuleBook())));
+//    players.add(new playerImpl("Bethany", new DagStrategy(new RuleBook())));
+//    players.add(new playerImpl("Cindy", new LdasgStrategy(new RuleBook())));
 //    this.ref = new Referee(players, new RuleBook());
 //  }
 //
 //  public Referee initRefCheaters() {
-//    List<AIPlayer> players = new ArrayList<>();
-//    players.add(new AIPlayerImpl("Allen", new FlawedStrategy()));
-//    players.add(new AIPlayerImpl("Bethany", new FlawedStrategy()));
-//    players.add(new AIPlayerImpl("Cindy", new FlawedStrategy()));
+//    List<player> players = new ArrayList<>();
+//    players.add(new playerImpl("Allen", new FlawedStrategy()));
+//    players.add(new playerImpl("Bethany", new FlawedStrategy()));
+//    players.add(new playerImpl("Cindy", new FlawedStrategy()));
 //    return new Referee(players, new RuleBook());
 //  }
 //
-//  public Referee initRefWithGameState(GameState gs) {
+//  public Referee initRefWithGameState(State gs) {
 //
 //
-//    List<AIPlayer> players = new ArrayList<>();
-//    players.add(new AIPlayerImpl("Allen", new FlawedStrategy()));
-//    players.add(new AIPlayerImpl("Bethany", new FlawedStrategy()));
-//    players.add(new AIPlayerImpl("Cindy", new FlawedStrategy()));
+//    List<player> players = new ArrayList<>();
+//    players.add(new playerImpl("Allen", new FlawedStrategy()));
+//    players.add(new playerImpl("Bethany", new FlawedStrategy()));
+//    players.add(new playerImpl("Cindy", new FlawedStrategy()));
 //    return new Referee(players, gs);
 //  }
 //
@@ -49,9 +49,9 @@
 //    gameBoard.extend(new Coordinate(1, 0), new Tile(QColor.BLUE, QShape.clover));
 //    gameBoard.extend(new Coordinate(2, 0), new Tile(QColor.GREEN, QShape.clover));
 //    gameBoard.extend(new Coordinate(2, 1), new Tile(QColor.GREEN, QShape.star));
-//    System.out.println(JsonUtils.GameStateToJState(new GameState(initTestPlayers(), gameBoard)));
+//    System.out.println(JsonUtils.GameStateToJState(new State(initTestPlayers(), gameBoard)));
 //    assertEquals(0,0);
-////    return new GameState(initTestPlayers(), gameBoard);
+////    return new State(initTestPlayers(), gameBoard);
 //  }
 //
 //  private static Queue<PlayerState> initTestPlayers() {

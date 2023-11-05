@@ -1,5 +1,11 @@
+package Common.State;
+
 import java.util.List;
 import java.util.Map;
+
+import Common.Tiles.Coordinate;
+import Common.Tiles.Placement;
+import Common.Tiles.Tile;
 
 /**
  * Interface representing the status of The Q Game board. Contains methods

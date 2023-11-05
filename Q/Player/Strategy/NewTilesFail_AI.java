@@ -1,9 +1,13 @@
+package Player.Strategy;
 import java.util.List;
 
+import Common.Tiles.Tile;
+import Player.playerImpl;
+
 /**
- * Represents a faulty AIPlayer that throws an error when the newTiles() method is called
+ * Represents a faulty player that throws an error when the newTiles() method is called
  */
-public class NewTilesFail_AI extends AIPlayerImpl {
+public class NewTilesFail_AI extends playerImpl {
 
   public NewTilesFail_AI(String name, Strategy strategy) {
     super(name, strategy);

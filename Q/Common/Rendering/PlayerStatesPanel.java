@@ -1,3 +1,5 @@
+package Common.Rendering;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -5,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.*;
+
+import Common.State.PlayerState;
 
 /**
  * Renders information about all the Players. Renders a Player's score, name, and Tiles.

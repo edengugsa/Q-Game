@@ -1,6 +1,17 @@
+package Common.Rendering;
+
 import org.junit.Test;
 
 import java.util.*;
+
+import Common.GameBoard.GameBoard;
+import Common.JsonUtils;
+import Common.State.PlayerState;
+import Common.State.PlayerStateImpl;
+import Common.Tiles.Coordinate;
+import Common.Tiles.QColor;
+import Common.Tiles.QShape;
+import Common.Tiles.Tile;
 
 /**
  * This class reads in a JMap from stdin, renders it, and saves it as a png image.
@@ -18,7 +29,7 @@ public class testDrawGameBoard {
 //      try {
 //        Map<Coordinate, Tile> map = utils.jMapToHashmap(jsonStreamParser.next().getAsJsonArray());
 //        testPlayers = initTestPlayers();
-//        GameState gamestate = new GameState(new ArrayDeque<>(initTestPlayers()), new GameBoard(map));
+//        State gamestate = new State(new ArrayDeque<>(initTestPlayers()), new GameBoard(map));
 //        gamestate.render();
 //
 //      } catch (Exception e) {
@@ -71,7 +82,7 @@ public class testDrawGameBoard {
     gameBoard.extend(new Coordinate(2, 0), new Tile(QColor.GREEN, QShape.clover));
     gameBoard.extend(new Coordinate(2, 1), new Tile(QColor.GREEN, QShape.star));
 // TODO FIX
-//    GameState gamestate = new GameState(initTestPlayers(), gameBoard);
+//    State gamestate = new State(initTestPlayers(), gameBoard);
 //    gamestate.render();
   }
 }

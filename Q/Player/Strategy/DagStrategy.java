@@ -1,6 +1,10 @@
+package Player.Strategy;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import Common.RuleBook.QRuleBook;
+import Common.Tiles.Placement;
 
 /**
  * Represents the Dag Strategy for choosing Placements. This Strategy will sort a Tile's

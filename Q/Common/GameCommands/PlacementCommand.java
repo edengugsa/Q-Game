@@ -1,7 +1,14 @@
+package Common.GameCommands;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.util.ArrayDeque;
 import java.util.Queue;
+
+import Common.RuleBook.QRuleBook;
+import Common.Scorer.Scorer;
+import Common.State.GameState;
+import Common.Tiles.Placement;
 
 /**
  * A QGameCommand for validating and executing the placement of tiles on the board.
@@ -9,6 +16,10 @@ import java.util.Queue;
 public class PlacementCommand implements QGameCommand {
 
   final Queue<Placement> placements;
+
+  public Queue<Placement> placements() {
+    return new ArrayDeque<>(this.placements);
+  }
 
   /**
    * Constructs this action with a list of placements.

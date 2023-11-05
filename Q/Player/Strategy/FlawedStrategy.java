@@ -1,5 +1,15 @@
+package Player.Strategy;
 import java.util.ArrayDeque;
 import java.util.Queue;
+
+import Common.GameCommands.PlacementCommand;
+import Common.GameCommands.QGameCommand;
+import Common.State.ActivePlayerKnowledge;
+import Common.Tiles.Coordinate;
+import Common.Tiles.Placement;
+import Common.Tiles.QColor;
+import Common.Tiles.QShape;
+import Common.Tiles.Tile;
 
 /**
  * A flawed strategy (for testing purposes). Returns pseudorandom placements that the player may or may not

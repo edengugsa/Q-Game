@@ -1,14 +1,20 @@
+package Player;
 import java.util.List;
 
+import Common.GameBoard.GameBoard;
+import Common.GameCommands.QGameCommand;
+import Common.State.ActivePlayerKnowledge;
+import Common.Tiles.Tile;
+import Player.Strategy.Strategy;
 
-public class AIPlayerImpl implements AIPlayer {
+public class playerImpl implements player {
 
   protected final String name;
   protected List<Tile> hand;
-  protected QGameBoardState board;
+  protected GameBoard board;
   private final Strategy strategy;
 
-  public AIPlayerImpl(String name, Strategy strategy) {
+  public playerImpl(String name, Strategy strategy) {
     this.name = name;
     this.strategy = strategy;
   }
@@ -24,7 +30,7 @@ public class AIPlayerImpl implements AIPlayer {
   }
 
   @Override
-  public void setup(QGameBoardState board, List<Tile> hand) {
+  public void setup(GameBoard board, List<Tile> hand) {
     this.board = board;
     this.hand = hand;
   }

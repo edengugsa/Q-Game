@@ -1,9 +1,13 @@
+package Common.Rendering;
+
 import java.awt.*;
 
 import javax.swing.*;
 
+import Common.State.GameState;
+
 /**
- * Represents functionality to render a GameState. The image will display the GameBoard, the number
+ * Represents functionality to render a State. The image will display the GameBoard, the number
  * of remaining Referee tiles, as well as each player's score and Tiles.
  */
 public class RenderGameState extends JFrame {

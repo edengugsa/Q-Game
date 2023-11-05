@@ -1,11 +1,16 @@
+package Common.GameCommands;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import Common.RuleBook.QRuleBook;
+import Common.Scorer.Scorer;
+import Common.State.GameState;
+import Common.Tiles.Tile;
 
 
 /**
  * Represents the Exchange Action where a Player requests to exchanges all of their tiles for new ones.
  * This is possibly only if there are enough referee tiles remaining. This class has functionality
- * to check if this Command can be executed on a given GameState and to execute it on a given GameState.
+ * to check if this Command can be executed on a given State and to execute it on a given State.
  */
 public class ExchangeCommand implements QGameCommand {
 
@@ -15,8 +20,8 @@ public class ExchangeCommand implements QGameCommand {
   }
 
   /**
-   * Exchanges all the given GameState's active player's tiles for new ones.
-   * Appends the player's old tiles to the end of GameState's deck.
+   * Exchanges all the given State's active player's tiles for new ones.
+   * Appends the player's old tiles to the end of State's deck.
    */
   @Override
   public void execute(GameState game) {

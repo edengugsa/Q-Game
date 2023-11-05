@@ -1,3 +1,6 @@
+package Player.Strategy;
+
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayDeque;
@@ -6,6 +9,22 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
 
+
+import Common.GameBoard.GameBoard;
+import Common.GameCommands.ExchangeCommand;
+import Common.GameCommands.PassCommand;
+import Common.GameCommands.PlacementCommand;
+import Common.GameCommands.QGameCommand;
+import Common.JsonUtils;
+import Common.RuleBook.RuleBook;
+import Common.State.GameState;
+import Common.State.PlayerState;
+import Common.State.PlayerStateImpl;
+import Common.Tiles.Coordinate;
+import Common.Tiles.Placement;
+import Common.Tiles.QColor;
+import Common.Tiles.QShape;
+import Common.Tiles.Tile;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,7 +38,7 @@ public class testStrategy {
 //    expectedPlacements.add(
 //            new Placement(new Coordinate(3,1), new Tile(QColor.GREEN, QShape.diamond)));
 //    QGameCommand expected = new PlacementCommand(expectedPlacements);
-//    GameState gs2 = gs.execute(expected);
+//    State gs2 = gs.execute(expected);
 //    gs2.render();
   }
 
@@ -179,7 +198,7 @@ public class testStrategy {
     expectedPlacements.add(
             new Placement(new Coordinate(-1,1), new Tile(QColor.YELLOW, QShape.diamond)));
     QGameCommand expected = new PlacementCommand(expectedPlacements);
-    assertEquals(expected.toString(), dag.compute(gs.getActivePlayerKnowledge()).toString());
+    Assert.assertEquals(expected.toString(), dag.compute(gs.getActivePlayerKnowledge()).toString());
   }
 
   @Test
@@ -193,21 +212,21 @@ public class testStrategy {
     expectedPlacements.add(
             new Placement(new Coordinate(-1,-1), new Tile(QColor.RED, QShape.eight_star)));
     QGameCommand expected = new PlacementCommand(expectedPlacements);
-    assertEquals(expected.toString(), dag.compute(gs.getActivePlayerKnowledge()).toString());
+    Assert.assertEquals(expected.toString(), dag.compute(gs.getActivePlayerKnowledge()).toString());
   }
 
   @Test
   public void testDagStrategyExchange() {
     GameState gs = initExchange();
     Strategy dag = new DagStrategy(new RuleBook());
-    assertEquals(new ExchangeCommand(), dag.compute(gs.getActivePlayerKnowledge()));
+    Assert.assertEquals(new ExchangeCommand(), dag.compute(gs.getActivePlayerKnowledge()));
   }
 
   @Test
   public void testDagStrategyPass() {
     GameState gs = initPass();
     Strategy dag = new DagStrategy(new RuleBook());
-    assertEquals(new PassCommand(), dag.compute(gs.getActivePlayerKnowledge()));
+    Assert.assertEquals(new PassCommand(), dag.compute(gs.getActivePlayerKnowledge()));
   }
 
   @Test
@@ -218,7 +237,7 @@ public class testStrategy {
     expectedPlacements.add(
             new Placement(new Coordinate(3,1), new Tile(QColor.GREEN, QShape.diamond)));
     QGameCommand expected = new PlacementCommand(expectedPlacements);
-    assertEquals(expected.toString(), ldasg.compute(gs.getActivePlayerKnowledge()).toString());
+    Assert.assertEquals(expected.toString(), ldasg.compute(gs.getActivePlayerKnowledge()).toString());
   }
 
 

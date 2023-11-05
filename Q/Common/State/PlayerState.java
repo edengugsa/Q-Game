@@ -1,4 +1,8 @@
+package Common.State;
+
 import java.util.List;
+
+import Common.Tiles.Tile;
 
 /**
  * Represents the Referee's knowledge of a Player in the Q game.

@@ -1,3 +1,5 @@
+package Common.GameBoard;
+
 public class testGameBoard {
 //    GameBoard g;
 //    @Before

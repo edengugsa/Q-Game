@@ -1,10 +1,15 @@
+package Common.GameBoard;
 import java.util.*;
+import Common.Tiles.Coordinate;
+import Common.Tiles.Tile;
+import Common.Tiles.Placement;
+
 
 /**
  * Represents an instance of The Q Game board implementing the QGameBoardState interface.
  * Utilizes a Map to chart Tiles to a unique (x,y) coordinate. Coordinates have no mapping bounds in this implementation.
  */
-public class GameBoard implements QGameBoard {
+public class GameBoard {
 
   private final Map<Coordinate, Tile> board;
 
@@ -18,11 +23,11 @@ public class GameBoard implements QGameBoard {
     this.board.put(new Coordinate(0,0), startTile);
   }
 
-  public GameBoard(Map<Coordinate, Tile> board) {
-    this.board = new HashMap<>(board);
+  public GameBoard(Map<Coordinate, Tile> map) {
+    this.board = new HashMap<>(map);
   }
 
-  @Override
+
   public List<Placement> placementOptions(Tile tile) {
     Set<Coordinate> allEmptySpots = this.getEmptySpots();
     ArrayList<Placement> options = new ArrayList<>();
@@ -34,22 +39,18 @@ public class GameBoard implements QGameBoard {
     return options;
   }
 
-  @Override
   public boolean containsCoord(Coordinate c) {
     return this.board.containsKey(c);
   }
 
-  @Override
   public Tile getTileAt(Coordinate c) {
     return this.board.get(c);
   }
 
-  @Override
   public Map<Coordinate, Tile> getMap() {
     return new HashMap<>(this.board); // returns a new copy, not the actual instance.
   }
 
-  @Override
   public int getNumNeighbors(Coordinate coordinate) {
     int count = 0;
     for (Coordinate c : coordinate.getNeighbors()) {

@@ -1,10 +1,33 @@
+package Common;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+//import Common.GameBoard;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 import java.util.*;
+
+import Common.GameBoard.GameBoard;
+import Common.RuleBook.RuleBook;
+import Common.State.ActivePlayerKnowledge;
+import Common.State.GameState;
+import Common.State.PlayerState;
+import Common.State.PlayerStateImpl;
+import Common.State.PublicPlayerState;
+import Common.Tiles.Coordinate;
+import Common.Tiles.Placement;
+import Common.Tiles.QColor;
+import Common.Tiles.QShape;
+import Common.Tiles.Tile;
+import Player.player;
+import Player.playerImpl;
+import Player.Strategy.DagStrategy;
+import Player.Strategy.LdasgStrategy;
+import Player.Strategy.NewTilesFail_AI;
+import Player.Strategy.SetupFail_AI;
+import Player.Strategy.Strategy;
+import Player.Strategy.TakeTurnFail_AI;
+import Player.Strategy.WinFail_AI;
 
 public class JsonUtils {
 
@@ -17,7 +40,7 @@ public class JsonUtils {
   }
 
   /**
-   * Converts a JState to a GameState
+   * Converts a JState to a State
    * @throws IllegalArgumentException if players is empty
    */
   public static GameState JStateToGameState(JsonObject jState) throws IllegalArgumentException {
@@ -36,18 +59,18 @@ public class JsonUtils {
     return new GameState(players, JMapToGameBoard(jState.getAsJsonArray("map")), deck);
   }
 
-  public static List<AIPlayer> JActorsToAIPlayerList(JsonArray JActors) {
+  public static List<player> JActorsToAIPlayerList(JsonArray JActors) {
     if (JActors.size() < 2 || JActors.size() > 4) {
       throw new IllegalArgumentException("Only 2-4 players are allowed.");
     }
-    List<AIPlayer> players = new ArrayList<>();
+    List<player> players = new ArrayList<>();
     for (JsonElement JActorSpec : JActors) {
       players.add(JActorSpecToAIPlayer(JActorSpec.getAsJsonArray()));
     }
     return players;
   }
 
-  private static AIPlayer JActorSpecToAIPlayer(JsonArray JActorSpec) throws IllegalArgumentException {
+  private static player JActorSpecToAIPlayer(JsonArray JActorSpec) throws IllegalArgumentException {
     if (JActorSpec.size() >= 2) {
       String name = JActorSpec.get(0).getAsString();
       Strategy strategy = jsonToStrategy(JActorSpec.get(1).getAsString());
@@ -60,7 +83,7 @@ public class JsonUtils {
           default ->  throw new IllegalArgumentException("Invalid JActor");
         };
       } else {
-        return new AIPlayerImpl(name, strategy);
+        return new playerImpl(name, strategy);
       }
     }
     throw new IllegalArgumentException("JActorSpec must contain either 2 or 3 elements.");
@@ -137,7 +160,7 @@ public class JsonUtils {
   /**
    * Converts the given JMap to a HashMap<Coordinate, Tile> tiles that represents the map of this game.
    */
-  protected static HashMap<Coordinate, Tile> JMapToHashmap(JsonArray jMap) {
+  protected static Map<Coordinate, Tile> JMapToHashmap(JsonArray jMap) {
     HashMap<Coordinate, Tile> tiles = new HashMap<>();
     for (JsonElement jRowElement : jMap) {
       JsonArray jRow = jRowElement.getAsJsonArray();

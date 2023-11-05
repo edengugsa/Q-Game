@@ -1,5 +1,9 @@
+package Common.Rendering;
+
 import java.awt.*;
 import javax.swing.*;
+
+import Common.GameBoard.GameBoard;
 
 /**
  * Renders a GameBoard. It receives a copy of the GameBoard
