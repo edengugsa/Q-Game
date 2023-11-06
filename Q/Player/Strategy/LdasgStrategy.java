@@ -18,10 +18,14 @@ import Common.Tiles.Placement;
 public class LdasgStrategy extends LexicoStrategy {
 
   /**
-   * Constructs a LdasgStrategy that computes GameCommands that adhere to the given RuleBook.
+   * Constructs a LdasgStrategy that computes GameCommands.
    */
-  public LdasgStrategy(QRuleBook ruleBook) {
-    super(ruleBook);
+  public LdasgStrategy(QRuleBook rulebook) {
+    super(rulebook);
+  }
+
+  public LdasgStrategy() {
+    super();
   }
 
   /**

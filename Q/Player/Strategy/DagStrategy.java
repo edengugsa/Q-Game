@@ -16,9 +16,14 @@ public class DagStrategy extends LexicoStrategy  {
   /**
    * Constructs a DagStrategy that computes GameCommands that adhere to the given RuleBook.
    */
-  public DagStrategy(QRuleBook ruleBook) {
-    super(ruleBook);
+  public DagStrategy(QRuleBook rulebook) {
+    super(rulebook);
   }
+
+  public DagStrategy() {
+    super();
+  }
+
 
   /**
    * @return a list of Placements sorted by this DagStrategy's Placement comparator

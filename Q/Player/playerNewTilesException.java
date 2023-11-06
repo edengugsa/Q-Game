@@ -7,9 +7,9 @@ import Player.Strategy.Strategy;
 /**
  * Represents a faulty player that throws an error when the newTiles() method is called
  */
-public class NewTilesFail_AI extends playerImpl {
+public class playerNewTilesException extends playerImpl {
 
-  public NewTilesFail_AI(String name, Strategy strategy) {
+  public playerNewTilesException(String name, Strategy strategy) {
     super(name, strategy);
   }
 

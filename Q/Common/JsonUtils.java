@@ -1,14 +1,18 @@
 package Common;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-//import Common.GameBoard;
 
 import com.google.gson.JsonObject;
 
 import java.util.*;
 
 import Common.GameBoard.GameBoard;
-import Common.RuleBook.RuleBook;
+import Common.RuleBook.BadAskForTilesRuleBook;
+import Common.RuleBook.NoFitRuleBook;
+import Common.RuleBook.NonAdjacentCoordinateRuleBook;
+import Common.RuleBook.NotALineRuleBook;
+import Common.RuleBook.QRuleBook;
+import Common.RuleBook.TileNotOwnedRuleBook;
 import Common.State.ActivePlayerKnowledge;
 import Common.State.GameState;
 import Common.State.PlayerState;
@@ -23,11 +27,11 @@ import Player.player;
 import Player.playerImpl;
 import Player.Strategy.DagStrategy;
 import Player.Strategy.LdasgStrategy;
-import Player.NewTilesFail_AI;
-import Player.SetupFail_AI;
+import Player.playerNewTilesException;
+import Player.playerSetupException;
 import Player.Strategy.Strategy;
-import Player.TakeTurnFail_AI;
-import Player.WinFail_AI;
+import Player.playerTakeTurnException;
+import Player.playerWinException;
 
 public class JsonUtils {
 
@@ -59,7 +63,7 @@ public class JsonUtils {
     return new GameState(players, JMapToGameBoard(jState.getAsJsonArray("map")), deck);
   }
 
-  public static List<player> JActorsToAIPlayerList(JsonArray JActors) {
+  public static List<player> JActorsToPlayerList(JsonArray JActors) {
     if (JActors.size() < 2 || JActors.size() > 4) {
       throw new IllegalArgumentException("Only 2-4 players are allowed.");
     }
@@ -70,26 +74,63 @@ public class JsonUtils {
     return players;
   }
 
-  private static player JActorSpecToPlayer(JsonArray JActorSpec) throws IllegalArgumentException {
-    if (JActorSpec.size() >= 2) {
-      String name = JActorSpec.get(0).getAsString();
-      Strategy strategy = jsonToStrategy(JActorSpec.get(1).getAsString());
-      if (JActorSpec.size() == 3) {
-        return switch (JActorSpec.get(2).getAsString()) {
-          case "setup" -> new SetupFail_AI(name, strategy);
-          case "take-turn" -> new TakeTurnFail_AI(name, strategy);
-          case "new-tiles" -> new NewTilesFail_AI(name, strategy);
-          case "win" -> new WinFail_AI(name, strategy);
-          default ->  throw new IllegalArgumentException("Invalid JActor");
-        };
-      } else {
-        return new playerImpl(name, strategy);
-      }
+
+
+  private static player PlayerWithJExn(String name, Strategy strategy, JsonArray JActorSpec) {
+    return switch (JActorSpec.get(2).getAsString()) {
+      case "setup" -> new playerSetupException(name, strategy);
+      case "take-turn" -> new playerTakeTurnException(name, strategy);
+      case "new-tiles" -> new playerNewTilesException(name, strategy);
+      case "win" -> new playerWinException(name, strategy);
+      default -> throw new IllegalArgumentException("Invalid JActor with JExn");
+    };
+  }
+
+  public static Strategy JStrategyJCheatToStrategy(String jStrategy, String jCheat) {
+    QRuleBook rules = JCheatToRuleBook(jCheat);
+    return switch (jStrategy) {
+      case "ldasg" -> new LdasgStrategy(rules);
+      case "dag" -> new DagStrategy(rules);
+      default -> throw new IllegalArgumentException("Strategy doesn't exist");
+    };
+  }
+
+  private static QRuleBook JCheatToRuleBook(String jCheat) {
+    return switch (jCheat) {
+      case "non-adjacent-coordinate" -> new NonAdjacentCoordinateRuleBook();
+      case "tile-not-owned" -> new TileNotOwnedRuleBook();
+      case "not-a-line" -> new NotALineRuleBook();
+      case "bad-ask-for-tiles" -> new BadAskForTilesRuleBook();
+      case "no-fit" -> new NoFitRuleBook();
+      default -> throw new IllegalArgumentException("Invalid JCheat");
+    };
+  }
+
+  private static player PlayerWithJCheat(String name, String strategyName, JsonArray JActorSpec) {
+    if (!JActorSpec.get(2).getAsString().equals("a cheat")) {
+      throw new IllegalArgumentException("invalid JActorSpecA");
     }
-    throw new IllegalArgumentException("JActorSpec must contain either 2 or 3 elements.");
+
+    return new playerImpl(name, JStrategyJCheatToStrategy(strategyName, JActorSpec.get(3).getAsString()));
   }
 
 
+
+  private static player JActorSpecToPlayer(JsonArray JActorSpec) throws IllegalArgumentException {
+    String name = JActorSpec.get(0).getAsString();
+    Strategy strategy = jsonToStrategy(JActorSpec.get(1).getAsString());
+
+    switch(JActorSpec.size()) {
+      case 2:
+        return new playerImpl(name, strategy);
+      case 3:
+        return PlayerWithJExn(name, strategy, JActorSpec);
+      case 4:
+        return PlayerWithJCheat(name, JActorSpec.get(1).getAsString(), JActorSpec);
+      default:
+        throw new IllegalArgumentException("JActorSpec must contain either 2, 3, or 4 elements.");
+    }
+  }
 
   /**
    * Converts the given hashmap of Coordinates and Tiles to a JMap. Tiles is a non-empty hashmap!
@@ -255,10 +296,10 @@ public class JsonUtils {
   }
 
 
-  public static Strategy jsonToStrategy(String strategy) {
-    return switch (strategy) {
-      case "ldasg" -> new LdasgStrategy(new RuleBook());
-      case "dag" -> new DagStrategy(new RuleBook());
+  public static Strategy jsonToStrategy(String strat) {
+    return switch (strat) {
+      case "ldasg" -> new LdasgStrategy();
+      case "dag" -> new DagStrategy();
       default -> throw new IllegalArgumentException("Strategy doesn't exist");
     };
   }

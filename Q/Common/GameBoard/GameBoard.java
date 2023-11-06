@@ -27,8 +27,11 @@ public class GameBoard {
     this.board = new HashMap<>(map);
   }
 
+  /**
+   * Returns all the Placements on this GameBoard where the given Tile is adjacent.
+   */
 
-  public List<Placement> placementOptions(Tile tile) {
+  public List<Placement> placementAdjacentOptions(Tile tile) {
     Set<Coordinate> allEmptySpots = this.getEmptySpots();
     ArrayList<Placement> options = new ArrayList<>();
     for (Coordinate emptySpot : allEmptySpots) {
@@ -38,6 +41,8 @@ public class GameBoard {
     }
     return options;
   }
+
+
 
   public boolean containsCoord(Coordinate c) {
     return this.board.containsKey(c);

@@ -17,7 +17,7 @@ public class PlacementCommand implements QGameCommand {
 
   final Queue<Placement> placements;
 
-  public Queue<Placement> placements() {
+  public Queue<Placement> getPlacements() {
     return new ArrayDeque<>(this.placements);
   }
 
@@ -33,12 +33,7 @@ public class PlacementCommand implements QGameCommand {
 
   @Override
   public boolean isLegal(QRuleBook ruleBook, GameState game) {
-    for (Placement p : this.placements) {
-      if (!game.currentPlayerTiles().contains(p.tile())) {
-        return false;
-      }
-    }
-    return ruleBook.allows(this, game.getGameBoard());
+    return ruleBook.allows(this, game.getGameBoard(), game.currentPlayerTiles());
   }
 
   @Override

@@ -1,6 +1,8 @@
 package Player.Strategy;
 
 import Common.GameCommands.QGameCommand;
+import Common.RuleBook.QRuleBook;
+import Common.RuleBook.RuleBook;
 import Common.State.ActivePlayerKnowledge;
 
 /**
@@ -14,5 +16,6 @@ public interface Strategy {
    * @return QGameAction this strategy's selected action based on the active player's knowledge about the game.
    */
   QGameCommand compute(ActivePlayerKnowledge knowledge);
+
 
 }

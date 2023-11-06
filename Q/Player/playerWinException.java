@@ -1,14 +1,13 @@
 package Player;
 
 import Player.Strategy.Strategy;
-import Player.playerImpl;
 
 /**
  * Represents a faulty player that throws an error when the win() method is called
  */
-public class WinFail_AI extends playerImpl {
+public class playerWinException extends playerImpl {
 
-  public WinFail_AI(String name, Strategy strategy) {
+  public playerWinException(String name, Strategy strategy) {
     super(name, strategy);
   }
 

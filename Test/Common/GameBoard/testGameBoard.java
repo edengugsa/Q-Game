@@ -1,28 +1,28 @@
-package Common.GameBoard;
-
-public class testGameBoard {
+//package Common.GameBoard;
+//
+//public class testGameBoard {
 //    GameBoard g;
 //    @Before
 //    public void init() {
 //        g = new GameBoard(new Tile(Color.RED, QShape.circle));
 //    }
-
+//
 //    public void placesTile() {
-        //assertFalse(g.placeTile(new Coordinate(3, 3), new Tile(Color.BLUE, QShape.STAR)));
-        //assertTrue(g.placeTile(new Coordinate(0, 1), new Tile(Color.BLUE, QShape.STAR)));
-        //assertFalse(g.placeTile(new Coordinate(0, 0), new Tile(Color.BLUE, QShape.STAR)));
-        // TODO: Check for IllegalArgumentException
+//        assertFalse(g.placeTile(new Coordinate(3, 3), new Tile(Color.BLUE, QShape.STAR)));
+//        assertTrue(g.placeTile(new Coordinate(0, 1), new Tile(Color.BLUE, QShape.STAR)));
+//        assertFalse(g.placeTile(new Coordinate(0, 0), new Tile(Color.BLUE, QShape.STAR)));
+//         TODO: Check for IllegalArgumentException
 //    }
-
+//
 //    @Test
 //    public void validSpotTest() {
 //        placeTiles();
-        //assertFalse(g.validPlacement(new Tile(Color.orange, QShape.STAR), new Coordinate(0, 1)));
-        //assertFalse(g.validPlacement(new Tile(Color.orange, QShape.STAR), new Coordinate(0, -1)));
-        //assertFalse(g.validPlacement(new Tile(Color.orange, QShape.STAR), new Coordinate(-1, 0)));
+//        assertFalse(g.validPlacement(new Tile(Color.orange, QShape.STAR), new Coordinate(0, 1)));
+//        assertFalse(g.validPlacement(new Tile(Color.orange, QShape.STAR), new Coordinate(0, -1)));
+//        assertFalse(g.validPlacement(new Tile(Color.orange, QShape.STAR), new Coordinate(-1, 0)));
 //        g.placeTile(new Coordinate(-1,1), new Tile(Color.BLUE, QShape.CIRCLE));
-        //assertFalse(g.validPlacement(new Tile(Color.BLUE, QShape.STAR), new Coordinate(-1, 0)));
-        //assertTrue(g.validPlacement(new Tile(Color.BLUE, QShape.STAR), new Coordinate(-2, 1)));
+//        assertFalse(g.validPlacement(new Tile(Color.BLUE, QShape.STAR), new Coordinate(-1, 0)));
+//        assertTrue(g.validPlacement(new Tile(Color.BLUE, QShape.STAR), new Coordinate(-2, 1)));
 //    }
 //
 //    private void placeTiles() {
@@ -53,5 +53,5 @@ public class testGameBoard {
 //        ArrayList<Coordinate> actual = g.getOptions(new Tile(Color.BLUE, QShape.SQUARE));
 //        assertEquals(actual.size(), 0);
 //    }
-
-}
+//
+//}

@@ -1,8 +1,11 @@
 package Player.Strategy;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 
 import Common.GameBoard.GameBoard;
 import Common.GameCommands.ExchangeCommand;
@@ -12,6 +15,8 @@ import Common.GameCommands.QGameCommand;
 import Common.RuleBook.QRuleBook;
 import Common.State.ActivePlayerKnowledge;
 import Common.Tiles.Placement;
+import Common.Tiles.QColor;
+import Common.Tiles.QShape;
 import Common.Tiles.Tile;
 
 /**
@@ -28,26 +33,35 @@ import Common.Tiles.Tile;
  * "red", "green", "blue", "yellow", "orange", "purple"
  */
 public abstract class LexicoStrategy implements Strategy {
-  protected final QRuleBook ruleBook;
+  protected QRuleBook ruleBook;
   protected ActivePlayerKnowledge currentState;
   protected List<Tile> playerTiles;
   protected Queue<Placement> placementsSoFar;
   protected GameBoard originalBoard;
   protected GameBoard mockBoard;
 
+  protected Set<Tile> allTiles = this.allTiles();
+
+
+
   /**
    * Constructs this LexicoStrategy which will adhere to the provided QRuleBook, and make decisions
    * based on the player's list of tiles and the player's knowledge about the game.
    */
-  public LexicoStrategy(QRuleBook ruleBook) {
-    this.ruleBook = ruleBook;
+  public LexicoStrategy() {
     this.placementsSoFar = new ArrayDeque<>();
+  }
+
+  public LexicoStrategy(QRuleBook ruleBook) {
+    super();
+    this.ruleBook = ruleBook;
   }
 
   @Override
   public QGameCommand compute(ActivePlayerKnowledge apk) {
     this.configure(apk);
     this.computePlacements();
+
     if (placementsSoFar.size() > 0) {
       return new PlacementCommand(placementsSoFar);
     }
@@ -66,10 +80,10 @@ public abstract class LexicoStrategy implements Strategy {
    * @throws IllegalStateException
    */
   private void computeOnePlacement() throws IllegalStateException {
-    for (Tile tile : this.playerTiles) {
-      for (Placement option : this.sort(mockBoard.placementOptions(tile))) {
+    for (Tile tile : this.allTiles) {
+      for (Placement option : this.sort(mockBoard.placementAdjacentOptions(tile))) {
         placementsSoFar.add(option);
-        if (this.ruleBook.allows(new PlacementCommand(placementsSoFar), this.originalBoard)) {
+        if (this.ruleBook.allows(new PlacementCommand(placementsSoFar), this.originalBoard, this.playerTiles)) {
           this.playerTiles.remove(option.tile());
           mockBoard.extend(option.coordinate(), option.tile());
           return;
@@ -111,6 +125,25 @@ public abstract class LexicoStrategy implements Strategy {
     this.playerTiles.sort(Tile.TileComparator);
     this.originalBoard = new GameBoard(apk.getBoard().getMap());
     this.mockBoard = new GameBoard(apk.getBoard().getMap());
+  }
+
+  /**
+   *  Returns a set of all possible Tiles.
+   */
+  private Set<Tile> allTiles() {
+    List<QColor> colors = new ArrayList<>(Arrays.asList
+            (QColor.RED, QColor.GREEN, QColor.BLUE, QColor.YELLOW, QColor.ORANGE, QColor.PURPLE));
+    List<QShape> shapes = new ArrayList<>(Arrays.asList
+            (QShape.star, QShape.eight_star, QShape.square, QShape.circle, QShape.clover, QShape.diamond));
+    Set<Tile> tiles = new HashSet<>();
+
+    for (QShape s : shapes) {
+      for (QColor c : colors) {
+        tiles.add(new Tile(c, s));
+      }
+    }
+
+    return tiles;
   }
 
 }

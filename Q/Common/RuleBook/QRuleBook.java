@@ -8,7 +8,7 @@ import Common.GameCommands.PassCommand;
 import Common.GameCommands.PlacementCommand;
 import Common.State.GameState;
 import Common.State.PlayerState;
-import Common.State.QGameBoardState;
+import Common.Tiles.Tile;
 
 /**
  * Represents the rules for the game 'Qwirkle'.
@@ -18,7 +18,7 @@ public interface QRuleBook {
   /**
    * @return true if this QRuleBook allows the given PlacementCommand to be executed on the current QGameBoardState.
    */
-  boolean allows(PlacementCommand cmd, GameBoard board);
+  boolean allows(PlacementCommand cmd, GameBoard gameboard, List<Tile> playerTiles);
 
   /**
    * @return true if this QRuleBook allows an ExchangeCommand to be executed given the ActivePlayerKnowledge.
@@ -50,4 +50,5 @@ public interface QRuleBook {
    * @return the number of tiles dealt to each player at the start of the game.
    */
   int tilesPerPlayer();
+
 }

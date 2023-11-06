@@ -4,14 +4,13 @@ import java.util.List;
 import Common.GameBoard.GameBoard;
 import Common.Tiles.Tile;
 import Player.Strategy.Strategy;
-import Player.playerImpl;
 
 /**
  * Represents a Player that raises an exception every time setup() is invoked.
  */
-public class SetupFail_AI extends playerImpl {
+public class playerSetupException extends playerImpl {
 
-  public SetupFail_AI(String name, Strategy strategy) {
+  public playerSetupException(String name, Strategy strategy) {
     super(name, strategy);
   }
 

@@ -10,7 +10,6 @@ import Common.GameCommands.PlacementCommand;
 import Common.GameCommands.QGameCommand;
 import Common.State.GameState;
 import Common.State.PlayerState;
-import Common.State.QGameBoardState;
 import Common.Tiles.Coordinate;
 import Common.Tiles.Placement;
 import Common.Tiles.Tile;
@@ -31,17 +30,25 @@ public class RuleBook implements QRuleBook {
   private GameBoard mock;
 
   /**
-   * @return true if the given placements on the given map follow the
-   * rules of this RuleBook. See class header for placement rules.
+   * @return true if the given Placements is allowed on the given GameState
+   * 1. Does the player own the tiles?
+   * 2. are the placements in the same row or col?
+   * 3. do the placements match its neighbors?
+   * 4. are the placements adjacent to placed tiles?
    */
   @Override
-  public boolean allows(PlacementCommand cmd, GameBoard board) {
+  public boolean allows(PlacementCommand cmd, GameBoard board, List<Tile> playerTiles) {
     this.mock = new GameBoard(board.getMap());
-    if (!contiguous(cmd.placements())) {return false;}
-    for (Placement p : cmd.placements()) {
-      if (!this.matchesNeighbors(p)) {return false;}
+    if (!contiguous(cmd.getPlacements()) ||
+            !this.tileInHand(playerTiles, cmd.getPlacements())) {
+      return false;
+    }
+    for (Placement p : cmd.getPlacements()) {
+      if (!this.matchesNeighbors(p) || !mock.isEmptyAndAdjacent(p)) {
+        return false;
+      }
       try {this.mock.extend(p.coordinate(), p.tile());}
-      catch (Exception e){return false;}
+      catch (Exception e) {return false;}
     }
     return true;
   }
@@ -118,7 +125,7 @@ public class RuleBook implements QRuleBook {
    * Determines if a given placement on the map satisfies the matching rules
    * of the Q-Game.
    */
-  private boolean matchesNeighbors(Placement p) {
+  protected boolean matchesNeighbors(Placement p) {
     Coordinate[] neighbors = p.coordinate().getNeighbors(); //
     // [0] = @below, [1] = @above, [2] = @left, [3] = @right
     return matchesShapeOrColor(p.tile(), neighbors[0], neighbors[1])
@@ -130,7 +137,7 @@ public class RuleBook implements QRuleBook {
    * A set of coordinates are contiguous if they are all in either the same row
    * or the same column.
    */
-  private boolean contiguous(Queue<Placement> placements) {
+  protected boolean contiguous(Queue<Placement> placements) {
     List<Coordinate> coords = new ArrayList<>();
     for (Placement p : placements) {
       coords.add(p.coordinate());
@@ -154,7 +161,7 @@ public class RuleBook implements QRuleBook {
    * Does the given Tile have the same color as the tiles at c1 and c2 or the same shape?
    * At least c1 and c2 must have a tile.
    */
-  private boolean matchesShapeOrColor(Tile tile, Coordinate c1, Coordinate c2) {
+  protected boolean matchesShapeOrColor(Tile tile, Coordinate c1, Coordinate c2) {
     boolean matchesTile1Shape = true, matchesTile1Color = true;
     boolean matchesTile2Shape = true, matchesTile2Color = true;
     if (this.mock.containsCoord(c1)) {
@@ -169,4 +176,15 @@ public class RuleBook implements QRuleBook {
     }
     return (matchesTile1Color && matchesTile2Color) || (matchesTile1Shape && matchesTile2Shape);
   }
+
+  protected boolean tileInHand(List<Tile> tiles, Queue<Placement> placements) {
+    for (Placement p : placements) {
+      if (tiles.contains(p.tile())) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+
 }

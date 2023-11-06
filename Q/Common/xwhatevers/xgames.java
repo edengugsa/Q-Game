@@ -18,7 +18,7 @@ public class xgames {
 
   public static void main(String[] args) {
       GameState gamestate = JsonUtils.JStateToGameState(parser.next().getAsJsonObject());
-      List<player> players = JsonUtils.JActorsToAIPlayerList(parser.next().getAsJsonArray());
+      List<player> players = JsonUtils.JActorsToPlayerList(parser.next().getAsJsonArray());
       List<List<String>> results = new Referee(players, gamestate).runGame();
       System.out.println("["+JsonUtils.NamesToJNames(results.get(0)) + ", " + JsonUtils.NamesToJNames(results.get(1)) + "]");
   }
