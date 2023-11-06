@@ -36,7 +36,7 @@ public class Referee {
 
   private final QRuleBook ruleBook;
   private final Scorer scorer;
-  public GameState game; // TODO PRIVATE
+  private GameState game;
   private Map<String, player> players;
   private final List<String> disqualifiedPlayers;
 

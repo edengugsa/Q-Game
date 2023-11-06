@@ -25,7 +25,7 @@ public class GameState {
   private GameBoard board;
   private Deque<Tile> deck; // dealer's deck of tiles
   private final QRuleBook rules = new RuleBook();
-  public Stack<QGameCommand> roundHistory; // store all the commands in the current round TOOD REMOVE!!!!
+  public Stack<QGameCommand> roundHistory; // store all the commands in the current round
   public boolean playerPlacedAllTiles;
 
   /**
@@ -285,6 +285,21 @@ public class GameState {
       }
     }
     throw new IllegalArgumentException("No such player");
+  }
+
+  /**
+   * @return A copy of this GameState
+   */
+  public GameState getCopy() {
+    return new GameState(this.getCopyOfPlayerStates(), this.getGameBoard(), new ArrayDeque<>(this.deck));
+  }
+  
+  private Queue<PlayerState> getCopyOfPlayerStates() {
+    Queue<PlayerState> copy = new ArrayDeque<>();
+    for (PlayerState ps : this.players) {
+      copy.add(new PlayerStateImpl(ps.name(), ps.getHand(), ps.score()));
+    }
+    return copy;
   }
 
 
