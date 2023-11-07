@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import Common.Rendering.RenderGameState;
+import Common.Rendering.RenderObserverGameStates;
 import Common.State.GameState;
 
 /**
@@ -14,31 +15,36 @@ import Common.State.GameState;
 public class observer {
   List<GameState> gameStates;
   GameState currentGameState;
-  RenderGameState renderGameState;
+  RenderObserverGameStates renderObserverGameStates;
   private ListIterator gameStateIterator;
 
 
   public observer() {
-    gameStates = new ArrayList<>();
-    gameStateIterator = gameStates.listIterator();
+    this.gameStates = new ArrayList<>();
+    this.gameStateIterator = gameStates.listIterator();
+  }
+
+  public GameState getCurrentGameState() {
+    return currentGameState;
   }
 
 
   /**
-   * Start running the GUI. receiveState() must be called BEFORE
+   * Start showing the GUI. receiveState() must be called BEFORE
    */
   public void startGUI() {
-    // render game start
-    this.renderGameState = new RenderGameState(currentGameState);
-    this.renderGameState.setVisible(true);
+    this.renderObserverGameStates = new RenderObserverGameStates(this);
+    this.renderObserverGameStates.setVisible(true);
+    System.out.println("set gui visible");
   }
 
   public void receiveState(GameState state) {
-    gameStates.add(state);
+    this.gameStates.add(state);
   }
 
   public void gameOver() {
-    // render game over for observer
+    System.out.println("Game over");
+    this.renderObserverGameStates.notifyGameOver();
   }
 
   public GameState next() {

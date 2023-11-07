@@ -4,6 +4,7 @@ import Common.GameBoard.GameBoard;
 import Common.GameCommands.PlacementCommand;
 
 public class NonAdjacentCoordinateRuleBook extends RuleBook {
+
 //  @Override
 //  public boolean allows(PlacementCommand cmd, GameBoard board) {
 //    this.mock = new GameBoard(board.getMap());

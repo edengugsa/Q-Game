@@ -39,7 +39,7 @@ public class ExchangeCommand implements QGameCommand {
     if (obj == null) {
       return false;
     }
-    if (!(obj instanceof ExchangeCommand other)) {
+    if (!(obj instanceof ExchangeCommand)) {
       return false;
     }
     return true;

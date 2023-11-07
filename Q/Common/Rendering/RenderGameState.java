@@ -10,7 +10,7 @@ import Common.State.GameState;
  * Represents functionality to render a State. The image will display the GameBoard, the number
  * of remaining Referee tiles, as well as each player's score and Tiles.
  */
-public class RenderGameState extends JFrame {
+public class RenderGameState extends JPanel {
 
   GameState gamestate;
   GameBoardPanel gameboardPanel;
@@ -20,9 +20,7 @@ public class RenderGameState extends JFrame {
   public RenderGameState(GameState gamestate) {
     this.gamestate = gamestate;
     this.setSize(1500,1000);
-    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setLayout(new GridLayout(1,3, 20,0));
-    this.setTitle("Q Game");
     this.gameboardPanel = new GameBoardPanel(gamestate.getGameBoard());
     this.playerStatesPanel = new PlayerStatesPanel(this.gamestate.players());
     this.numRefTiles = new JLabel();
@@ -33,7 +31,7 @@ public class RenderGameState extends JFrame {
   }
 
   @Override
-  public void paint(Graphics e) {
+  public void paintComponent(Graphics e) {
     this.playerStatesPanel.updatePlayers(this.gamestate.players());
     this.playerStatesPanel.repaint();
     this.gameboardPanel.updateGameBoard(this.gamestate.getGameBoard());

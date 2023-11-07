@@ -77,10 +77,10 @@ public abstract class LexicoStrategy implements Strategy {
   /**
    * Tries to compute one Placement that adheres to the Q Game rules. Throws an exception if
    * Placement
-   * @throws IllegalStateException
+   * @throws IllegalStateException if tiles cannot be placed
    */
   private void computeOnePlacement() throws IllegalStateException {
-    for (Tile tile : this.allTiles) {
+    for (Tile tile : this.playerTiles) { // TODO non player tiles?
       for (Placement option : this.sort(mockBoard.placementAdjacentOptions(tile))) {
         placementsSoFar.add(option);
         if (this.ruleBook.allows(new PlacementCommand(placementsSoFar), this.originalBoard, this.playerTiles)) {
@@ -103,7 +103,8 @@ public abstract class LexicoStrategy implements Strategy {
    */
   private void computePlacements() {
     this.placementsSoFar = new ArrayDeque<>();
-
+    int num = 4;
+//    while (num > 0) {
     while (playerTiles.size() > 0) {
       try {
         computeOnePlacement();
