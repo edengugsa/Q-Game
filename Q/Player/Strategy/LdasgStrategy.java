@@ -24,6 +24,9 @@ public class LdasgStrategy extends LexicoStrategy {
     super(rulebook);
   }
 
+  /**
+   * Constructs a Ldasg Strategy that computes moves based on the default rulebook
+   */
   public LdasgStrategy() {
     super();
   }

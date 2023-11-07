@@ -13,6 +13,7 @@ import Common.GameCommands.PassCommand;
 import Common.GameCommands.PlacementCommand;
 import Common.GameCommands.QGameCommand;
 import Common.RuleBook.QRuleBook;
+import Common.RuleBook.RuleBook;
 import Common.State.ActivePlayerKnowledge;
 import Common.Tiles.Placement;
 import Common.Tiles.QColor;
@@ -43,12 +44,12 @@ public abstract class LexicoStrategy implements Strategy {
   protected Set<Tile> allTiles = this.allTiles();
 
 
-
   /**
    * Constructs this LexicoStrategy which will adhere to the provided QRuleBook, and make decisions
    * based on the player's list of tiles and the player's knowledge about the game.
    */
   public LexicoStrategy() {
+    this.ruleBook = new RuleBook();
     this.placementsSoFar = new ArrayDeque<>();
   }
 
@@ -75,8 +76,7 @@ public abstract class LexicoStrategy implements Strategy {
   }
 
   /**
-   * Tries to compute one Placement that adheres to the Q Game rules. Throws an exception if
-   * Placement
+   * Tries to compute one Placement that adheres to the Q Game rules.
    * @throws IllegalStateException if tiles cannot be placed
    */
   private void computeOnePlacement() throws IllegalStateException {

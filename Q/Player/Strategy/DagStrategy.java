@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import Common.RuleBook.QRuleBook;
+import Common.RuleBook.RuleBook;
 import Common.Tiles.Placement;
 
 /**
@@ -20,6 +21,9 @@ public class DagStrategy extends LexicoStrategy  {
     super(rulebook);
   }
 
+  /**
+   *    * Constructs a DagStrategy that computes GameCommands that adhere to the default Rules.
+   */
   public DagStrategy() {
     super();
   }

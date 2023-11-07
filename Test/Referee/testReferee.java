@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Queue;
 
 
+import javax.swing.*;
+
 import Common.GameBoard.GameBoard;
 import Common.JsonUtils;
 import Common.RuleBook.RuleBook;
@@ -39,7 +41,7 @@ public class testReferee {
     this.ref = new Referee(players, new RuleBook());
   }
 
-  public void initRefWithObservers() {
+  public static Referee initRefWithObservers() {
     List<player> players = new ArrayList<>();
     players.add(new playerImpl("Allen", new LdasgStrategy(new RuleBook())));
     players.add(new playerImpl("Bethany", new DagStrategy(new RuleBook())));
@@ -48,7 +50,7 @@ public class testReferee {
     List<observer> observers = new ArrayList<>();
     observers.add(new observer());
 
-    this.ref = new Referee(players, observers, new RuleBook());
+    return new Referee(players, observers, new RuleBook());
   }
 
   public Referee initRefCheaters() {
@@ -144,7 +146,20 @@ public class testReferee {
     winners.add("Cindy");
     expected.add(winners);
     expected.add(new ArrayList<>());
+
     assertEquals(expected, output);
+  }
+
+
+  public static void main(String[] args) {
+    Referee ref = initRefWithObservers();
+    List<List<String>> output = ref.runGame();
+    List<List<String>> expected = new ArrayList<>();
+    List<String> winners = new ArrayList<>();
+    winners.add("Cindy");
+    expected.add(winners);
+    expected.add(new ArrayList<>());
+
   }
 
 

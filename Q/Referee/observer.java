@@ -16,7 +16,7 @@ public class observer {
   List<GameState> gameStates;
   GameState currentGameState;
   RenderObserverGameStates renderObserverGameStates;
-  private ListIterator gameStateIterator;
+  private ListIterator<GameState> gameStateIterator;
 
 
   public observer() {
@@ -28,18 +28,25 @@ public class observer {
     return currentGameState;
   }
 
+  public void setup(GameState gameState) {
+    this.currentGameState = gameState;
+    this.receiveState(gameState);
+    this.startGUI();
+  }
 
   /**
    * Start showing the GUI. receiveState() must be called BEFORE
    */
-  public void startGUI() {
+  private void startGUI() {
     this.renderObserverGameStates = new RenderObserverGameStates(this);
     this.renderObserverGameStates.setVisible(true);
-    System.out.println("set gui visible");
   }
 
+  /**
+   * Receive a new GameState from the Referee
+   */
   public void receiveState(GameState state) {
-    this.gameStates.add(state);
+    this.gameStateIterator.add(state);
   }
 
   public void gameOver() {
@@ -48,8 +55,12 @@ public class observer {
   }
 
   public GameState next() {
+
+//    List<GameState> gameStatesCopy = new ArrayList<>(this.gameStates);
+//    ListIterator<GameState> iterator = gameStatesCopy.listIterator();
+
     if(gameStateIterator.hasNext()) {
-      GameState next = (GameState) gameStateIterator.next();
+      GameState next = gameStateIterator.next();
       currentGameState = next;
       return currentGameState;
     }
@@ -59,8 +70,12 @@ public class observer {
   }
 
   public GameState previous() {
-    if(gameStateIterator.hasPrevious()) {
-      GameState prev = (GameState) gameStateIterator.previous();
+//    List<GameState> gameStatesCopy = new ArrayList<>(this.gameStates);
+//    ListIterator<GameState> iterator = gameStatesCopy.listIterator();
+//    int i = gameStatesCopy.indexOf(currentGameState);
+//    iterator.
+    if(this.gameStateIterator.hasPrevious()) {
+      GameState prev = gameStateIterator.previous();
       currentGameState = prev;
       return currentGameState;
     }

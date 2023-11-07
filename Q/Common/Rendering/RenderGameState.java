@@ -11,7 +11,6 @@ import Common.State.GameState;
  * of remaining Referee tiles, as well as each player's score and Tiles.
  */
 public class RenderGameState extends JPanel {
-
   GameState gamestate;
   GameBoardPanel gameboardPanel;
   PlayerStatesPanel playerStatesPanel;
@@ -28,6 +27,10 @@ public class RenderGameState extends JPanel {
     this.add(this.playerStatesPanel);
     this.add(numRefTiles);
     this.setVisible(true);
+  }
+
+  public void updateGameState(GameState gs) {
+    this.gamestate = gs;
   }
 
   @Override

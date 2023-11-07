@@ -40,9 +40,9 @@ public class RuleBook implements QRuleBook {
   public boolean allows(PlacementCommand cmd, GameBoard board, List<Tile> playerTiles) {
     this.mock = new GameBoard(board.getMap());
     if (!contiguous(cmd.getPlacements()) ||
-            !this.tileInHand(playerTiles, cmd.getPlacements())) {
-      return false;
-    }
+           !this.isTileInHand(playerTiles, cmd.getPlacements())) {
+              return false;
+          }
     for (Placement p : cmd.getPlacements()) {
       if (!this.matchesNeighbors(p) || !mock.isEmptyAndAdjacent(p)) {
         return false;
@@ -177,13 +177,13 @@ public class RuleBook implements QRuleBook {
     return (matchesTile1Color && matchesTile2Color) || (matchesTile1Shape && matchesTile2Shape);
   }
 
-  protected boolean tileInHand(List<Tile> tiles, Queue<Placement> placements) {
+  protected boolean isTileInHand(List<Tile> tiles, Queue<Placement> placements) {
     for (Placement p : placements) {
       if (tiles.contains(p.tile())) {
-        return false;
+        return true;
       }
     }
-    return true;
+    return false;
   }
 
 

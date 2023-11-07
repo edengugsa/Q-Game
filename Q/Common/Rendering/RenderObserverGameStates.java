@@ -3,9 +3,7 @@ package Common.Rendering;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import Referee.observer;
-
 import javax.swing.*;
 
 import Common.State.GameState;
@@ -20,25 +18,37 @@ public class RenderObserverGameStates extends JFrame {
  observer observer;
  RenderGameState renderGameState;
 
+  private JButton next;
+  private JButton prev;
+  private JButton save;
+
+
 
   public RenderObserverGameStates(observer observer) {
     this.observer = observer;
     this.setSize(1500,2000);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    this.setLayout(new GridLayout(2,1, 20,0));
+    this.setLayout(new GridLayout(2,3, 20,0));
     this.setTitle("Observer");
 
     this.buttons = new RenderObserverButtons();
     this.add(this.buttons);
-    this.buttons.setVisible(true);
     this.renderGameState = new RenderGameState(observer.getCurrentGameState());
+    this.add(this.renderGameState);
     this.renderGameState.setVisible(true);
   }
 
   public void renderNextGameState() {
     try {
+
+//      this.renderGameState.updateGameState(observer.next());
+//      this.repaint();
+//      this.setVisible(true);
       GameState gs =  observer.next();
+      this.remove(renderGameState);
       renderGameState = new RenderGameState(gs);
+      this.add(renderGameState);
+      this.renderGameState.setVisible(true);
       this.repaint();
     }
     catch (Exception e) {
@@ -59,7 +69,10 @@ public class RenderObserverGameStates extends JFrame {
   public void renderPrevGameState() {
     try {
       GameState gs =  observer.previous();
+      this.remove(renderGameState);
       renderGameState = new RenderGameState(gs);
+      this.add(renderGameState);
+      this.renderGameState.setVisible(true);
       this.repaint();
     }
     catch (Exception e) {
@@ -82,7 +95,7 @@ public class RenderObserverGameStates extends JFrame {
     private JButton save;
 
     public RenderObserverButtons() {
-      this.setLayout(new GridLayout(3,1));
+      this.setLayout(new GridLayout(1,3));
       this.next = new JButton("next");
       this.prev = new JButton("prev");
       this.save = new JButton("save");
@@ -102,6 +115,15 @@ public class RenderObserverGameStates extends JFrame {
           saveGameState();
         }
       });
+      this.prev.setBounds(20, 20, 100, 30);
+      this.prev.setBounds(140, 20, 100, 30);
+      this.prev.setBounds(260, 20, 100, 30);
+      this.add(this.prev);
+      this.add(this.next);
+      this.add(this.save); // TODO fix formating
+      this.setSize(1000,40);
+      this.setVisible(true);
+
     }
   }
 }

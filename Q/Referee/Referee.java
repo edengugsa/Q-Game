@@ -94,8 +94,10 @@ public class Referee {
 
   private void runGameHelper() {
     while (!ruleBook.gameOver(game)) {
-      sendObserversNewGameState(game);
+
+//      catchBreath(3); // TODO REMOE
       this.currentPlayerTakeTurn();
+      sendObserversNewGameState(game.getCopy());
       if (ruleBook.gameOver(game)) {
         break;
       }
@@ -106,6 +108,7 @@ public class Referee {
   private void sendObserversNewGameState(GameState newGs) {
     for (observer o : this.observers) {
       try {
+
         o.receiveState(newGs);
       }
       catch (Exception e) {
@@ -116,6 +119,7 @@ public class Referee {
   }
 
   private void tellObserversGameOver() {
+    sendObserversNewGameState(game);
     for (observer o : this.observers) {
       try {
         o.gameOver();
@@ -128,6 +132,7 @@ public class Referee {
 
 
   private void currentPlayerTakeTurn(){
+
     try {
       QGameCommand cmd = currentPlayer().takeTurn(game.getActivePlayerKnowledge());
       if (cmd.isLegal(ruleBook, game)) {
@@ -206,13 +211,12 @@ public class Referee {
   private void setupObservers() {
     for (observer o : this.observers) {
       try {
-        o.receiveState(this.game);
+        o.setup(this.game.getCopy());
         System.out.println("calling startGui on ovserver");
-        o.startGUI();
       }
       catch (Exception e) {
         this.observers.remove(o);
-        System.out.println("Removed observer in setup");
+        System.out.println(e.getMessage());
       }
     }
   }

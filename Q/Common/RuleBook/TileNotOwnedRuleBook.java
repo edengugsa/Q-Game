@@ -11,8 +11,8 @@ import Common.Tiles.Tile;
  */
 public class TileNotOwnedRuleBook extends RuleBook {
   @Override
-  protected boolean tileInHand(List<Tile> tiles, Queue<Placement> placements) {
-    return !super.tileInHand(tiles, placements);
+  protected boolean isTileInHand(List<Tile> tiles, Queue<Placement> placements) {
+    return !super.isTileInHand(tiles, placements);
   }
 
 }
