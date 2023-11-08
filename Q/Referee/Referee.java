@@ -94,10 +94,10 @@ public class Referee {
 
   private void runGameHelper() {
     while (!ruleBook.gameOver(game)) {
-
+      sendObserversNewGameState(game.getCopy());
 //      catchBreath(3); // TODO REMOE
       this.currentPlayerTakeTurn();
-      sendObserversNewGameState(game.getCopy());
+
       if (ruleBook.gameOver(game)) {
         break;
       }
