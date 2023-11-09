@@ -175,7 +175,7 @@ public class Referee {
    * Tell Players if they won or not. If th winning player throws an exception, they're removed.
    */
   private void tellPlayersGameResult(List<String> winners) {
-    Set<String> names = new HashSet<>(this.game.getPlayersNames());
+    List<String> names = new ArrayList<>(this.game.getPlayersNames());
     for (String name : names) {
       player player = this.players.get(name);
       try {

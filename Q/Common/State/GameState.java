@@ -23,6 +23,7 @@ public class GameState {
 
   private final Queue<PlayerState> players;
   private GameBoard board;
+
   private Deque<Tile> deck; // dealer's deck of tiles
   private final QRuleBook rules = new RuleBook();
   public Stack<QGameCommand> roundHistory; // store all the commands in the current round
@@ -330,8 +331,8 @@ public class GameState {
     buildDeck();
   }
 
-  public Set<String> getPlayersNames() {
-    Set<String> names = new HashSet<>();
+  public List<String> getPlayersNames() {
+    List<String> names = new ArrayList<>();
     for (PlayerState p : this.players) {
       names.add(p.name());
     }
@@ -344,6 +345,10 @@ public class GameState {
 
   public void renewPlayerTiles(QGameCommand cmd) {
     cmd.renewPlayerTiles(this);
+  }
+
+  public Deque<Tile> getDeck() {
+    return new ArrayDeque<>(this.deck);
   }
 
 

@@ -108,10 +108,10 @@ public class JsonUtils {
     }
     JsonArray cheaters = new JsonArray();
     for (String cheater : w.cheaters) {
-      winners.add(cheater);
+      cheaters.add(cheater);
     }
-    res.addAll(winners);
-    res.addAll(cheaters);
+    res.add(winners);
+    res.add(cheaters);
     return res;
   }
 

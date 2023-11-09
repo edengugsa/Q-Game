@@ -48,10 +48,13 @@ public class PlayerStatePanel extends JPanel {
    */
   public BufferedImage toPng() {
     BufferedImage playerTilesImage = new GameBoardPainter(this.createGameBoardFromTiles(this.playerState.getHand()).getMap()).reveal();
-    BufferedImage combined = new BufferedImage(playerTilesImage.getWidth(), playerTilesImage.getHeight() + TEXT_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+    BufferedImage combined = new BufferedImage(playerTilesImage.getWidth(), playerTilesImage.getHeight() + TEXT_HEIGHT, BufferedImage.TYPE_INT_RGB);
     Graphics g = combined.getGraphics();
+    g.setColor(Color.PINK);
+    g.fillRect(0, 0, combined.getWidth(), combined.getHeight());
+    g.setColor(Color.BLACK);
     g.drawString("Name: " + playerState.name() + "   Score: " + playerState.score() +
-            "   Tiles Remaining: " + playerState.tilesRemaining(), 0, 0);
+            "   Tiles Remaining: " + playerState.tilesRemaining(), 10, 50);
     g.drawImage(playerTilesImage, 0, TEXT_HEIGHT, null);
     return combined;
   }

@@ -27,7 +27,7 @@ public class XGamesWithObservers {
     List<player> players = JsonUtils.JActorsToPlayerList(parser.next().getAsJsonArray());
 
     List<observer> observers = new ArrayList<>();
-    if (args.length > 1 && args[1].equals("--show")) { // TODO test this works
+    if (args.length > 0 && args[0].equals("–show")) { // TODO test this works
       observers.add(new observer());
     }
 

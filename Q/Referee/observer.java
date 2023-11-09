@@ -70,14 +70,12 @@ public class observer {
 //    if (!tmp.exists()){
 //      tmp.mkdirs();
 //    }
-    String fileName = Integer.toString(idx) + ".png";
-
+    String fileName = "Tmp/" + idx + ".png";
     try {
-      File outputfile = new File(fileName);
-      ImageIO.write(new RenderGameState(state).toPng(), ".png", outputfile);
+      ImageIO.write(new RenderGameState(state).toPng(), "png", new File(fileName));
     }
     catch(Exception e) {
-      System.out.println("Could not save game state " + fileName + ": " + e.toString());
+      System.out.println("Could not save game state " + fileName + ": " + e);
     }
   }
 

@@ -23,11 +23,11 @@ public class xgames {
 
       List<player> players = JsonUtils.JActorsToPlayerList(parser.next().getAsJsonArray());
 
-      // TODO REMOVE OBSERVER
-      List<observer> observers = new ArrayList<>();
-      observers.add(new observer());
+//      // TODO REMOVE OBSERVER
+//      List<observer> observers = new ArrayList<>();
+//      observers.add(new observer());
 
-      WinnersAndCheaters results = new Referee(players, observers, gamestate).runGame();
+      WinnersAndCheaters results = new Referee(players, gamestate).runGame();
       System.out.println(JsonUtils.WinnersAndCheatersToJson(results));
   }
 }

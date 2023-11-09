@@ -47,8 +47,10 @@ public class PlayerStatesPanel extends JPanel {
     int width = 50 * 6;
     int height = this.playerToPanel.size() * (70+50 + 10);
 
-    BufferedImage combined = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    BufferedImage combined = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     Graphics g = combined.getGraphics();
+    g.setColor(Color.PINK);
+    g.fillRect(0, 0, combined.getWidth(), combined.getHeight());
 
     int i = 0;
     for (PlayerStatePanel ps : this.playerToPanel.values()) {
