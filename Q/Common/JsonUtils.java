@@ -32,6 +32,7 @@ import Player.playerSetupException;
 import Player.Strategy.Strategy;
 import Player.playerTakeTurnException;
 import Player.playerWinException;
+import Referee.WinnersAndCheaters;
 
 public class JsonUtils {
 
@@ -72,6 +73,12 @@ public class JsonUtils {
       players.add(JActorSpecToPlayer(JActorSpec.getAsJsonArray()));
     }
     return players;
+  }
+
+
+  public static JsonArray WinnersAndCheatersToJson(WinnersAndCheaters w) {
+    JsonArray res = new JsonArray();
+    res.addAll(new JsonArray(w.winners));
   }
 
 

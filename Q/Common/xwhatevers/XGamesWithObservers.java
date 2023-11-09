@@ -1,11 +1,36 @@
 package Common.xwhatevers;
 
+import com.google.gson.JsonStreamParser;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import Common.JsonUtils;
+import Common.State.GameState;
+import Player.player;
+import Referee.Referee;
+import Referee.observer;
+
 /**
  * Takes in a JState and JActorSpecA
  */
 public class XGamesWithObservers {
 
-  public static void main(String[] args) {
+  private static final JsonStreamParser parser
+          = new JsonStreamParser(new BufferedReader(new InputStreamReader(System.in)));
 
+  public static void main(String[] args) {
+    GameState gamestate = JsonUtils.JStateToGameState(parser.next().getAsJsonObject());
+    List<player> players = JsonUtils.JActorsToPlayerList(parser.next().getAsJsonArray());
+
+    List<observer> observers = new ArrayList<>();
+    if (args.length > 1) {
+      observers.add(new observer());
+    }
+
+    List<List<String>> results = new Referee(players, observers, gamestate).runGame();
+    System.out.println("[" + JsonUtils.NamesToJNames(results.get(0)) + ", " + JsonUtils.NamesToJNames(results.get(1)) + "]");
   }
 }

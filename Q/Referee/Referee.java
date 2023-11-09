@@ -89,12 +89,12 @@ public class Referee {
   /**
    * Runs a single game to completion according to the rules of The Q Game.
    */
-  public List<List<String>> runGame() {
+  public WinnersAndCheaters runGame() {
     this.setupPlayersAndObservers();
     this.runGameHelper();
     this.tellObserversGameOver();
-    List<List<String>> winnersAndCheaters = this.generateResults();
-    this.tellPlayersGameResult(winnersAndCheaters.get(0));
+    WinnersAndCheaters winnersAndCheaters = this.generateResults();
+    this.tellPlayersGameResult(winnersAndCheaters.winners);
     return winnersAndCheaters;
   }
 
@@ -187,13 +187,19 @@ public class Referee {
     }
   }
 
-  private List<List<String>> generateResults() {
-    List<List<String>> results = new ArrayList<>();
+//  private List<List<String>> generateResults() {
+//    List<List<String>> results = new ArrayList<>();
+//    List<String> winners = ruleBook.determineWinners(game.players());
+//    Collections.sort(winners); // TODO Move to xgames
+//    results.add(winners);
+//    results.add(disqualifiedPlayers);
+//    return results;
+//  }
+
+  private WinnersAndCheaters generateResults() {
     List<String> winners = ruleBook.determineWinners(game.players());
     Collections.sort(winners); // TODO Move to xgames
-    results.add(winners);
-    results.add(disqualifiedPlayers);
-    return results;
+    return new WinnersAndCheaters(winners, disqualifiedPlayers);
   }
 
   /**
