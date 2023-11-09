@@ -97,7 +97,8 @@ public class JsonUtils {
 
   public static JsonArray WinnersAndCheatersToJson(WinnersAndCheaters w) {
     JsonArray res = new JsonArray();
-    res.addAll(new JsonArray(w.winners));
+//    res.addAll(new JsonArray(w.winners)); TOOD FINISH
+    return res;
   }
 
 

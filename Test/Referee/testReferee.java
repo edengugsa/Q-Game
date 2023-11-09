@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Queue;
 
 
-import javax.swing.*;
 
 import Common.GameBoard.GameBoard;
 import Common.JsonUtils;
@@ -111,54 +110,42 @@ public class testReferee {
 
   @Test
   public void testRunGameResults() {
-    List<List<String>> output = this.ref.runGame();
-    List<List<String>> expected = new ArrayList<>();
+    WinnersAndCheaters output = this.ref.runGame();
     List<String> winners = new ArrayList<>();
     winners.add("Cindy");
-    expected.add(winners);
-    expected.add(new ArrayList<>());
-    assertEquals(expected, output);
+    assertEquals(new WinnersAndCheaters(winners, new ArrayList<>()), output);
   }
 
 
   @Test
   public void testFailState() {
     Referee ref = this.initRefCheaters();
-    List<List<String>> output = ref.runGame();
+    WinnersAndCheaters res = ref.runGame();
 
-    List<List<String>> expected = new ArrayList<>();
     List<String> winners = new ArrayList<>();
-    expected.add(winners);
     List<String> disqualified = new ArrayList<>();
     disqualified.add("Allen");
     disqualified.add("Bethany");
     disqualified.add("Cindy");
-    expected.add(disqualified);
-    assertEquals(expected, output);
+    assertEquals(new WinnersAndCheaters(winners, disqualified), res);
   }
 
   @Test
   public void testRefereeWithObservers() {
     this.initRefWithObservers();
-    List<List<String>> output = this.ref.runGame();
-    List<List<String>> expected = new ArrayList<>();
+    WinnersAndCheaters output = this.ref.runGame();
     List<String> winners = new ArrayList<>();
     winners.add("Cindy");
-    expected.add(winners);
-    expected.add(new ArrayList<>());
 
-    assertEquals(expected, output);
+    assertEquals(new WinnersAndCheaters(winners, new ArrayList<>()), output);
   }
 
 
   public static void main(String[] args) {
     Referee ref = initRefWithObservers();
-    List<List<String>> output = ref.runGame();
-    List<List<String>> expected = new ArrayList<>();
+    WinnersAndCheaters output = ref.runGame();
     List<String> winners = new ArrayList<>();
     winners.add("Cindy");
-    expected.add(winners);
-    expected.add(new ArrayList<>());
 
   }
 
