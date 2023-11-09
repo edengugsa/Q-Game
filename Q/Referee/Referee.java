@@ -4,9 +4,11 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import Common.GameCommands.QGameCommand;
@@ -44,6 +46,9 @@ public class Referee {
    * FOR TESTING. Resumes a Game from a previous state.
    */
   public Referee(List<player> players, GameState game) {
+    if (players.size() < 2 || players.size() > 4) {
+      throw new IllegalStateException("Must have 2-4 players to begin game.");
+    }
     if (players.size() != game.numPlayers()) {
       throw new IllegalStateException("Players and State aren't consistent");
     }
@@ -53,20 +58,21 @@ public class Referee {
     this.scorer = new Scorer();
     this.disqualifiedPlayers = new ArrayList<>();
     this.observers = new ArrayList<>();
-    this.setupPlayersAndObservers();
   }
 
   /**
    * Starts a QGame with a list of players and RuleBook.
    */
   public Referee(List<player> players, QRuleBook ruleBook) {
+    if (players.size() < 2 || players.size() > 4) {
+      throw new IllegalStateException("Must have 2-4 players to begin game.");
+    }
     this.ruleBook = ruleBook;
     this.scorer = new Scorer();
     this.disqualifiedPlayers = new ArrayList<>();
     this.observers = new ArrayList<>();
     this.setNameToPlayersMap(players);
     this.setGame();
-
   }
 
   public Referee(List<player> players, List<observer> observers, GameState game) {
@@ -94,21 +100,19 @@ public class Referee {
 
   private void runGameHelper() {
     while (!ruleBook.gameOver(game)) {
-      sendObserversNewGameState(game.getCopy());
-//      catchBreath(3); // TODO REMOE
-      this.currentPlayerTakeTurn();
 
+//      catchBreath(3); // TODO REMOVE
+      this.currentPlayerTakeTurn();
+      sendObserversNewGameState(game.getCopy());
       if (ruleBook.gameOver(game)) {
         break;
       }
-      game.bump();
     }
   }
 
   private void sendObserversNewGameState(GameState newGs) {
     for (observer o : this.observers) {
       try {
-
         o.receiveState(newGs);
       }
       catch (Exception e) {
@@ -136,9 +140,15 @@ public class Referee {
     try {
       QGameCommand cmd = currentPlayer().takeTurn(game.getActivePlayerKnowledge());
       if (cmd.isLegal(ruleBook, game)) {
+//        System.out.println(currentPlayer().name() + ": " + cmd);
         game.execute(cmd);
         game.score(cmd, this.scorer);
+        if (game.currentPlayer().getHand().isEmpty()) {
+          return;
+        }
+        game.renewPlayerTiles(cmd);
         updatePlayer();
+        game.bump();
       }
       else {
         disqualify();
@@ -161,18 +171,18 @@ public class Referee {
   }
 
   /**
-   * Tell Players if they won or not. If a Player raises an exception, the winners will be
-   * recalculated
+   * Tell Players if they won or not. If th winning player throws an exception, they're removed.
    */
   private void tellPlayersGameResult(List<String> winners) {
-
-    for (player p : this.players.values()) {
+    Set<String> names = new HashSet<>(this.game.getPlayersNames());
+    for (String name : names) {
+      player player = this.players.get(name);
       try {
-        p.win(winners.contains(p.name()));
+        player.win(winners.contains(player.name()));
       }
       catch (Exception e) {
-        winners.remove(p.name());
-        disqualify(p.name());
+        disqualify(name);
+        winners.remove(name);
       }
     }
   }
@@ -222,9 +232,11 @@ public class Referee {
   }
 
   private void setupPlayers() {
-    for (player p : this.players.values()) {
+    int numPlayers = this.game.numPlayers();
+    for (int i = 0; i < numPlayers; i++) {
       try {
-        p.setup(game.getGameBoard(), game.currentPlayerTiles());
+        player actualPlayer = this.players.get(game.currentPlayerName());
+        actualPlayer.setup(game.getGameBoard(), game.currentPlayerTiles());
         game.bump();
       }
       catch (Exception e) {
@@ -250,9 +262,7 @@ public class Referee {
    * Disqualifies the current player. Goes to the next Player in State.
    */
   private void disqualify() {
-    game.addToRefDeck(game.currentPlayerTiles());
-    disqualifiedPlayers.add(game.currentPlayerName());
-    game.removeCurrentPlayer();
+    disqualify(game.currentPlayerName());
   }
 
   private void disqualify(String playerName) {
