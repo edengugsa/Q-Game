@@ -64,6 +64,25 @@ public class JsonUtils {
     return new GameState(players, JMapToGameBoard(jState.getAsJsonArray("map")), deck);
   }
 
+//  public static JsonObject GameStateToJState(GameState state) {
+//    JsonObject jsonObj = new JsonObject();
+//    jsonObj.add("map", HashMapToJMap(state.board()));
+//    jsonObj.addProperty("tile*", refTilesToJTileArray(state.getRefDeck()));
+//    jsonObj.addProperty("players", playerStatesToJPlayersArray(state.players()));
+//    return jsonObj;
+//  }
+//
+//  public static JsonArray refTilesToJTileArray(Deque<Tile> tiles) {
+//    JsonArray jsonArr = new JsonArray();
+//
+//  }
+//
+//  public static JsonArray playerStatesToJPlayersArray(List<PlayerState> players) {
+//    JsonArray jsonArr = new JsonArray();
+//
+//  }
+
+
   public static List<player> JActorsToPlayerList(JsonArray JActors) {
     if (JActors.size() < 2 || JActors.size() > 4) {
       throw new IllegalArgumentException("Only 2-4 players are allowed.");

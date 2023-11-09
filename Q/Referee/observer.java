@@ -1,8 +1,13 @@
 package Referee;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import Common.JsonUtils;
 import Common.Rendering.RenderObserverGameStates;
 import Common.State.GameState;
 
@@ -74,8 +79,9 @@ public class observer {
     }
   }
 
-  public void save(String fileName) {
-    // TODO save gameState
+  public void save(String fileName) throws IOException {
+    JsonObject stateToSave = JsonUtils.GameStateToJState(gameStates.get(this.currentGameStateIdx));
+    Gson gson = new Gson();
+    gson.toJson(stateToSave, new FileWriter(fileName));
   }
-
 }

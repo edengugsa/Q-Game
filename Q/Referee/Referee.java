@@ -138,6 +138,7 @@ public class Referee {
   private void currentPlayerTakeTurn(){
 
     try {
+      String name = currentPlayer().name();
       QGameCommand cmd = currentPlayer().takeTurn(game.getActivePlayerKnowledge());
       if (cmd.isLegal(ruleBook, game)) {
 //        System.out.println(currentPlayer().name() + ": " + cmd);
