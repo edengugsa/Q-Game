@@ -1,6 +1,7 @@
 package Common.Rendering;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,11 +22,14 @@ public class PlayerStatePanel extends JPanel {
   private GameBoardPanel tiles;
   private boolean disqualified;
 
+  private static int WIDTH = 400;
+  private static int HEIGHT = 400;
+
   public PlayerStatePanel(PlayerState playerState) {
     this.playerState = playerState;
     this.setLayout(new GridLayout(2, 1, 0, 0));
     nameScoreTilesRemaining = new JLabel();
-    tiles = new GameBoardPanel(this.createGameBoardFromTiles(this.playerState.getHand()));
+    this.tiles = new GameBoardPanel(this.createGameBoardFromTiles(this.playerState.getHand()), WIDTH, HEIGHT);
     this.add(nameScoreTilesRemaining);
     this.add(tiles);
     this.disqualified = false;
@@ -53,6 +57,7 @@ public class PlayerStatePanel extends JPanel {
    * and go in the right direction.
    */
   private GameBoard createGameBoardFromTiles(List<Tile> tiles) {
+    tiles.sort(Tile.TileComparator);
     HashMap<Coordinate, Tile> tilesHashmap = new HashMap<Coordinate,Tile>();
     for (int i = 0; i < tiles.size(); i++) {
       tilesHashmap.put(new Coordinate(i, 0), tiles.get(i));

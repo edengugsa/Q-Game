@@ -56,10 +56,10 @@ public class GameBoard {
     return new HashMap<>(this.board); // returns a new copy, not the actual instance.
   }
 
-  public int getNumNeighbors(Coordinate coordinate) {
+  public int getNumFreeNeighbors(Coordinate coordinate) {
     int count = 0;
     for (Coordinate c : coordinate.getNeighbors()) {
-      if (this.containsCoord(c)) {
+      if (!this.containsCoord(c)) {
         count++;
       }
     }

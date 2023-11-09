@@ -24,6 +24,11 @@ public class PassCommand implements QGameCommand {
   @Override
   public void score (GameState game, Scorer scorer) {}
 
+  @Override
+  public void renewPlayerTiles(GameState game) {
+    // nothing
+  }
+
   public boolean equals(Object obj) {
     if (obj == null) {
       return false;

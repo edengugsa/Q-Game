@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import Common.RuleBook.QRuleBook;
+import Common.Tiles.Coordinate;
 import Common.Tiles.Placement;
 
 
@@ -31,12 +32,13 @@ public class LdasgStrategy extends LexicoStrategy {
     super();
   }
 
+
   /**
    * @return a list of placements sorted by this LdasgStrategy's comparator. 
    */
-  protected List<Placement> sort(List<Placement> placements) {
-    Collections.sort(placements, this.neighborsComparator);
-    return placements;
+  protected List<Coordinate> sort(List<Coordinate> coordinates) {
+    Collections.sort(coordinates, this.neighborsComparator);
+    return coordinates;
   }
 
   /**
@@ -44,7 +46,7 @@ public class LdasgStrategy extends LexicoStrategy {
    * Sorts Placements first by the most existing number of neighbors, and ties are broken using the 
    * row-column order of coordinates.
    */
-  private Comparator<Placement> neighborsComparator = Comparator
-          .comparing((Placement p) -> this.currentState.getBoard().getNumNeighbors(p.coordinate())).reversed()
-          .thenComparing(Placement::coordinate);
+  private  Comparator<Coordinate> neighborsComparator = Comparator
+          .comparing((Coordinate c) -> this.mockBoard.getNumFreeNeighbors(c))
+          .thenComparing(CoordinateComparator);
 }

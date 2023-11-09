@@ -7,7 +7,6 @@ import Referee.observer;
 import javax.swing.*;
 
 import Common.State.GameState;
-import Referee.observer;
 
 /**
  * Renders a component that lets an Observer browse through GameStates and save a
@@ -17,12 +16,6 @@ public class RenderObserverGameStates extends JFrame {
  RenderObserverButtons buttons;
  observer observer;
  RenderGameState renderGameState;
-
-  private JButton next;
-  private JButton prev;
-  private JButton save;
-
-
 
   public RenderObserverGameStates(observer observer) {
     this.observer = observer;
@@ -40,44 +33,38 @@ public class RenderObserverGameStates extends JFrame {
 
   public void renderNextGameState() {
     try {
-
-//      this.renderGameState.updateGameState(observer.next());
-//      this.repaint();
-//      this.setVisible(true);
-      GameState gs =  observer.next();
-      this.remove(renderGameState);
-      renderGameState = new RenderGameState(gs);
-      this.add(renderGameState);
-      this.renderGameState.setVisible(true);
-      this.repaint();
+      this.renderGameState(observer.next());
     }
     catch (Exception e) {
       this.noNextOrPrev(e.getMessage());
     }
   }
 
+  public void renderPrevGameState() {
+    try {
+      this.renderGameState(observer.previous());
+    }
+    catch (Exception e) {
+      this.noNextOrPrev(e.getMessage());
+    }
+  }
+
+  private void renderGameState(GameState gs) {
+    this.remove(renderGameState);
+    renderGameState = new RenderGameState(gs);
+    this.add(renderGameState);
+    this.renderGameState.setVisible(true);
+    this.repaint();
+  }
+
   public void notifyGameOver() {
-//    JOptionPane.showMessageDialog(this, "Game is over",
-//            "Game over", JOptionPane.INFORMATION_MESSAGE);
+    JOptionPane.showMessageDialog(this, "Game is over",
+            "Game over", JOptionPane.INFORMATION_MESSAGE);
   }
 
   private void noNextOrPrev(String msg) {
     JOptionPane.showMessageDialog(this, msg,
             "Observer Button Malfunction", JOptionPane.ERROR_MESSAGE);
-  }
-
-  public void renderPrevGameState() {
-    try {
-      GameState gs =  observer.previous();
-      this.remove(renderGameState);
-      renderGameState = new RenderGameState(gs);
-      this.add(renderGameState);
-      this.renderGameState.setVisible(true);
-      this.repaint();
-    }
-    catch (Exception e) {
-      this.noNextOrPrev(e.getMessage());
-    }
   }
 
   public void saveGameState() {

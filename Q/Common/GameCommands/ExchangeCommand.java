@@ -32,7 +32,12 @@ public class ExchangeCommand implements QGameCommand {
   }
 
   @Override
-  public void score (GameState game, Scorer scorer) {}
+  public void score(GameState game, Scorer scorer) {}
+
+  @Override
+  public void renewPlayerTiles(GameState game) {
+    // nothing
+  }
 
   @Override
   public boolean equals(Object obj) {

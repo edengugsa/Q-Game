@@ -5,6 +5,7 @@ import java.util.List;
 
 import Common.RuleBook.QRuleBook;
 import Common.RuleBook.RuleBook;
+import Common.Tiles.Coordinate;
 import Common.Tiles.Placement;
 
 /**
@@ -32,15 +33,15 @@ public class DagStrategy extends LexicoStrategy  {
   /**
    * @return a list of Placements sorted by this DagStrategy's Placement comparator
    */
-  protected List<Placement> sort(List<Placement> placements) {
-    Collections.sort(placements, this.DagComparator);
-    return placements;
+  protected List<Coordinate> sort(List<Coordinate> coordinate) {
+    Collections.sort(coordinate, this.DagComparator);
+    return coordinate;
   }
 
   /**
    * Represents this DagStrategy's comparator for sorting Placements. Placement p1 is less than Placement p2 if p1's Coordinate
    * is less than p2's Coordinate.
    */
-  private final Comparator<? super Placement>
-          DagComparator = Comparator.comparing(Placement::coordinate);
+  private final Comparator<? super Coordinate>
+          DagComparator = CoordinateComparator;
 }

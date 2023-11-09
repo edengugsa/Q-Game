@@ -39,12 +39,16 @@ public class PlacementCommand implements QGameCommand {
   @Override
   public void execute(GameState game) {
       game.place(this.placements);
-      game.renewPlayerTiles(this.placements.size());
   }
 
   @Override
   public void score(GameState game, Scorer scorer) {
     game.updateScore(scorer.scorePlacement(this.placements, game.getGameBoard(), game.playerPlacedAllTiles));
+  }
+
+  @Override
+  public void renewPlayerTiles(GameState game) {
+    game.renewPlayerTiles(this.placements.size());
   }
 
   @Override

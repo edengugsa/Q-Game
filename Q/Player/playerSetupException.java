@@ -16,7 +16,7 @@ public class playerSetupException extends playerImpl {
 
   @Override
   public void setup(GameBoard board, List<Tile> hand) {
-    throw new IllegalStateException("whoops!");
+    throw new IllegalStateException("Setup exc");
   }
 
 }

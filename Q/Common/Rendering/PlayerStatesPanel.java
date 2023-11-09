@@ -11,7 +11,8 @@ import javax.swing.*;
 import Common.State.PlayerState;
 
 /**
- * Renders information about all the Players. Renders a Player's score, name, and Tiles.
+ * Renders information about all the Players. Renders a Player's score, name, and Tiles in order
+ * from least to greatest.
  */
 public class PlayerStatesPanel extends JPanel {
   private Map<PlayerState, PlayerStatePanel> playerToPanel;
@@ -35,7 +36,7 @@ public class PlayerStatesPanel extends JPanel {
   public void paintComponent(Graphics g) {
     for (PlayerState p : this.playerToPanel.keySet()) {
       if (!this.activePlayers.contains(p)) {
-        this.playerToPanel.get(p).disqualified();
+        this.playerToPanel.get(p).disqualified(); // TODO disqualified doesn't show
         this.playerToPanel.get(p).repaint();
       }
     }

@@ -2,9 +2,7 @@ package Referee;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
-import Common.Rendering.RenderGameState;
 import Common.Rendering.RenderObserverGameStates;
 import Common.State.GameState;
 
@@ -13,23 +11,24 @@ import Common.State.GameState;
  * of time.
  */
 public class observer {
-  List<GameState> gameStates;
-  GameState currentGameState;
-  RenderObserverGameStates renderObserverGameStates;
-  private ListIterator<GameState> gameStateIterator;
-
+  private List<GameState> gameStates;
+  private int currentGameStateIdx;
+  private RenderObserverGameStates renderObserverGameStates;
 
   public observer() {
     this.gameStates = new ArrayList<>();
-    this.gameStateIterator = gameStates.listIterator();
+    this.currentGameStateIdx = 0;
   }
 
+  /**
+   * @return the current GameState the observer sees.
+   */
   public GameState getCurrentGameState() {
-    return currentGameState;
+    return gameStates.get(currentGameStateIdx);
   }
 
   public void setup(GameState gameState) {
-    this.currentGameState = gameState;
+    this.currentGameStateIdx = 0;
     this.receiveState(gameState);
     this.startGUI();
   }
@@ -46,23 +45,19 @@ public class observer {
    * Receive a new GameState from the Referee
    */
   public void receiveState(GameState state) {
-    this.gameStateIterator.add(state);
+    this.gameStates.add(state);
   }
 
   public void gameOver() {
-    System.out.println("Game over");
+    System.out.println("Observer: Game over");
     this.renderObserverGameStates.notifyGameOver();
   }
 
+
   public GameState next() {
-
-//    List<GameState> gameStatesCopy = new ArrayList<>(this.gameStates);
-//    ListIterator<GameState> iterator = gameStatesCopy.listIterator();
-
-    if(gameStateIterator.hasNext()) {
-      GameState next = gameStateIterator.next();
-      currentGameState = next;
-      return currentGameState;
+    if (this.currentGameStateIdx + 1 < this.gameStates.size()) {
+      this.currentGameStateIdx += 1;
+      return gameStates.get(this.currentGameStateIdx);
     }
     else {
       throw new IllegalArgumentException("game has no next state");
@@ -70,14 +65,9 @@ public class observer {
   }
 
   public GameState previous() {
-//    List<GameState> gameStatesCopy = new ArrayList<>(this.gameStates);
-//    ListIterator<GameState> iterator = gameStatesCopy.listIterator();
-//    int i = gameStatesCopy.indexOf(currentGameState);
-//    iterator.
-    if(this.gameStateIterator.hasPrevious()) {
-      GameState prev = gameStateIterator.previous();
-      currentGameState = prev;
-      return currentGameState;
+    if(this.currentGameStateIdx - 1 >= 0) {
+      this.currentGameStateIdx -= 1;
+      return gameStates.get(this.currentGameStateIdx);
     }
     else {
       throw new IllegalArgumentException("game has no previous state");
@@ -85,7 +75,7 @@ public class observer {
   }
 
   public void save(String fileName) {
-    // save gameState
+    // TODO save gameState
   }
 
 }

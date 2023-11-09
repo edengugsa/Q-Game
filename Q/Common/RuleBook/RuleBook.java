@@ -65,7 +65,7 @@ public class RuleBook implements QRuleBook {
 
   @Override
   public boolean gameOver(GameState game) {
-    return game.numPlayers() == 0 || this.roundWithoutPlacements(game) || game.playerPlacedAllTiles;
+    return game.numPlayers() == 0 || this.roundWithoutPlacements(game) || game.currentPlayerTiles().isEmpty();
   }
 
   @Override
@@ -120,6 +120,13 @@ public class RuleBook implements QRuleBook {
     }
     return true;
   }
+
+
+  public boolean matchesNeighbors(GameBoard gameboard, Placement placement) {
+    this.mock = gameboard;
+    return this.matchesNeighbors(placement);
+  }
+
 
   /**
    * Determines if a given placement on the map satisfies the matching rules

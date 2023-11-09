@@ -28,6 +28,11 @@ public interface QGameCommand {
   void score(GameState game, Scorer scorer);
 
   /**
+   * Replaces the Active Player's tiles.
+   */
+  void renewPlayerTiles(GameState game);
+
+  /**
    * @return this command represented as a JsonElement.
    */
   JsonElement toJSON();

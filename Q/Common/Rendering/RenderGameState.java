@@ -12,7 +12,7 @@ import Common.State.GameState;
  */
 public class RenderGameState extends JPanel {
   GameState gamestate;
-  GameBoardPanel gameboardPanel;
+  GameBoardPanel gameboardPanel; // TODO Make this a scrollable panel
   PlayerStatesPanel playerStatesPanel;
   JLabel numRefTiles;
 

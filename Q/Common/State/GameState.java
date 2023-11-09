@@ -34,9 +34,6 @@ public class GameState {
    * @param players the queue of players in turn order.
    */
   public GameState(Queue<PlayerState> players) throws IllegalStateException {
-    if (players.size() < 2 || players.size() > 4) {
-      throw new IllegalStateException("Must have 2-4 players to begin game.");
-    }
     this.players = players;
     buildDeck();
     buildBoard();
@@ -55,9 +52,6 @@ public class GameState {
 
   public GameState(Queue<PlayerState> players, GameBoard board,
                    Deque<Tile> deck) {
-    if (players.size() < 2 || players.size() > 4) {
-      throw new IllegalStateException("Must have 2-4 players to begin game.");
-    }
     this.players = players;
     this.board = board;
     this.deck = deck;
@@ -183,6 +177,11 @@ public class GameState {
   }
 
 
+
+
+
+
+
   /**
    * @return the given amount of tiles from this State's deck
    * @throws IllegalStateException if the number of tiles in the deck is fewer than the requested amount
@@ -282,6 +281,7 @@ public class GameState {
     for (PlayerState ps : this.players()) {
       if (ps.name().equals(name)) {
         this.players.remove(ps);
+        return;
       }
     }
     throw new IllegalArgumentException("No such player");
@@ -325,6 +325,10 @@ public class GameState {
 
   public void addToRefDeck(List<Tile> tiles) {
     this.deck.addAll(tiles);
+  }
+
+  public void renewPlayerTiles(QGameCommand cmd) {
+    cmd.renewPlayerTiles(this);
   }
 
 

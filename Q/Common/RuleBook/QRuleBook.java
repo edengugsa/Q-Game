@@ -8,6 +8,7 @@ import Common.GameCommands.PassCommand;
 import Common.GameCommands.PlacementCommand;
 import Common.State.GameState;
 import Common.State.PlayerState;
+import Common.Tiles.Placement;
 import Common.Tiles.Tile;
 
 /**
@@ -50,5 +51,7 @@ public interface QRuleBook {
    * @return the number of tiles dealt to each player at the start of the game.
    */
   int tilesPerPlayer();
+
+  boolean matchesNeighbors(GameBoard gameboard, Placement placement);
 
 }

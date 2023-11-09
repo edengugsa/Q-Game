@@ -38,10 +38,10 @@ public class Scorer {
    * Default constructor. Sets the number of points rewarded to default values.
    */
   public Scorer() {
-    this.Q_PTS = 6;
+    this.Q_PTS = 8;
     this.PTS_PER_CONTIG_TILE = 1;
     this.PTS_PER_TILE = 1;
-    this.PTS_FOR_PLACING_ALL = 6;
+    this.PTS_FOR_PLACING_ALL = 4;
   }
 
   /**
