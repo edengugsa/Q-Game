@@ -27,6 +27,7 @@ public class GameState {
   private final QRuleBook rules = new RuleBook();
   public Stack<QGameCommand> roundHistory; // store all the commands in the current round
   public boolean playerPlacedAllTiles;
+  public boolean refTilesDone;
 
   /**
    * Public constructor for the State. Prepares the game for playing
@@ -99,6 +100,11 @@ public class GameState {
 
   public int tilesRemaining() {
     return this.deck.size();
+  }
+
+  public Deque<Tile> getRefDeck() {
+    ArrayDeque<Tile> copy  = new ArrayDeque<>(deck);
+    return copy;
   }
 
   /**
@@ -208,8 +214,17 @@ public class GameState {
   public void renewPlayerTiles(int numTiles) {
     playerPlacedAllTiles = this.currentPlayerTiles().size() == 0;
     if (!playerPlacedAllTiles && this.tilesRemaining() > 0) {
-      this.currentPlayer().newTiles(this.getFromDeck(numTiles));
+      try {
+        this.currentPlayer().newTiles(this.getFromDeck(numTiles));
+      }
+      catch (Exception e) {
+        setRefTilesDone(true);
+      }
     }
+  }
+
+  private void setRefTilesDone(Boolean bool) {
+    refTilesDone = bool;
   }
 
 
