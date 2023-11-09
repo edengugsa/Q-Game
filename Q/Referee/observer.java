@@ -66,10 +66,6 @@ public class observer {
    * Saves the given GameState at [idx].png in Tmp/
    */
   private void saveGameStateAsPng(GameState state, int idx) {
-//    File tmp = new File("/Tmp");
-//    if (!tmp.exists()){
-//      tmp.mkdirs();
-//    }
     String fileName = "Tmp/" + idx + ".png";
     try {
       ImageIO.write(new RenderGameState(state).toPng(), "png", new File(fileName));
@@ -79,23 +75,11 @@ public class observer {
     }
   }
 
-  /**
-   * @return An Image representing the given GameState.
-   */
-//  public BufferedImage GameStateToPng(GameState gs) {
-//    BufferedImage gameboard = new GameBoardPainter(gs.board()).reveal();
-//    BufferedImage playerStates =
-//
-//    BufferedImage res = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-//
-//    return res;
-//  }
 
   public void gameOver() {
     System.out.println("Observer: Game over");
     this.renderObserverGameStates.notifyGameOver();
   }
-// lets make it a method first GameStateToPng
 
   public GameState next() {
     if (this.currentGameStateIdx + 1 < this.gameStates.size()) {
