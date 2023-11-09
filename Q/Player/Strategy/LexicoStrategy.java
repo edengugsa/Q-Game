@@ -2,6 +2,7 @@ package Player.Strategy;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -43,8 +44,6 @@ public abstract class LexicoStrategy implements Strategy {
   protected GameBoard originalBoard;
   protected GameBoard mockBoard;
 
-  protected Set<Tile> allTiles = this.allTiles();
-
 
   /**
    * Constructs this LexicoStrategy which will adhere to the provided QRuleBook, and make decisions
@@ -82,9 +81,14 @@ public abstract class LexicoStrategy implements Strategy {
    * @throws IllegalStateException if tiles cannot be placed
    */
   private void computeOnePlacement() throws IllegalStateException {
-    List<Tile> playerTilesCopy = new ArrayList<>(this.playerTiles);
-    for (Tile tile : playerTilesCopy) { // TODO non player tiles?
-      List<Coordinate> p = this.getMatchingCoordinates(mockBoard.placementAdjacentOptions(tile));
+//    List<Tile> playerTilesCopy = new ArrayList<>(this.playerTiles);
+    List<Tile> playerTiles = new ArrayList<>(this.ruleBook.getPlayerTiles(this.playerTiles));
+    Collections.sort(playerTiles, Tile.TileComparator);
+    for (Tile tile : playerTiles) { // TODO non player tiles?
+//      List<Coordinate> p = this.getMatchingCoordinates(mockBoard.placementAdjacentOptions(tile));
+
+      List<Placement> placementOptions = this.ruleBook.getPlacementOptions(tile, this.mockBoard);
+      List<Coordinate> p = this.getMatchingCoordinates(placementOptions);
       if (p.size() > 0) {
         this.sort(p);
         Placement smallestPlacement = new Placement(p.get(0), tile);
@@ -129,7 +133,7 @@ public abstract class LexicoStrategy implements Strategy {
   private void computePlacements() {
     this.placementsSoFar = new ArrayDeque<>();
 
-    while (playerTiles.size() > 0) {
+    while (playerTiles.size() > 0 && this.placementsSoFar.size() < 6) {
       try {
         computeOnePlacement();
       }
@@ -152,24 +156,7 @@ public abstract class LexicoStrategy implements Strategy {
     this.mockBoard = new GameBoard(apk.getBoard().getMap());
   }
 
-  /**
-   *  Returns a set of all possible Tiles.
-   */
-  private Set<Tile> allTiles() {
-    List<QColor> colors = new ArrayList<>(Arrays.asList
-            (QColor.RED, QColor.GREEN, QColor.BLUE, QColor.YELLOW, QColor.ORANGE, QColor.PURPLE));
-    List<QShape> shapes = new ArrayList<>(Arrays.asList
-            (QShape.star, QShape.eight_star, QShape.square, QShape.circle, QShape.clover, QShape.diamond));
-    Set<Tile> tiles = new HashSet<>();
 
-    for (QShape s : shapes) {
-      for (QColor c : colors) {
-        tiles.add(new Tile(c, s));
-      }
-    }
-
-    return tiles;
-  }
 
   protected final Comparator<Coordinate> CoordinateComparator =
           Comparator.comparing(Coordinate::row).thenComparing(Coordinate::col);

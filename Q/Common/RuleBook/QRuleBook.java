@@ -6,8 +6,10 @@ import Common.GameBoard.GameBoard;
 import Common.GameCommands.ExchangeCommand;
 import Common.GameCommands.PassCommand;
 import Common.GameCommands.PlacementCommand;
+import Common.State.ActivePlayerKnowledge;
 import Common.State.GameState;
 import Common.State.PlayerState;
+import Common.Tiles.Coordinate;
 import Common.Tiles.Placement;
 import Common.Tiles.Tile;
 
@@ -53,5 +55,9 @@ public interface QRuleBook {
   int tilesPerPlayer();
 
   boolean matchesNeighbors(GameBoard gameboard, Placement placement);
+
+  List<Tile> getPlayerTiles(List<Tile> tile);
+
+  List<Placement> getPlacementOptions(Tile t, GameBoard board);
 
 }

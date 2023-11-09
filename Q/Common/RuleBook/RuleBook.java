@@ -8,6 +8,7 @@ import Common.GameCommands.ExchangeCommand;
 import Common.GameCommands.PassCommand;
 import Common.GameCommands.PlacementCommand;
 import Common.GameCommands.QGameCommand;
+import Common.State.ActivePlayerKnowledge;
 import Common.State.GameState;
 import Common.State.PlayerState;
 import Common.Tiles.Coordinate;
@@ -125,6 +126,16 @@ public class RuleBook implements QRuleBook {
   public boolean matchesNeighbors(GameBoard gameboard, Placement placement) {
     this.mock = gameboard;
     return this.matchesNeighbors(placement);
+  }
+
+  @Override
+  public List<Tile> getPlayerTiles(List<Tile> tiles) {
+    return tiles;
+  }
+
+  @Override
+  public List<Placement> getPlacementOptions(Tile t, GameBoard board) {
+    return board.placementAdjacentOptions(t);
   }
 
 
