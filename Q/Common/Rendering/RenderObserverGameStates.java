@@ -30,11 +30,7 @@ public class RenderObserverGameStates extends JFrame {
     this.observer = observer;
     this.setSize(1500,2000);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    this.setLayout(new BorderLayout(2,3, 20,0));
-    BorderLayout bl = new BorderLayout();
-    bl.layoutContainer();
-    Container t = new Container();
-    t.
+    this.setLayout(new GridLayout(2,3, 20,0));
 
     this.setTitle("Observer");
 
@@ -128,9 +124,10 @@ public class RenderObserverGameStates extends JFrame {
           }
         }
       });
+
       this.prev.setBounds(20, 20, 100, 30);
-      this.prev.setBounds(140, 20, 100, 30);
-      this.prev.setBounds(260, 20, 100, 30);
+      this.next.setBounds(140, 20, 100, 30);
+      this.save.setBounds(260, 20, 100, 30);
       JPanel buttonPanel = new JPanel();
       buttonPanel.setSize(1000, 10);
       buttonPanel.add(this.prev);

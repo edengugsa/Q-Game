@@ -53,6 +53,7 @@ public class PlayerStatesPanel extends JPanel {
     int i = 0;
     for (PlayerStatePanel ps : this.playerToPanel.values()) {
       g.drawImage(ps.toPng(), 0, i * (70+50 + 10), null);
+      i++;
     }
 
     return combined;

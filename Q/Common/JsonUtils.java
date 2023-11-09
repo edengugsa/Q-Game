@@ -95,6 +95,10 @@ public class JsonUtils {
   }
 
 
+  /**
+   * Converts the given WinnersAndCheaters to a JsonArray of a list of winners sorted alphabetically
+   * by their name and a list of cheaters sorted by the order in which they were removed.
+   */
   public static JsonArray WinnersAndCheatersToJson(WinnersAndCheaters w) {
     JsonArray res = new JsonArray();
     Collections.sort(w.winners, String::compareTo);

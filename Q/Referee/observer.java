@@ -3,13 +3,19 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+
 import Common.JsonUtils;
 import Common.Rendering.GameBoardPainter;
+import Common.Rendering.RenderGameState;
 import Common.Rendering.RenderObserverGameStates;
 import Common.State.GameState;
 
@@ -47,17 +53,32 @@ public class observer {
     this.renderObserverGameStates = new RenderObserverGameStates(this);
     this.renderObserverGameStates.setVisible(true);
   }
-  // i think our receiveState should call a method thats like renderGameStateAsPNG
-  // and then our JPanel just shows that image instead of having JPanels. Like all the JPanels
-  // should be combined into an image
-  // its for the first functionality but the second functionality's gui happens to use it
-  // im confused
 
   /**
-   * Receive a new GameState from the Referee
+   * Receive a new GameState from the Referee and saves it as a PNG file in Tmp/
    */
   public void receiveState(GameState state) {
     this.gameStates.add(state);
+    this.saveGameStateAsPng(state, this.gameStates.size() - 1);
+  }
+
+  /**
+   * Saves the given GameState at [idx].png in Tmp/
+   */
+  private void saveGameStateAsPng(GameState state, int idx) {
+//    File tmp = new File("/Tmp");
+//    if (!tmp.exists()){
+//      tmp.mkdirs();
+//    }
+    String fileName = Integer.toString(idx) + ".png";
+
+    try {
+      File outputfile = new File(fileName);
+      ImageIO.write(new RenderGameState(state).toPng(), ".png", outputfile);
+    }
+    catch(Exception e) {
+      System.out.println("Could not save game state " + fileName + ": " + e.toString());
+    }
   }
 
   /**

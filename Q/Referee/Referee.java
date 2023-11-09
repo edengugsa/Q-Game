@@ -188,18 +188,9 @@ public class Referee {
     }
   }
 
-//  private List<List<String>> generateResults() {
-//    List<List<String>> results = new ArrayList<>();
-//    List<String> winners = ruleBook.determineWinners(game.players());
-//    Collections.sort(winners); // TODO Move to xgames
-//    results.add(winners);
-//    results.add(disqualifiedPlayers);
-//    return results;
-//  }
 
   private WinnersAndCheaters generateResults() {
     List<String> winners = ruleBook.determineWinners(game.players());
-    Collections.sort(winners); // TODO Move to xgames
     return new WinnersAndCheaters(winners, disqualifiedPlayers);
   }
 
@@ -233,7 +224,7 @@ public class Referee {
       }
       catch (Exception e) {
         this.observers.remove(o);
-        System.out.println(e.getMessage());
+        System.out.println("Could not setup Observers: " + e.getMessage());
       }
     }
   }
