@@ -32,7 +32,7 @@ public class XScore {
       try {
         GameBoard gm = JsonUtils.JMapToGameBoard(jsonStreamParser.next().getAsJsonArray());
         Queue<Placement> placements = JsonUtils.JPlacementsToPlacements(jsonStreamParser.next().getAsJsonArray());
-        new GameBoardPainter(gm.getMap(), 500, 500).saveImage("png", "board");
+//        new GameBoardPainter(gm.getMap()).saveImage("png", "board");
         System.out.println(new Scorer().scorePlacement(placements, gm, false));
       } catch (Exception e) {
         System.out.println(e.getMessage());

@@ -1,6 +1,7 @@
 package Common.Rendering;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +41,21 @@ public class PlayerStatesPanel extends JPanel {
         this.playerToPanel.get(p).repaint();
       }
     }
+  }
+
+  public BufferedImage toPng() {
+    int width = 50 * 6;
+    int height = this.playerToPanel.size() * (70+50 + 10);
+
+    BufferedImage combined = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    Graphics g = combined.getGraphics();
+
+    int i = 0;
+    for (PlayerStatePanel ps : this.playerToPanel.values()) {
+      g.drawImage(ps.toPng(), 0, i * (70+50 + 10), null);
+    }
+
+    return combined;
   }
 
   private void paintPlayers(List<PlayerState> players) {

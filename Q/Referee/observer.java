@@ -2,12 +2,14 @@ package Referee;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.awt.image.BufferedImage;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import Common.JsonUtils;
+import Common.Rendering.GameBoardPainter;
 import Common.Rendering.RenderObserverGameStates;
 import Common.State.GameState;
 
@@ -45,6 +47,11 @@ public class observer {
     this.renderObserverGameStates = new RenderObserverGameStates(this);
     this.renderObserverGameStates.setVisible(true);
   }
+  // i think our receiveState should call a method thats like renderGameStateAsPNG
+  // and then our JPanel just shows that image instead of having JPanels. Like all the JPanels
+  // should be combined into an image
+  // its for the first functionality but the second functionality's gui happens to use it
+  // im confused
 
   /**
    * Receive a new GameState from the Referee
@@ -53,11 +60,23 @@ public class observer {
     this.gameStates.add(state);
   }
 
+  /**
+   * @return An Image representing the given GameState.
+   */
+//  public BufferedImage GameStateToPng(GameState gs) {
+//    BufferedImage gameboard = new GameBoardPainter(gs.board()).reveal();
+//    BufferedImage playerStates =
+//
+//    BufferedImage res = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+//
+//    return res;
+//  }
+
   public void gameOver() {
     System.out.println("Observer: Game over");
     this.renderObserverGameStates.notifyGameOver();
   }
-
+// lets make it a method first GameStateToPng
 
   public GameState next() {
     if (this.currentGameStateIdx + 1 < this.gameStates.size()) {
@@ -79,9 +98,11 @@ public class observer {
     }
   }
 
+  /**
+   * Saves the current GameState to a Json file. the .json extension is automatically appended.
+   */
   public void save(String fileName) throws IOException {
     JsonObject stateToSave = JsonUtils.GameStateToJState(gameStates.get(this.currentGameStateIdx));
-    Gson gson = new Gson();
-    gson.toJson(stateToSave, new FileWriter(fileName));
+    new Gson().toJson(stateToSave, new FileWriter(fileName + ".json"));
   }
 }

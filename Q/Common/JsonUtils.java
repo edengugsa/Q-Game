@@ -97,7 +97,17 @@ public class JsonUtils {
 
   public static JsonArray WinnersAndCheatersToJson(WinnersAndCheaters w) {
     JsonArray res = new JsonArray();
-//    res.addAll(new JsonArray(w.winners)); TOOD FINISH
+    Collections.sort(w.winners, String::compareTo);
+    JsonArray winners = new JsonArray();
+    for (String winner : w.winners) {
+      winners.add(winner);
+    }
+    JsonArray cheaters = new JsonArray();
+    for (String cheater : w.cheaters) {
+      winners.add(cheater);
+    }
+    res.addAll(winners);
+    res.addAll(cheaters);
     return res;
   }
 

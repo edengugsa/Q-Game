@@ -12,6 +12,7 @@ import Common.State.GameState;
 import Player.player;
 import Referee.Referee;
 import Referee.observer;
+import Referee.WinnersAndCheaters;
 
 /**
  * Takes in a JState and JActorSpecA
@@ -26,11 +27,11 @@ public class XGamesWithObservers {
     List<player> players = JsonUtils.JActorsToPlayerList(parser.next().getAsJsonArray());
 
     List<observer> observers = new ArrayList<>();
-    if (args.length > 1) {
+    if (args.length > 1 && args[1].equals("--show")) { // TODO test this works
       observers.add(new observer());
     }
 
-    List<List<String>> results = new Referee(players, observers, gamestate).runGame();
-    System.out.println("[" + JsonUtils.NamesToJNames(results.get(0)) + ", " + JsonUtils.NamesToJNames(results.get(1)) + "]");
+    WinnersAndCheaters results = new Referee(players, observers, gamestate).runGame();
+    System.out.println(JsonUtils.WinnersAndCheatersToJson(results));
   }
 }

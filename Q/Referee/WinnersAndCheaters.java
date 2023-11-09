@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class WinnersAndCheaters {
   public List<String> winners;
-  List<String> cheaters;
+  public List<String> cheaters;
 
   public WinnersAndCheaters(List<String> winners, List<String> cheaters) {
     this.winners = winners;

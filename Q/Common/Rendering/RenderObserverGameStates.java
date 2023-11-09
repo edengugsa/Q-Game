@@ -3,6 +3,9 @@ package Common.Rendering;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+
+import Common.JsonUtils;
 import Referee.observer;
 import javax.swing.*;
 
@@ -15,13 +18,24 @@ import Common.State.GameState;
 public class RenderObserverGameStates extends JFrame {
  RenderObserverButtons buttons;
  observer observer;
- RenderGameState renderGameState;
+ RenderGameState renderGameState; // this should take in an image that shows the entire image or its a scrollable JPane ok
+  // is the image just the board or the whole state?
+  // the whole state. we just gotta combine all three jpanels in renderGameState into an image
+  // board, player states, ref tiles
+  // 3? the board, players ok wait or we can turn the jpanel into an image. this is a quick fix tho
+  // w
+
 
   public RenderObserverGameStates(observer observer) {
     this.observer = observer;
     this.setSize(1500,2000);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    this.setLayout(new GridLayout(2,3, 20,0));
+    this.setLayout(new BorderLayout(2,3, 20,0));
+    BorderLayout bl = new BorderLayout();
+    bl.layoutContainer();
+    Container t = new Container();
+    t.
+
     this.setTitle("Observer");
 
     this.buttons = new RenderObserverButtons();
@@ -67,8 +81,13 @@ public class RenderObserverGameStates extends JFrame {
             "Observer Button Malfunction", JOptionPane.ERROR_MESSAGE);
   }
 
-  public void saveGameState() {
-    throw new UnsupportedOperationException("what");
+  /**
+   * Saves the current GameState as a Json at the given path.
+   */
+  public void saveGameState() throws IOException {
+    // ask the user for the file name?
+    String fileName = JOptionPane.showInputDialog("Enter a file name to save the game state to");
+    observer.save(fileName);
   }
 
 
@@ -82,7 +101,9 @@ public class RenderObserverGameStates extends JFrame {
     private JButton save;
 
     public RenderObserverButtons() {
+//      GridLayout gl = new GridLayout(1, 3);
       this.setLayout(new GridLayout(1,3));
+
       this.next = new JButton("next");
       this.prev = new JButton("prev");
       this.save = new JButton("save");
@@ -99,15 +120,23 @@ public class RenderObserverGameStates extends JFrame {
       });
       this.save.addActionListener(new ActionListener(){
         public void actionPerformed(ActionEvent e){
-          saveGameState();
+          try {
+            saveGameState();
+          }
+          catch (IOException ex) {
+            throw new RuntimeException(ex);
+          }
         }
       });
       this.prev.setBounds(20, 20, 100, 30);
       this.prev.setBounds(140, 20, 100, 30);
       this.prev.setBounds(260, 20, 100, 30);
-      this.add(this.prev);
-      this.add(this.next);
-      this.add(this.save); // TODO fix formating
+      JPanel buttonPanel = new JPanel();
+      buttonPanel.setSize(1000, 10);
+      buttonPanel.add(this.prev);
+      buttonPanel.add(this.next);
+      buttonPanel.add(this.save); // TODO fix formating
+      this.add(buttonPanel);
       this.setSize(1000,40);
       this.setVisible(true);
 

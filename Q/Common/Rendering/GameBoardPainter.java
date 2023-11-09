@@ -16,9 +16,7 @@ import Common.Tiles.Tile;
  * Contains the rendering functionality required for displaying a game-board as a viewable image.
  */
 public class GameBoardPainter {
-  private int TILE_SIZE;
-  private int maxWidth;
-  private int maxHeight;
+  private int TILE_SIZE = 50;
   private Graphics2D graphics;
   private BufferedImage image;
   private Map<Coordinate, Tile> gameboard;
@@ -27,9 +25,7 @@ public class GameBoardPainter {
    * Instantiates this GameBoardPainter object to render a Q-Game board as a PNG image.
    * @param gameboard the game board to render
    */
-  public GameBoardPainter(Map<Coordinate, Tile> gameboard, int maxWidth, int maxHeight) {
-    this.maxHeight = maxHeight;
-    this.maxWidth = maxWidth;
+  public GameBoardPainter(Map<Coordinate, Tile> gameboard) {
     this.gameboard = new HashMap<>(gameboard);
     this.buildCanvas();
     this.paintImage();
@@ -62,8 +58,6 @@ public class GameBoardPainter {
     ArrayList<Integer> dimensions = getBoardDimensions();
     int tilesWide = (Math.abs(dimensions.get(2) - dimensions.get(0)) + 1);
     int tilesHigh = (Math.abs(dimensions.get(3) - dimensions.get(1)) + 1);
-
-    TILE_SIZE = Math.min(maxWidth, maxHeight) / Math.max(tilesHigh, tilesWide);
 
     this.image = new BufferedImage(TILE_SIZE*tilesWide,
             TILE_SIZE*tilesHigh, BufferedImage.TYPE_INT_ARGB);

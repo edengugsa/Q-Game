@@ -1,6 +1,7 @@
 package Common.Rendering;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,7 @@ public class PlayerStatePanel extends JPanel {
 
   private static int WIDTH = 400;
   private static int HEIGHT = 400;
+  private static int TEXT_HEIGHT = 70;
 
   public PlayerStatePanel(PlayerState playerState) {
     this.playerState = playerState;
@@ -38,6 +40,20 @@ public class PlayerStatePanel extends JPanel {
 
   public void disqualified() {
     this.disqualified = true;
+  }
+
+  /**
+   * Renders this PlayerState as an image. It displays the player's name, score, tiles remaining,
+   * and their tiles.
+   */
+  public BufferedImage toPng() {
+    BufferedImage playerTilesImage = new GameBoardPainter(this.createGameBoardFromTiles(this.playerState.getHand()).getMap()).reveal();
+    BufferedImage combined = new BufferedImage(playerTilesImage.getWidth(), playerTilesImage.getHeight() + TEXT_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+    Graphics g = combined.getGraphics();
+    g.drawString("Name: " + playerState.name() + "   Score: " + playerState.score() +
+            "   Tiles Remaining: " + playerState.tilesRemaining(), 0, 0);
+    g.drawImage(playerTilesImage, 0, TEXT_HEIGHT, null);
+    return combined;
   }
 
   @Override
@@ -64,4 +80,6 @@ public class PlayerStatePanel extends JPanel {
     }
     return new GameBoard(tilesHashmap);
   }
+
+
 }

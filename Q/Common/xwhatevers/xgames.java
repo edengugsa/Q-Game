@@ -9,6 +9,7 @@ import Common.JsonUtils;
 import Common.State.GameState;
 import Player.player;
 import Referee.Referee;
+import Referee.WinnersAndCheaters;
 
 /**
  * Reads in a JState and JActors, runs a complete game of Q, and then outputs the winners and cheaters.
@@ -26,7 +27,7 @@ public class xgames {
       List<observer> observers = new ArrayList<>();
       observers.add(new observer());
 
-      List<List<String>> results = new Referee(players, observers, gamestate).runGame();
-      System.out.println("["+JsonUtils.NamesToJNames(results.get(0)) + ", " + JsonUtils.NamesToJNames(results.get(1)) + "]");
+      WinnersAndCheaters results = new Referee(players, observers, gamestate).runGame();
+      System.out.println(JsonUtils.WinnersAndCheatersToJson(results));
   }
 }

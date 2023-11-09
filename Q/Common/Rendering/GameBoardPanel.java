@@ -33,7 +33,7 @@ public class GameBoardPanel extends JPanel {
 
   @Override
   protected void paintComponent(Graphics g) {
-    GameBoardPainter gbp = new GameBoardPainter(this.board.getMap(), this.maxWidth, this.maxHeight);
+    GameBoardPainter gbp = new GameBoardPainter(this.board.getMap());
     super.paintComponent(g);
     g.drawImage(gbp.reveal(), 0, 0, null);
   }
