@@ -218,7 +218,6 @@ public class Referee {
     for (observer o : this.observers) {
       try {
         o.setup(this.game.getCopy());
-        System.out.println("calling startGui on ovserver");
       }
       catch (Exception e) {
         this.observers.remove(o);

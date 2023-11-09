@@ -70,7 +70,7 @@ public class RenderGameState extends JPanel {
       refTilesMap.put(new Coordinate(i % 4, Math.floorDiv(i, 4)), refTiles.pop());
     }
     BufferedImage refTilesImg= new GameBoardPainter(refTilesMap).reveal();
-    BufferedImage combined = new BufferedImage(refTilesImg.getWidth(), refTilesImg.getHeight() + 70, BufferedImage.TYPE_INT_RGB);
+    BufferedImage combined = new BufferedImage(200, refTilesImg.getHeight() + 70, BufferedImage.TYPE_INT_RGB);
     Graphics g = combined.getGraphics();
     g.setColor(Color.PINK);
     g.fillRect(0, 0, combined.getWidth(), combined.getHeight());

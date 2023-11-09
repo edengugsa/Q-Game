@@ -43,7 +43,7 @@ public class PlacementCommand implements QGameCommand {
 
   @Override
   public void score(GameState game, Scorer scorer) {
-    game.updateScore(scorer.scorePlacement(this.placements, game.getGameBoard(), game.playerPlacedAllTiles));
+    game.updateScore(scorer.scorePlacement(this.placements, game.getGameBoard(), game.currentPlayerTiles().isEmpty()));
   }
 
   @Override

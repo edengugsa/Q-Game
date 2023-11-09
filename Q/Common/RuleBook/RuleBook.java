@@ -65,7 +65,7 @@ public class RuleBook implements QRuleBook {
 
   @Override
   public boolean gameOver(GameState game) {
-    return game.numPlayers() == 0 || this.roundWithoutPlacements(game) || game.currentPlayerTiles().isEmpty() || game.refTilesDone;
+    return game.numPlayers() == 0 || this.roundWithoutPlacements(game) || game.currentPlayerTiles().isEmpty();
   }
 
   @Override

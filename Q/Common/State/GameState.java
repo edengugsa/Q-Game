@@ -28,7 +28,6 @@ public class GameState {
   private final QRuleBook rules = new RuleBook();
   public Stack<QGameCommand> roundHistory; // store all the commands in the current round
   public boolean playerPlacedAllTiles;
-  public boolean refTilesDone;
 
   /**
    * Public constructor for the State. Prepares the game for playing
@@ -208,24 +207,17 @@ public class GameState {
   }
 
   /**
-   * Renews the current Player's tiles with the given number of tiles, unless the Player
-   * is out of tiles.
+   * Renews the current Player's tiles after they requested a legal Placement Command. If they
+   * placed more tiles than there are ref tiles, they get all the reftiles. If they placed all their
+   * tiles, they don't get any tiles.
+   *
    * @param numTiles the number of tiles placed by the current player
    */
   public void renewPlayerTiles(int numTiles) {
     playerPlacedAllTiles = this.currentPlayerTiles().size() == 0;
     if (!playerPlacedAllTiles && this.tilesRemaining() > 0) {
-      try {
-        this.currentPlayer().newTiles(this.getFromDeck(numTiles));
-      }
-      catch (Exception e) {
-        setRefTilesDone(true);
-      }
+      this.currentPlayer().newTiles(this.getFromDeck(Math.min(numTiles, this.tilesRemaining())));
     }
-  }
-
-  private void setRefTilesDone(Boolean bool) {
-    refTilesDone = bool;
   }
 
 
