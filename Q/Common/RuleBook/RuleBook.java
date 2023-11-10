@@ -228,5 +228,4 @@ public class RuleBook implements QRuleBook {
     return false;
   }
 
-
 }

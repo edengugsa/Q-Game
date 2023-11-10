@@ -71,13 +71,13 @@ public class observer {
       ImageIO.write(new RenderGameState(state).toPng(), "png", new File(fileName));
     }
     catch(Exception e) {
-      System.out.println("Could not save game state " + fileName + ": " + e);
+//      System.out.println("Could not save game state " + fileName + ": " + e);
     }
   }
 
 
   public void gameOver() {
-    System.out.println("Observer: Game over");
+//    System.out.println("Observer: Game over");
     this.renderObserverGameStates.notifyGameOver();
   }
 
@@ -106,6 +106,9 @@ public class observer {
    */
   public void save(String fileName) throws IOException {
     JsonObject stateToSave = JsonUtils.GameStateToJState(gameStates.get(this.currentGameStateIdx));
-    new Gson().toJson(stateToSave, new FileWriter(fileName + ".json"));
+    try (FileWriter fileWriter = new FileWriter(fileName + ".json")) {
+      new Gson().toJson(stateToSave, fileWriter);
+      fileWriter.flush();
+    }
   }
 }
