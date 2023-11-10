@@ -2,13 +2,10 @@ package Referee;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import Common.GameCommands.QGameCommand;
@@ -80,6 +77,10 @@ public class Referee {
     this.observers = observers;
   }
 
+  protected GameState getGameState() {
+    return this.game.getCopy();
+  }
+
 
   public Referee(List<player> players, List<observer> observers, QRuleBook ruleBook) {
     this(players, ruleBook);
@@ -136,7 +137,6 @@ public class Referee {
   private void currentPlayerTakeTurn(){
 
     try {
-      String name = currentPlayer().name();
       QGameCommand cmd = currentPlayer().takeTurn(game.getActivePlayerKnowledge());
       if (cmd.isLegal(ruleBook, game)) {
 //        System.out.println(currentPlayer().name() + ": " + cmd);

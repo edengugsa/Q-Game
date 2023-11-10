@@ -11,10 +11,25 @@ import Common.Tiles.Coordinate;
 import Common.Tiles.Placement;
 import Common.Tiles.Tile;
 
+/**
+ * Represents a RuleBook that allows computing a Placement of a Tile that is not adjacent to a
+ * placed Tile on the board.
+ */
 public class NonAdjacentCoordinateRuleBook extends RuleBook {
 
   /**
-   * Gets non-adjacent Placements for the given tile on the given board
+   * Returns the first Tile.
+   */
+  @Override
+  public List<Tile> getPlayerTiles(List<Tile> playerTiles) {
+    List<Tile> res = new ArrayList<>();
+    res.add(playerTiles.get(0));
+
+    return res;
+  }
+
+  /**
+   * Returns a List of one Placement that is empty but not adjacent to a placed tile.
    */
   @Override
   public List<Placement> getPlacementOptions(Tile t, GameBoard board) {
@@ -26,6 +41,7 @@ public class NonAdjacentCoordinateRuleBook extends RuleBook {
                 && !board.containsCoord(p.coordinate())
                 && board.getNumFreeNeighbors(neighbor) == 4) {
           res.add(new Placement(neighbor, t));
+          return new ArrayList<>(res);
         }
       }
     }
@@ -33,27 +49,13 @@ public class NonAdjacentCoordinateRuleBook extends RuleBook {
   }
 
   /**
-   * @return true if the given Placements is allowed on the given GameState
-   * 1. Does the player own the tiles?
-   * 2. are the placements in the same row or col?
-   * 3. do the placements match its neighbors?
-   * 4. are the placements adjacent to placed tiles?
+   * @return true if the given Placement is not adjacent to any tile on the board.
    */
   @Override
   public boolean allows(PlacementCommand cmd, GameBoard board, List<Tile> playerTiles) {
     GameBoard mock = new GameBoard(board.getMap());
-    if (!contiguous(cmd.getPlacements()) ||
-            !this.isTileInHand(playerTiles, cmd.getPlacements())) {
-      return false;
-    }
-    for (Placement p : cmd.getPlacements()) {
-      if (!mock.isEmptyAndAdjacent(p)) {
-        return true;
-      }
-      try {mock.extend(p.coordinate(), p.tile());}
-      catch (Exception e) {return false;}
-    }
-    return false;
+    return !mock.isEmptyAndAdjacent(cmd.getPlacements().remove()) &&
+            this.isTileInHand(playerTiles, cmd.getPlacements());
   }
 
 }

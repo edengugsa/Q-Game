@@ -81,47 +81,41 @@ public abstract class LexicoStrategy implements Strategy {
    * @throws IllegalStateException if tiles cannot be placed
    */
   private void computeOnePlacement() throws IllegalStateException {
-//    List<Tile> playerTilesCopy = new ArrayList<>(this.playerTiles);
     List<Tile> playerTiles = new ArrayList<>(this.ruleBook.getPlayerTiles(this.playerTiles));
     Collections.sort(playerTiles, Tile.TileComparator);
-    for (Tile tile : playerTiles) { // TODO non player tiles?
-//      List<Coordinate> p = this.getMatchingCoordinates(mockBoard.placementAdjacentOptions(tile));
-
+    for (Tile tile : playerTiles) {
       List<Placement> placementOptions = this.ruleBook.getPlacementOptions(tile, this.mockBoard);
-      List<Coordinate> p = this.getMatchingCoordinates(placementOptions);
+      List<Coordinate> p = this.ruleBook.getMatchingCoordinates(placementOptions, this.mockBoard);
       if (p.size() > 0) {
         this.sort(p);
         Placement smallestPlacement = new Placement(p.get(0), tile);
         placementsSoFar.add(smallestPlacement);
 
-        if (this.ruleBook.allows(new PlacementCommand(placementsSoFar), this.originalBoard, this.playerTiles)) {
-          this.playerTiles.remove(tile);
-          mockBoard.extend(smallestPlacement.coordinate(), smallestPlacement.tile());
-          return;
-        }
-        else {
-          placementsSoFar.remove(smallestPlacement);
-          if (this.placementsSoFar.size() > 0) {
-            break;
+//        if (this.ruleBook.allows(new PlacementCommand(placementsSoFar), this.originalBoard, this.playerTiles)) {
+        if (this.ruleBook.allows(new PlacementCommand(placementsSoFar), this.currentState)) {
+            this.playerTiles.remove(tile);
+            try {
+              mockBoard.extend(smallestPlacement.coordinate(), smallestPlacement.tile());
+              return;
+            }
+            catch (Exception e) {
+              // need this try catch for nonadjacent jcheat
+            }
+
+          }
+          else {
+            placementsSoFar.remove(smallestPlacement);
+            if (this.placementsSoFar.size() > 0) {
+              break;
+            }
           }
         }
       }
-    }
+
     throw new IllegalStateException("Cannot place any tiles.");
   }
 
-  /**
-   * @return Filters the given list of Placements so that they match their neighbors.
-   */
-  private List<Coordinate> getMatchingCoordinates(List<Placement> p) {
-    List<Coordinate> res = new ArrayList<>();
-    for (Placement option: p) {
-      if (this.ruleBook.matchesNeighbors(mockBoard, option)) {
-        res.add(option.coordinate());
-      }
-    }
-    return res;
-  }
+
 
 
 
@@ -133,7 +127,7 @@ public abstract class LexicoStrategy implements Strategy {
   private void computePlacements() {
     this.placementsSoFar = new ArrayDeque<>();
 
-    while (playerTiles.size() > 0 && this.placementsSoFar.size() < 6) {
+    while (playerTiles.size() > 0 && this.placementsSoFar.size() < this.ruleBook.maxPlacementSize()) {
       try {
         computeOnePlacement();
       }

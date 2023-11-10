@@ -24,6 +24,11 @@ public interface QRuleBook {
   boolean allows(PlacementCommand cmd, GameBoard gameboard, List<Tile> playerTiles);
 
   /**
+   * @return true if this QRuleBook allows the given PlacementCommand to be executed on the current QGameBoardState.
+   */
+  boolean allows(PlacementCommand cmd, ActivePlayerKnowledge apk);
+
+  /**
    * @return true if this QRuleBook allows an ExchangeCommand to be executed given the ActivePlayerKnowledge.
    */
    boolean allows(ExchangeCommand cmd, int numRefTiles, int numPlayerTiles);
@@ -59,5 +64,9 @@ public interface QRuleBook {
   List<Tile> getPlayerTiles(List<Tile> tile);
 
   List<Placement> getPlacementOptions(Tile t, GameBoard board);
+
+  int maxPlacementSize();
+
+  List<Coordinate> getMatchingCoordinates(List<Placement> p, GameBoard board);
 
 }

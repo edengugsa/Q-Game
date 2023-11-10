@@ -12,11 +12,14 @@ import Common.Tiles.Tile;
  */
 public class TileNotOwnedRuleBook extends RuleBook {
 
-  private Set<Tile> allTiles = allTiles();
-
   @Override
   protected boolean isTileInHand(List<Tile> tiles, Queue<Placement> placements) {
     return !super.isTileInHand(tiles, placements);
+  }
+
+  @Override
+  public int maxPlacementSize() {
+    return 1;
   }
 
   /**

@@ -28,7 +28,8 @@ import Common.Tiles.Tile;
  */
 public class RuleBook implements QRuleBook {
 
-  private GameBoard mock;
+  GameBoard mock;
+
 
   /**
    * @return true if the given Placements is allowed on the given GameState
@@ -52,6 +53,11 @@ public class RuleBook implements QRuleBook {
       catch (Exception e) {return false;}
     }
     return true;
+  }
+
+  @Override
+  public boolean allows(PlacementCommand cmd, ActivePlayerKnowledge apk) {
+    return this.allows(cmd, apk.getBoard(), apk.getActivePlayerTiles());
   }
 
   @Override
@@ -138,6 +144,11 @@ public class RuleBook implements QRuleBook {
     return board.placementAdjacentOptions(t);
   }
 
+  @Override
+  public int maxPlacementSize() {
+    return 6;
+  }
+
 
   /**
    * Determines if a given placement on the map satisfies the matching rules
@@ -173,6 +184,19 @@ public class RuleBook implements QRuleBook {
       }
     }
     return sameRow || sameCol;
+  }
+
+  /**
+   * @return Filters the given list of Placements so that they match their neighbors.
+   */
+  public List<Coordinate> getMatchingCoordinates(List<Placement> p, GameBoard board) {
+    List<Coordinate> res = new ArrayList<>();
+    for (Placement option: p) {
+      if (matchesNeighbors(board, option)) {
+        res.add(option.coordinate());
+      }
+    }
+    return res;
   }
 
   /**
