@@ -68,13 +68,13 @@ public class testJCheat {
     assertEquals(expectedBeth.toString(), cmdBeth.toString());
     assertFalse(ref.getGameState().getActivePlayerKnowledge().getActivePlayerTiles().contains(new Placement(new Coordinate(0, -1), new Tile(QColor.YELLOW, QShape.star))));
 
-//    // Not in a line
-//    QGameCommand cmdCindy = cindy.takeTurn(ref.getGameState().getActivePlayerKnowledge());
-//    Queue<Placement> expPlacementsCindy = new ArrayDeque<>();
-//    expPlacementsCindy.add(new Placement(new Coordinate(0, -1), new Tile(QColor.BLUE, QShape.8star)));
-//    expPlacementsCindy.add(new Placement(new Coordinate(0, -2), new Tile(QColor.BLUE, QShape.star)));
-//    QGameCommand expectedCindy = new PlacementCommand(expPlacementsCindy);
-//    assertEquals(expectedCindy.toString(), cmdCindy.toString());
+    // Not in a line
+    QGameCommand cmdCindy = cindy.takeTurn(ref.getGameState().getActivePlayerKnowledge());
+    Queue<Placement> expPlacementsCindy = new ArrayDeque<>();
+    expPlacementsCindy.add(new Placement(new Coordinate(0, -1), new Tile(QColor.BLUE, QShape.eight_star)));
+    expPlacementsCindy.add(new Placement(new Coordinate(0, -2), new Tile(QColor.BLUE, QShape.star)));
+    QGameCommand expectedCindy = new PlacementCommand(expPlacementsCindy);
+    assertEquals(expectedCindy.toString(), cmdCindy.toString());
 
     // Doesn't match neighbors
     QGameCommand cmdDarryl = darryl.takeTurn(ref.getGameState().getActivePlayerKnowledge());
