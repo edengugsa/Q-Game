@@ -17,39 +17,35 @@ import Common.Tiles.Tile;
  * of remaining Referee tiles, as well as each player's score and Tiles.
  */
 public class RenderGameState extends JPanel {
-  GameState gamestate;
-  GameBoardPanel gameboardPanel;
-  JScrollPane scrollableGameBoard;
-  PlayerStatesPanel playerStatesPanel;
-  JLabel numRefTiles;
+  GameState gs;
+  JScrollPane scrollabeGameState;
+  JLabel gameStateImg;
 
   public RenderGameState(GameState gamestate) {
-    this.gamestate = gamestate;
-    this.setSize(1500,1000);
-    this.setLayout(new GridLayout(1,3, 20,0));
-    this.gameboardPanel = new GameBoardPanel(gamestate.getGameBoard());
-    this.scrollableGameBoard = new JScrollPane(gameboardPanel);
-    this.playerStatesPanel = new PlayerStatesPanel(this.gamestate.players());
-    this.numRefTiles = new JLabel();
-    this.add(this.scrollableGameBoard);
-    this.add(this.playerStatesPanel);
-    this.add(numRefTiles);
+    this.gs = gs;
+    this.gameStateImg = new JLabel(new ImageIcon(this.GameStateToPng(gamestate)));
+    this.scrollabeGameState = new JScrollPane(this.gameStateImg);
+    this.scrollabeGameState.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+    this.scrollabeGameState.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+    this.add(scrollabeGameState);
     this.setVisible(true);
   }
 
   public void updateGameState(GameState gs) {
-    this.gamestate = gs;
+    this.gameStateImg.setIcon(new ImageIcon(this.GameStateToPng(gs)));
+    this.scrollabeGameState.revalidate();
+    this.scrollabeGameState.repaint();
   }
 
   /**
    * @return an image showing this class' GameState.
    */
-  public BufferedImage toPng() {
-    BufferedImage gameBoardImg = new GameBoardPainter(this.gamestate.getGameBoard().getMap()).reveal();
-    BufferedImage playerStatesImg = this.playerStatesPanel.toPng();
-    BufferedImage refTilesImg = this.refTilesImg();
+  public BufferedImage GameStateToPng(GameState gs) {
+    BufferedImage gameBoardImg = new GameBoardPainter(gs.getGameBoard().getMap()).reveal();
+    BufferedImage playerStatesImg = new PlayerStatesAndNumRefTilesPanel(gs.players(), gs.tilesRemaining()).toPng();
+    BufferedImage refTilesImg = this.refTilesImg(gs);
     int height = Math.max(gameBoardImg.getHeight(), Math.max(playerStatesImg.getHeight(), refTilesImg.getHeight()));
-    int width = gameBoardImg.getWidth() + playerStatesImg.getWidth() + refTilesImg().getWidth() + 20; // 20 for padding
+    int width = gameBoardImg.getWidth() + playerStatesImg.getWidth() + refTilesImg.getWidth() + 20; // 20 for padding
     BufferedImage combined = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     Graphics g = combined.getGraphics();
     g.setColor(Color.PINK);
@@ -63,10 +59,10 @@ public class RenderGameState extends JPanel {
   /**
    * @return an image showing the number of ref tiles remaining as well as a preview of the first 20 ref tiles
    */
-  private BufferedImage refTilesImg() {
-    Deque<Tile> refTiles = this.gamestate.getDeck();
+  private static BufferedImage refTilesImg(GameState gs) {
+    Deque<Tile> refTiles = gs.getDeck();
     Map<Coordinate, Tile> refTilesMap = new HashMap<>();
-    for (int i = 0; i < Math.min(this.gamestate.tilesRemaining(), 20); i++ ) {
+    for (int i = 0; i < Math.min(gs.tilesRemaining(), 20); i++ ) {
       refTilesMap.put(new Coordinate(i % 4, Math.floorDiv(i, 4)), refTiles.pop());
     }
     BufferedImage refTilesImg= new GameBoardPainter(refTilesMap).reveal();
@@ -76,17 +72,8 @@ public class RenderGameState extends JPanel {
     g.fillRect(0, 0, combined.getWidth(), combined.getHeight());
     g.drawImage(refTilesImg, 0, 70, null);
     g.setColor(Color.BLACK);
-    g.drawString("Number of Tiles Left: " + this.gamestate.tilesRemaining(), 10 , 50);
+    g.drawString("Number of Tiles Left: " + gs.tilesRemaining(), 10 , 50);
     return combined;
-  }
-
-  @Override
-  public void paintComponent(Graphics e) {
-    this.playerStatesPanel.updatePlayers(this.gamestate.players());
-    this.playerStatesPanel.repaint();
-    this.gameboardPanel.updateGameBoard(this.gamestate.getGameBoard());
-    this.gameboardPanel.repaint();
-    this.numRefTiles.setText("Number of Tiles Left: " + this.gamestate.tilesRemaining());
   }
 
 }

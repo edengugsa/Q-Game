@@ -2,7 +2,6 @@ package Common.Rendering;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class PlayerStatePanel extends JPanel {
    */
   public BufferedImage toPng() {
     BufferedImage playerTilesImage = new GameBoardPainter(this.createGameBoardFromTiles(this.playerState.getHand()).getMap()).reveal();
-    BufferedImage combined = new BufferedImage(playerTilesImage.getWidth(), playerTilesImage.getHeight() + TEXT_HEIGHT, BufferedImage.TYPE_INT_RGB);
+    BufferedImage combined = new BufferedImage(50*6+20, playerTilesImage.getHeight() + TEXT_HEIGHT, BufferedImage.TYPE_INT_RGB);
     Graphics g = combined.getGraphics();
     g.setColor(Color.PINK);
     g.fillRect(0, 0, combined.getWidth(), combined.getHeight());

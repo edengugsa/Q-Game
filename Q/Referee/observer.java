@@ -2,19 +2,15 @@ package Referee;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
 import Common.JsonUtils;
-import Common.Rendering.GameBoardPainter;
 import Common.Rendering.RenderGameState;
 import Common.Rendering.RenderObserverGameStates;
 import Common.State.GameState;
@@ -68,7 +64,7 @@ public class observer {
   private void saveGameStateAsPng(GameState state, int idx) {
     String fileName = "Tmp/" + idx + ".png";
     try {
-      ImageIO.write(new RenderGameState(state).toPng(), "png", new File(fileName));
+      ImageIO.write(new RenderGameState(state).GameStateToPng(state), "png", new File(fileName));
     }
     catch(Exception e) {
 //      System.out.println("Could not save game state " + fileName + ": " + e);

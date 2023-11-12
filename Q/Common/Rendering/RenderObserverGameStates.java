@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-import Common.JsonUtils;
 import Referee.observer;
 import javax.swing.*;
 
@@ -18,32 +17,44 @@ import Common.State.GameState;
 public class RenderObserverGameStates extends JFrame {
  RenderObserverButtons buttons;
  observer observer;
- RenderGameState renderGameState; // this should take in an image that shows the entire image or its a scrollable JPane ok
-  // is the image just the board or the whole state?
-  // the whole state. we just gotta combine all three jpanels in renderGameState into an image
-  // board, player states, ref tiles
-  // 3? the board, players ok wait or we can turn the jpanel into an image. this is a quick fix tho
-  // w
-
+ RenderGameState renderGameState;
 
   public RenderObserverGameStates(observer observer) {
     this.observer = observer;
+
     this.setSize(1500,2000);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    this.setLayout(new GridLayout(2,3, 20,0));
-
     this.setTitle("Observer");
+    this.setLayout(new GridBagLayout());
+    GridBagConstraints c = new GridBagConstraints();
+    c.fill = GridBagConstraints.HORIZONTAL;
 
     this.buttons = new RenderObserverButtons();
-    this.add(this.buttons);
-    this.renderGameState = new RenderGameState(observer.getCurrentGameState());
-    this.add(this.renderGameState);
-    this.renderGameState.setVisible(true);
+    c.weightx = 0.5;
+    c.gridx = 0;
+    c.gridy = 0;
+    c.anchor = GridBagConstraints.FIRST_LINE_START;
+    this.add(this.buttons, c);
+
+    c.fill = GridBagConstraints.HORIZONTAL;
+    c.weightx = 0.0;
+    c.gridx = 0;
+    c.gridy = 1;
+
+    this.renderGameState = new RenderGameState(this.observer.getCurrentGameState());
+    this.add(this.renderGameState, c);
   }
+
+  private void addGameStateImg(GameState gs) {
+    this.renderGameState.updateGameState(gs);
+    this.renderGameState.repaint();
+    this.repaint();
+  }
+
 
   public void renderNextGameState() {
     try {
-      this.renderGameState(observer.next());
+      this.addGameStateImg(observer.next());
     }
     catch (Exception e) {
       this.noNextOrPrev(e.getMessage());
@@ -52,20 +63,14 @@ public class RenderObserverGameStates extends JFrame {
 
   public void renderPrevGameState() {
     try {
-      this.renderGameState(observer.previous());
+      this.addGameStateImg(observer.previous());
     }
     catch (Exception e) {
       this.noNextOrPrev(e.getMessage());
     }
   }
 
-  private void renderGameState(GameState gs) {
-    this.remove(renderGameState);
-    renderGameState = new RenderGameState(gs);
-    this.add(renderGameState);
-    this.renderGameState.setVisible(true);
-    this.repaint();
-  }
+
 
   public void notifyGameOver() {
     JOptionPane.showMessageDialog(this, "Game is over",
@@ -81,7 +86,6 @@ public class RenderObserverGameStates extends JFrame {
    * Saves the current GameState as a Json at the given path.
    */
   public void saveGameState() throws IOException {
-    // ask the user for the file name?
     String fileName = JOptionPane.showInputDialog("Enter a file name to save the game state to");
     observer.save(fileName);
   }
@@ -97,7 +101,6 @@ public class RenderObserverGameStates extends JFrame {
     private JButton save;
 
     public RenderObserverButtons() {
-//      GridLayout gl = new GridLayout(1, 3);
       this.setLayout(new GridLayout(1,3));
 
       this.next = new JButton("next");
@@ -125,18 +128,17 @@ public class RenderObserverGameStates extends JFrame {
         }
       });
 
-      this.prev.setBounds(20, 20, 100, 30);
-      this.next.setBounds(140, 20, 100, 30);
-      this.save.setBounds(260, 20, 100, 30);
+//      this.prev.setBounds(20, 20, 100, 30);
+//      this.next.setBounds(140, 20, 100, 30);
+//      this.save.setBounds(260, 20, 100, 30);
       JPanel buttonPanel = new JPanel();
-      buttonPanel.setSize(1000, 10);
+//      buttonPanel.setSize(1000, 10);
       buttonPanel.add(this.prev);
       buttonPanel.add(this.next);
-      buttonPanel.add(this.save); // TODO fix formating
+      buttonPanel.add(this.save);
       this.add(buttonPanel);
-      this.setSize(1000,40);
+//      this.setSize(1000,40);
       this.setVisible(true);
-
     }
   }
 }

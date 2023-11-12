@@ -2,7 +2,6 @@ package Common.Rendering;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,22 +14,17 @@ import Common.State.PlayerState;
  * Renders information about all the Players. Renders a Player's score, name, and Tiles in order
  * from least to greatest.
  */
-public class PlayerStatesPanel extends JPanel {
+public class PlayerStatesAndNumRefTilesPanel extends JPanel {
   private Map<PlayerState, PlayerStatePanel> playerToPanel;
   List<PlayerState> activePlayers;
+  int numRefTilesLeft;
 
-  PlayerStatesPanel(List<PlayerState> players) {
+  PlayerStatesAndNumRefTilesPanel(List<PlayerState> players, int numRefTilesLeft) {
     this.playerToPanel = new HashMap<>();
     paintPlayers(players);
     int numRows = players.size();
     this.setLayout(new GridLayout(numRows, 1, 10, 0));
-  }
-
-  /**
-   * @param players still in the game
-   */
-  public void updatePlayers(List<PlayerState> players) {
-    this.activePlayers = players;
+    this.numRefTilesLeft = numRefTilesLeft;
   }
 
   @Override
