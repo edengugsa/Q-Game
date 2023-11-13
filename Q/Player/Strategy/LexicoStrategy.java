@@ -80,7 +80,8 @@ public abstract class LexicoStrategy implements Strategy {
    * Tries to compute one Placement that adheres to the Q Game rules.
    * @throws IllegalStateException if tiles cannot be placed
    */
-  private void computeOnePlacement() throws IllegalStateException {
+  @Override
+  public void computeOnePlacement() throws IllegalStateException {
     List<Tile> playerTiles = new ArrayList<>(this.ruleBook.getPlayerTiles(this.playerTiles));
     Collections.sort(playerTiles, Tile.TileComparator);
     for (Tile tile : playerTiles) {

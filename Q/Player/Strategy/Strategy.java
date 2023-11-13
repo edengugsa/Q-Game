@@ -12,10 +12,12 @@ import Common.State.ActivePlayerKnowledge;
 public interface Strategy {
 
   /**
-   * @param knowledge the knowledge about the game
+   * @param apk the knowledge about the game
    * @return QGameAction this strategy's selected action based on the active player's knowledge about the game.
    */
-  QGameCommand compute(ActivePlayerKnowledge knowledge);
+  QGameCommand compute(ActivePlayerKnowledge apk);
+
+  void computeOnePlacement() throws IllegalStateException;
 
 
 }
