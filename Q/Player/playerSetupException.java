@@ -2,6 +2,7 @@ package Player;
 import java.util.List;
 
 import Common.GameBoard.GameBoard;
+import Common.State.GameState;
 import Common.Tiles.Tile;
 import Player.Strategy.Strategy;
 
@@ -15,7 +16,7 @@ public class playerSetupException extends playerImpl {
   }
 
   @Override
-  public void setup(GameBoard board, List<Tile> hand) {
+  public void setup(GameState state, List<Tile> hand) {
     throw new IllegalStateException("Setup exc");
   }
 
