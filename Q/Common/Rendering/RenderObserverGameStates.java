@@ -89,7 +89,6 @@ public class RenderObserverGameStates extends JFrame {
   public void saveGameState() throws IOException {
 
     JFileChooser fileChooser = new JFileChooser();
-    System.out.println("Present Project Directory : "+ System.getProperty("user.dir"));
     fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
     int option = fileChooser.showSaveDialog(this);
     if(option == JFileChooser.APPROVE_OPTION){

@@ -293,7 +293,8 @@ public class JsonUtils {
   public static JsonObject PlayerStateToJPlayer(PlayerState ps) {
     JsonObject jPlayer = new JsonObject();
     jPlayer.addProperty("score", ps.score());
-    jPlayer.add("tiles", TilesToJTiles(ps.getHand()));
+    jPlayer.addProperty("name", ps.name());
+    jPlayer.add("tile*", TilesToJTiles(ps.getHand()));
 
     return jPlayer;
   }
