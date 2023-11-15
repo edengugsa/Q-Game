@@ -13,15 +13,14 @@ import Common.Tiles.Coordinate;
 import Common.Tiles.Placement;
 import Common.Tiles.Tile;
 
+/**
+ *  Represents a Strategy that produces a PlacementCommand with a tile that is not adjacent to
+ *  a placed tile in the ActivePlayerKnowledge's GameBoard.
+ */
 public class NonAdjacentCoordinateStrategy extends AbstractCheatStrategy {
 
   NonAdjacentCoordinateStrategy(Strategy fallbackStrategy) {
     super(fallbackStrategy);
-  }
-
-  @Override
-  public boolean canCheat() {
-    return true;
   }
 
 
@@ -62,5 +61,7 @@ public class NonAdjacentCoordinateStrategy extends AbstractCheatStrategy {
         }
       }
     }
+    //shouldn't reach here
+    return new Coordinate(-5000,5000);
   }
 }

@@ -4,7 +4,7 @@ import Common.GameCommands.QGameCommand;
 import Common.State.ActivePlayerKnowledge;
 
 public interface CheatStrategy extends Strategy {
-  boolean canCheat();
+  boolean canCheat(ActivePlayerKnowledge apk);
 
   QGameCommand computeHelper(ActivePlayerKnowledge knowledge);
 }

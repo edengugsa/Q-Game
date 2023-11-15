@@ -17,7 +17,7 @@ public interface Strategy {
    */
   QGameCommand compute(ActivePlayerKnowledge apk);
 
-  void computeOnePlacement() throws IllegalStateException;
+//  void computeOnePlacement() throws IllegalStateException;
 
 
 }

@@ -1,45 +1,57 @@
 package Player.Strategy;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 
+import Common.GameBoard.GameBoard;
+import Common.GameCommands.PlacementCommand;
 import Common.GameCommands.QGameCommand;
+import Common.RuleBook.RuleBook;
 import Common.State.ActivePlayerKnowledge;
+import Common.Tiles.Placement;
 import Common.Tiles.QColor;
 import Common.Tiles.QShape;
 import Common.Tiles.Tile;
 
+/**
+ * Represents a Strategy that produces a PlacementCommand with a tile that the
+ * ActivePlayerKnowledge does not own.
+ */
 public class TileNotOwnedStrategy extends AbstractCheatStrategy {
-  Strategy fallbackStrategy;
 
   public TileNotOwnedStrategy(Strategy fallbackStrategy) {
     super(fallbackStrategy);
-    this.fallbackStrategy = fallbackStrategy;
   }
 
-  @Override
-  public boolean canCheat() {
-    return true;
-  }
+  /**
+   * Computes a Placement Command that contains one Tile that the Player does not own at a valid
+   * coordinate on the GameBoard.
+   * If the Tiles the Player does not own cannot be placed on the board, it will revert to its
+   * fallback strategy. TODO or should it try Exchanging/Passing?
+   */
+  public QGameCommand computeHelper(ActivePlayerKnowledge apk) {
+//    ActivePlayerKnowledge newAPK = new ActivePlayerKnowledge(apk.getOpponentStates(),
+//            apk.getBoard(), apk.getNumRefTilesRemaining(), getPlayerTiles(apk.getActivePlayerTiles()));
 
-  @Override
-  public QGameCommand compute(ActivePlayerKnowledge apk) {
-    if (canCheat()) {
-      return this.computeHelper(apk);
+//    return this.fallbackStrategy.computeOnePlacement(newAPK);
+    List<Tile> tilesPlayerDoesNotOwn = this.getPlayerTiles(apk.getActivePlayerTiles());
+    GameBoard gameboard = apk.getBoard();
+
+    for (Tile t : tilesPlayerDoesNotOwn) {
+      for(Placement p : gameboard.placementAdjacentOptions(t)) {
+        if (new RuleBook().matchesNeighbors(gameboard, p)) {
+          Queue onePlacement = new ArrayDeque();
+          onePlacement.add(p);
+          return new PlacementCommand(onePlacement);
+        }
+      }
     }
-    else {
-      return this.fallbackStrategy.compute(apk);
-    }
-  }
-
-  private QGameCommand computeHelper(ActivePlayerKnowledge apk) {
-    ActivePlayerKnowledge newAPK = new ActivePlayerKnowledge(apk.getOpponentStates(),
-            apk.getBoard(), apk.getNumRefTilesRemaining(), getPlayerTiles(apk.getActivePlayerTiles()));
-
-    return this.fallbackStrategy.computeOnePlacement(newAPK);
+    return this.fallbackStrategy.compute(apk);
   }
 
 

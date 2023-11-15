@@ -2,11 +2,7 @@ package Player.Strategy;
 
 import Common.GameCommands.QGameCommand;
 import Common.State.ActivePlayerKnowledge;
-import Common.Tiles.Coordinate;
-import Common.Tiles.Placement;
-import Common.Tiles.QColor;
-import Common.Tiles.QShape;
-import Common.Tiles.Tile;
+
 
 /**
  * Represents an AbstractCheat Strategy that will produce a GameCommand that violates the Q Game
@@ -19,15 +15,22 @@ public abstract class AbstractCheatStrategy implements CheatStrategy {
     this.fallbackStrategy = fallbackStrategy;
   }
 
-  abstract public boolean canCheat();
-
-
-  public Placement computeOnePlacement() {
-    return new Placement(new Coordinate(0,0), new Tile(QColor.YELLOW, QShape.square));
+  /**
+   * Given the Active Player's Knowledge of the QGame, can this Strategy produce a GameCommand
+   * that violates the rules?
+   */
+  public boolean canCheat(ActivePlayerKnowledge apk) {
+    return true;
   }
 
+
+
+//  public Placement computeOnePlacement() {
+//    return new Placement(new Coordinate(0,0), new Tile(QColor.YELLOW, QShape.square));
+//  }
+
   public QGameCommand compute(ActivePlayerKnowledge apk) {
-    if (canCheat()) {
+    if (canCheat(apk)) {
       return this.compute(apk);
     }
     else {
