@@ -80,29 +80,20 @@ public abstract class LexicoStrategy implements Strategy {
    * Tries to compute one Placement that adheres to the Q Game rules.
    * @throws IllegalStateException if tiles cannot be placed
    */
-//  @Override
-  public void computeOnePlacement() throws IllegalStateException {
+  protected void computeOnePlacement() throws IllegalStateException {
     List<Tile> playerTiles = new ArrayList<>(this.ruleBook.getPlayerTiles(this.playerTiles));
-    Collections.sort(playerTiles, Tile.TileComparator);
+    playerTiles.sort(Tile.TileComparator);
     for (Tile tile : playerTiles) {
-      List<Placement> placementOptions = this.ruleBook.getPlacementOptions(tile, this.mockBoard);
+      List<Placement> placementOptions = this.mockBoard.placementAdjacentOptions(tile);
       List<Coordinate> p = this.ruleBook.getMatchingCoordinates(placementOptions, this.mockBoard);
       if (p.size() > 0) {
         this.sort(p);
         Placement smallestPlacement = new Placement(p.get(0), tile);
         placementsSoFar.add(smallestPlacement);
-
-//        if (this.ruleBook.allows(new PlacementCommand(placementsSoFar), this.originalBoard, this.playerTiles)) {
         if (this.ruleBook.allows(new PlacementCommand(placementsSoFar), this.currentState)) {
             this.playerTiles.remove(tile);
-            try {
-              mockBoard.extend(smallestPlacement.coordinate(), smallestPlacement.tile());
-              return;
-            }
-            catch (Exception e) {
-              // need this try catch for nonadjacent jcheat
-            }
-
+            mockBoard.extend(smallestPlacement.coordinate(), smallestPlacement.tile());
+            return;
           }
           else {
             placementsSoFar.remove(smallestPlacement);
@@ -115,10 +106,6 @@ public abstract class LexicoStrategy implements Strategy {
 
     throw new IllegalStateException("Cannot place any tiles.");
   }
-
-
-
-
 
   /**
    * @return the longest sequence of Placements based on this Strategy.
