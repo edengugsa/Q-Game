@@ -19,5 +19,4 @@ public interface Strategy {
 
 //  void computeOnePlacement() throws IllegalStateException;
 
-
 }

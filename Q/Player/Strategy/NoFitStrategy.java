@@ -17,7 +17,7 @@ import Common.Tiles.Tile;
  *  adjacent tiles on the ActivePlayerKnowledge's GameBoard.
  */
 public class NoFitStrategy extends AbstractCheatStrategy {
-  NoFitStrategy(Strategy fallbackStrategy) {
+  public NoFitStrategy(Strategy fallbackStrategy) {
     super(fallbackStrategy);
   }
 
@@ -26,17 +26,17 @@ public class NoFitStrategy extends AbstractCheatStrategy {
    * on the apk's GameBoard.
    *
    * If such a Placement is not possible, it will revert to its
-   * fallback strategy. TODO or should it try Exchanging/Passing?
+   * fallback strategy.
    */
   @Override
   public QGameCommand computeHelper(ActivePlayerKnowledge apk) {
     List<Tile> playerTiles = apk.getActivePlayerTiles();
     GameBoard gameboard = apk.getBoard();
 
-    for (Tile t : playerTiles) {
+    for(Tile t : playerTiles) {
       for(Placement p : gameboard.placementAdjacentOptions(t)) {
-        if (new RuleBook().matchesNeighbors(gameboard, p)) {
-          Queue onePlacement = new ArrayDeque();
+        if(!new RuleBook().matchesNeighbors(gameboard, p)) {
+          Queue<Placement> onePlacement = new ArrayDeque<>();
           onePlacement.add(p);
           return new PlacementCommand(onePlacement);
         }

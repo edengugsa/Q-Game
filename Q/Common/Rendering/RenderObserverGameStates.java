@@ -1,8 +1,6 @@
 package Common.Rendering;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -71,8 +69,6 @@ public class RenderObserverGameStates extends JFrame {
     }
   }
 
-
-
   public void notifyGameOver() {
     JOptionPane.showMessageDialog(this, "Game is over",
             "Game over", JOptionPane.INFORMATION_MESSAGE);
@@ -87,17 +83,12 @@ public class RenderObserverGameStates extends JFrame {
    * Saves the current GameState as a Json at the given path.
    */
   public void saveGameState() throws IOException {
-
     JFileChooser fileChooser = new JFileChooser();
     fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
     int option = fileChooser.showSaveDialog(this);
-    if(option == JFileChooser.APPROVE_OPTION){
+    if(option == JFileChooser.APPROVE_OPTION) {
       observer.save(fileChooser.getSelectedFile().getName());
-//      File file = fileChooser.getSelectedFile();
     }
-
-//    String fileName = JOptionPane.showInputDialog("Enter a file name to save the game state to");
-//    observer.save(fileName);
   }
 
 
@@ -112,42 +103,26 @@ public class RenderObserverGameStates extends JFrame {
 
     public RenderObserverButtons() {
       this.setLayout(new GridLayout(1,3));
-
       this.next = new JButton("next");
       this.prev = new JButton("prev");
       this.save = new JButton("save");
 
-      this.next.addActionListener(new ActionListener(){
-        public void actionPerformed(ActionEvent e){
-          renderNextGameState();
+      this.next.addActionListener(e -> renderNextGameState());
+      this.prev.addActionListener(e -> renderPrevGameState());
+      this.save.addActionListener(e -> {
+        try {
+          saveGameState();
         }
-      });
-      this.prev.addActionListener(new ActionListener(){
-        public void actionPerformed(ActionEvent e){
-          renderPrevGameState();
-        }
-      });
-      this.save.addActionListener(new ActionListener(){
-        public void actionPerformed(ActionEvent e){
-          try {
-            saveGameState();
-          }
-          catch (IOException ex) {
-            throw new RuntimeException(ex);
-          }
+        catch (IOException ex) {
+          throw new RuntimeException(ex);
         }
       });
 
-//      this.prev.setBounds(20, 20, 100, 30);
-//      this.next.setBounds(140, 20, 100, 30);
-//      this.save.setBounds(260, 20, 100, 30);
       JPanel buttonPanel = new JPanel();
-//      buttonPanel.setSize(1000, 10);
       buttonPanel.add(this.prev);
       buttonPanel.add(this.next);
       buttonPanel.add(this.save);
       this.add(buttonPanel);
-//      this.setSize(1000,40);
       this.setVisible(true);
     }
   }

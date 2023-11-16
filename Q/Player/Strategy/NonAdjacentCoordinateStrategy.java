@@ -19,7 +19,7 @@ import Common.Tiles.Tile;
  */
 public class NonAdjacentCoordinateStrategy extends AbstractCheatStrategy {
 
-  NonAdjacentCoordinateStrategy(Strategy fallbackStrategy) {
+  public NonAdjacentCoordinateStrategy(Strategy fallbackStrategy) {
     super(fallbackStrategy);
   }
 

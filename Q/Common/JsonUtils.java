@@ -7,12 +7,6 @@ import com.google.gson.JsonObject;
 import java.util.*;
 
 import Common.GameBoard.GameBoard;
-import Common.RuleBook.BadAskForTilesRuleBook;
-import Common.RuleBook.NoFitRuleBook;
-import Common.RuleBook.NonAdjacentCoordinateRuleBook;
-import Common.RuleBook.NotALineRuleBook;
-import Common.RuleBook.QRuleBook;
-import Common.RuleBook.TileNotOwnedRuleBook;
 import Common.State.ActivePlayerKnowledge;
 import Common.State.GameState;
 import Common.State.PlayerState;
@@ -23,6 +17,12 @@ import Common.Tiles.Placement;
 import Common.Tiles.QColor;
 import Common.Tiles.QShape;
 import Common.Tiles.Tile;
+import Player.Strategy.BadAskForTilesStrategy;
+import Player.Strategy.CheatStrategy;
+import Player.Strategy.NoFitStrategy;
+import Player.Strategy.NonAdjacentCoordinateStrategy;
+import Player.Strategy.NotALineStrategy;
+import Player.Strategy.TileNotOwnedStrategy;
 import Player.player;
 import Player.playerImpl;
 import Player.Strategy.DagStrategy;
@@ -82,7 +82,7 @@ public class JsonUtils {
    */
   public static JsonArray WinnersAndCheatersToJson(WinnersAndCheaters w) {
     JsonArray res = new JsonArray();
-    Collections.sort(w.winners, String::compareTo);
+    w.winners.sort(String::compareTo);
     JsonArray winners = new JsonArray();
     for (String winner : w.winners) {
       winners.add(winner);
@@ -108,22 +108,22 @@ public class JsonUtils {
     };
   }
 
-  public static Strategy JStrategyJCheatToStrategy(String jStrategy, String jCheat) {
-    QRuleBook rules = JCheatToRuleBook(jCheat);
+  public static Strategy JStrategyToStrategy(String jStrategy) {
     return switch (jStrategy) {
-      case "ldasg" -> new LdasgStrategy(rules);
-      case "dag" -> new DagStrategy(rules);
+      case "ldasg" -> new LdasgStrategy();
+      case "dag" -> new DagStrategy();
       default -> throw new IllegalArgumentException("Strategy doesn't exist");
     };
   }
 
-  private static QRuleBook JCheatToRuleBook(String jCheat) {
+  private static CheatStrategy JCheatToCheatStrategy(String jStrategy, String jCheat) {
+    Strategy fallbackStrategy = JStrategyToStrategy(jStrategy);
     return switch (jCheat) {
-      case "non-adjacent-coordinate" -> new NonAdjacentCoordinateRuleBook();
-      case "tile-not-owned" -> new TileNotOwnedRuleBook();
-      case "not-a-line" -> new NotALineRuleBook();
-      case "bad-ask-for-tiles" -> new BadAskForTilesRuleBook();
-      case "no-fit" -> new NoFitRuleBook();
+      case "non-adjacent-coordinate" -> new NonAdjacentCoordinateStrategy(fallbackStrategy);
+      case "tile-not-owned" -> new TileNotOwnedStrategy(fallbackStrategy);
+      case "not-a-line" -> new NotALineStrategy(fallbackStrategy);
+      case "bad-ask-for-tiles" -> new BadAskForTilesStrategy(fallbackStrategy);
+      case "no-fit" -> new NoFitStrategy(fallbackStrategy);
       default -> throw new IllegalArgumentException("Invalid JCheat");
     };
   }
@@ -133,25 +133,21 @@ public class JsonUtils {
       throw new IllegalArgumentException("invalid JActorSpecA");
     }
 
-    return new playerImpl(name, JStrategyJCheatToStrategy(strategyName, JActorSpec.get(3).getAsString()));
+    return new playerImpl(name, JCheatToCheatStrategy(strategyName, JActorSpec.get(3).getAsString()));
   }
-
 
 
   private static player JActorSpecToPlayer(JsonArray JActorSpec) throws IllegalArgumentException {
     String name = JActorSpec.get(0).getAsString();
     Strategy strategy = jsonToStrategy(JActorSpec.get(1).getAsString());
 
-    switch(JActorSpec.size()) {
-      case 2:
-        return new playerImpl(name, strategy);
-      case 3:
-        return PlayerWithJExn(name, strategy, JActorSpec);
-      case 4:
-        return PlayerWithJCheat(name, JActorSpec.get(1).getAsString(), JActorSpec);
-      default:
-        throw new IllegalArgumentException("JActorSpec must contain either 2, 3, or 4 elements.");
-    }
+    return switch (JActorSpec.size()) {
+      case 2 -> new playerImpl(name, strategy);
+      case 3 -> PlayerWithJExn(name, strategy, JActorSpec);
+      case 4 -> PlayerWithJCheat(name, JActorSpec.get(1).getAsString(), JActorSpec);
+      default ->
+              throw new IllegalArgumentException("JActorSpec must contain either 2, 3, or 4 elements.");
+    };
   }
 
   /**
@@ -217,7 +213,7 @@ public class JsonUtils {
     for (JsonElement tileElement : jPlayer.get("tile*").getAsJsonArray()) {
       playersTiles.add(JTileToTile(tileElement.getAsJsonObject()));
     }
-    return new PlayerStateImpl(playersTiles, jPlayer.get("score").getAsInt());
+    return new PlayerStateImpl(jPlayer.get("name").getAsString(), playersTiles, jPlayer.get("score").getAsInt());
   }
 
   /**

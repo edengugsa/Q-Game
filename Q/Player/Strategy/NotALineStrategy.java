@@ -1,7 +1,7 @@
 package Player.Strategy;
 
 import java.util.ArrayDeque;
-import java.util.Queue;
+import java.util.Deque;
 
 import Common.GameBoard.GameBoard;
 import Common.GameCommands.PlacementCommand;
@@ -31,23 +31,26 @@ public class NotALineStrategy extends AbstractCheatStrategy {
 
   /**
    * Returns a PlacementCommand with exactly two Placements that are not in the same row or col.
-   * If it is not possible, it will revert to its fallback strategy.
+   * If that is not possible, it will revert to its fallback strategy.
    */
   @Override
   public QGameCommand computeHelper(ActivePlayerKnowledge apk) {
     GameBoard board = apk.getBoard();
-    Queue<Placement> notInLinePlacements = new ArrayDeque<>();
+    Deque<Placement> notInLinePlacements = new ArrayDeque<>();
     RuleBook rulebook = new RuleBook();
 
     for (Tile t : apk.getActivePlayerTiles()) {
       for (Placement p : board.placementAdjacentOptions(t)) {
         if (rulebook.matchesNeighbors(board, p)) {
           notInLinePlacements.add(p);
-          if (notInLinePlacements.isEmpty()) {
+          if (notInLinePlacements.size() == 1) {
             break;
           }
           else {
-            if (!rulebook.contiguous(notInLinePlacements)) {
+            if (rulebook.contiguous(notInLinePlacements)) {
+              notInLinePlacements.removeLast();
+            }
+            else {
               return new PlacementCommand(notInLinePlacements);
             }
           }

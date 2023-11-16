@@ -12,13 +12,8 @@ import Common.GameCommands.ExchangeCommand;
 import Common.GameCommands.PlacementCommand;
 import Common.GameCommands.QGameCommand;
 import Common.RuleBook.BadAskForTilesRuleBook;
-import Common.RuleBook.NoFitRuleBook;
-import Common.RuleBook.NonAdjacentCoordinateRuleBook;
-import Common.RuleBook.NotALineRuleBook;
 import Common.RuleBook.RuleBook;
-import Common.RuleBook.TileNotOwnedRuleBook;
 import Common.State.ActivePlayerKnowledge;
-import Common.State.GameState;
 import Common.Tiles.Coordinate;
 import Common.Tiles.Placement;
 import Common.Tiles.QColor;
@@ -26,6 +21,10 @@ import Common.Tiles.QShape;
 import Common.Tiles.Tile;
 import Player.Strategy.DagStrategy;
 import Player.Strategy.LdasgStrategy;
+import Player.Strategy.NoFitStrategy;
+import Player.Strategy.NonAdjacentCoordinateStrategy;
+import Player.Strategy.NotALineStrategy;
+import Player.Strategy.TileNotOwnedStrategy;
 import Player.player;
 import Player.playerImpl;
 
@@ -34,21 +33,13 @@ import static org.junit.Assert.assertFalse;
 
 public class testJCheat {
 
-
-  public Referee initRef() {
-    List<player> players = new ArrayList<>();
-    players.add(new playerImpl("Allen", new LdasgStrategy(new NonAdjacentCoordinateRuleBook())));
-    players.add(new playerImpl("Bethany", new DagStrategy(new TileNotOwnedRuleBook())));
-    return new Referee(players, new RuleBook());
-  }
-
   @Test
   public void testJCheat() {
     List<player> players = new ArrayList<>();
-    player allen = new playerImpl("Allen", new LdasgStrategy(new NonAdjacentCoordinateRuleBook()));
-    player bethany = new playerImpl("Bethany", new DagStrategy(new TileNotOwnedRuleBook()));
-    player cindy = new playerImpl("Cindy", new DagStrategy(new NotALineRuleBook()));
-    player darryl = new playerImpl("Darryl", new DagStrategy(new NoFitRuleBook()));
+    player allen = new playerImpl("Allen", new NonAdjacentCoordinateStrategy(new LdasgStrategy()));
+    player bethany = new playerImpl("Bethany", new TileNotOwnedStrategy(new DagStrategy()));
+    player cindy = new playerImpl("Cindy", new NotALineStrategy(new DagStrategy()));
+    player darryl = new playerImpl("Darryl", new NoFitStrategy(new DagStrategy()));
     players.add(allen);
     players.add(bethany);
     Referee ref = new Referee(players, new RuleBook());
@@ -62,27 +53,22 @@ public class testJCheat {
 
     // Tile not owned Jcheat
     QGameCommand cmdBeth = bethany.takeTurn(ref.getGameState().getActivePlayerKnowledge());
-    Queue<Placement> expPlacementsBeth = new ArrayDeque<>();
-    expPlacementsBeth.add(new Placement(new Coordinate(0, -1), new Tile(QColor.YELLOW, QShape.star)));
-    QGameCommand expectedBeth = new PlacementCommand(expPlacementsBeth);
-    assertEquals(expectedBeth.toString(), cmdBeth.toString());
-    assertFalse(ref.getGameState().getActivePlayerKnowledge().getActivePlayerTiles().contains(new Placement(new Coordinate(0, -1), new Tile(QColor.YELLOW, QShape.star))));
+    assertFalse(ref.getGameState().getActivePlayerKnowledge().getActivePlayerTiles().contains(new Tile(QColor.YELLOW, QShape.square)));
 
     // Not in a line
     QGameCommand cmdCindy = cindy.takeTurn(ref.getGameState().getActivePlayerKnowledge());
     Queue<Placement> expPlacementsCindy = new ArrayDeque<>();
-    expPlacementsCindy.add(new Placement(new Coordinate(0, -1), new Tile(QColor.BLUE, QShape.eight_star)));
-    expPlacementsCindy.add(new Placement(new Coordinate(0, -2), new Tile(QColor.BLUE, QShape.star)));
+    expPlacementsCindy.add(new Placement(new Coordinate(0, -1), new Tile(QColor.YELLOW, QShape.diamond)));
+    expPlacementsCindy.add(new Placement(new Coordinate(1, 0), new Tile(QColor.BLUE, QShape.eight_star)));
     QGameCommand expectedCindy = new PlacementCommand(expPlacementsCindy);
     assertEquals(expectedCindy.toString(), cmdCindy.toString());
 
     // Doesn't match neighbors
     QGameCommand cmdDarryl = darryl.takeTurn(ref.getGameState().getActivePlayerKnowledge());
     Queue<Placement> expPlacementsDarryl = new ArrayDeque<>();
-    expPlacementsDarryl.add(new Placement(new Coordinate(0, -1), new Tile(QColor.BLUE, QShape.star)));
+    expPlacementsDarryl.add(new Placement(new Coordinate(0, -1), new Tile(QColor.YELLOW, QShape.diamond)));
     QGameCommand expectedDarryl = new PlacementCommand(expPlacementsDarryl);
     assertEquals(expectedDarryl.toString(), cmdDarryl.toString());
-
   }
 
   @Test

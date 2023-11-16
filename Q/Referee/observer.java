@@ -71,9 +71,7 @@ public class observer {
     }
   }
 
-
   public void gameOver() {
-//    System.out.println("Observer: Game over");
     this.renderObserverGameStates.notifyGameOver();
   }
 
@@ -98,7 +96,7 @@ public class observer {
   }
 
   /**
-   * Saves the current GameState to a Json file. fileName should have the .json extension
+   * Saves the current GameState to a file. Assumes fileName has the extension
    */
   public void save(String fileName) throws IOException {
     JsonObject stateToSave = JsonUtils.GameStateToJState(gameStates.get(this.currentGameStateIdx));

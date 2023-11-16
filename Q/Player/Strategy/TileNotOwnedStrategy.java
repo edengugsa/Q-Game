@@ -32,20 +32,16 @@ public class TileNotOwnedStrategy extends AbstractCheatStrategy {
    * Computes a Placement Command that contains one Tile that the Player does not own at a valid
    * coordinate on the GameBoard.
    * If the Tiles the Player does not own cannot be placed on the board, it will revert to its
-   * fallback strategy. TODO or should it try Exchanging/Passing?
+   * fallback strategy.
    */
   public QGameCommand computeHelper(ActivePlayerKnowledge apk) {
-//    ActivePlayerKnowledge newAPK = new ActivePlayerKnowledge(apk.getOpponentStates(),
-//            apk.getBoard(), apk.getNumRefTilesRemaining(), getPlayerTiles(apk.getActivePlayerTiles()));
-
-//    return this.fallbackStrategy.computeOnePlacement(newAPK);
-    List<Tile> tilesPlayerDoesNotOwn = this.getPlayerTiles(apk.getActivePlayerTiles());
+    List<Tile> tilesPlayerDoesNotOwn = this.getTilesPlayerDoesNotOwn(apk.getActivePlayerTiles());
     GameBoard gameboard = apk.getBoard();
 
     for (Tile t : tilesPlayerDoesNotOwn) {
       for(Placement p : gameboard.placementAdjacentOptions(t)) {
         if (new RuleBook().matchesNeighbors(gameboard, p)) {
-          Queue onePlacement = new ArrayDeque();
+          Queue<Placement> onePlacement = new ArrayDeque<>();
           onePlacement.add(p);
           return new PlacementCommand(onePlacement);
         }
@@ -55,7 +51,7 @@ public class TileNotOwnedStrategy extends AbstractCheatStrategy {
   }
 
 
-  public List<Tile> getPlayerTiles(List<Tile> playerTiles) {
+  private List<Tile> getTilesPlayerDoesNotOwn(List<Tile> playerTiles) {
     List<Tile> res = new ArrayList<>();
 
     for (Tile t: allTiles()) {
@@ -85,6 +81,4 @@ public class TileNotOwnedStrategy extends AbstractCheatStrategy {
 
     return tiles;
   }
-
-
 }

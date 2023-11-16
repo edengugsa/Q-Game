@@ -9,7 +9,7 @@ import Common.State.ActivePlayerKnowledge;
  */
 public class BadAskForTilesStrategy extends AbstractCheatStrategy {
 
-  BadAskForTilesStrategy(Strategy fallbackStrategy) {
+  public BadAskForTilesStrategy(Strategy fallbackStrategy) {
     super(fallbackStrategy);
   }
 

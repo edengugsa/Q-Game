@@ -15,7 +15,9 @@ import Referee.observer;
 import Referee.WinnersAndCheaters;
 
 /**
- * Takes in a JState and JActorSpecA
+ * Testing harness for running a Q Game with an optional Observer and with JCheat Players.
+ * Takes in a GameState and JActorSpecA from stdin, runs a complete game, and prints out the names of
+ * winners and cheaters.
  */
 public class XGamesWithObservers {
 
