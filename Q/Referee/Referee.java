@@ -122,8 +122,6 @@ public class Referee {
   }
 
   private void tellObserversGameOver() {
-    //sendObserversNewGameState(game);
-
     for (observer o : this.observers) {
       try {
         o.gameOver();
@@ -136,11 +134,9 @@ public class Referee {
 
 
   private void currentPlayerTakeTurn(){
-
     try {
       QGameCommand cmd = currentPlayer().takeTurn(game.getActivePlayerKnowledge());
       if (cmd.isLegal(ruleBook, game)) {
-//        System.out.println(currentPlayer().name() + ": " + cmd);
         game.execute(cmd);
         game.score(cmd, this.scorer);
         if (game.currentPlayer().getHand().isEmpty()) {
@@ -216,7 +212,8 @@ public class Referee {
   }
 
   private void setupObservers() {
-    for (observer o : this.observers) {
+    List<observer> observerCopy =  new ArrayList<>(observers);
+    for (observer o : observerCopy) {
       try {
         o.setup(this.game.getCopy());
       }

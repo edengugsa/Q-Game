@@ -1,5 +1,6 @@
 package Player.Strategy;
 
+import Common.GameCommands.ExchangeCommand;
 import Common.GameCommands.QGameCommand;
 import Common.State.ActivePlayerKnowledge;
 
@@ -23,6 +24,6 @@ public class BadAskForTilesStrategy extends AbstractCheatStrategy {
 
   @Override
   public QGameCommand computeHelper(ActivePlayerKnowledge knowledge) {
-    return null;
+    return new ExchangeCommand();
   }
 }

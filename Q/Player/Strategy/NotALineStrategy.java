@@ -43,7 +43,7 @@ public class NotALineStrategy extends AbstractCheatStrategy {
       for (Placement p : board.placementAdjacentOptions(t)) {
         if (rulebook.matchesNeighbors(board, p)) {
           notInLinePlacements.add(p);
-          if (notInLinePlacements.size() == 1) {
+          if (notInLinePlacements.size() < 2) {
             break;
           }
           else {

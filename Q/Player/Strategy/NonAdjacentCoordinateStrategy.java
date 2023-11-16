@@ -25,25 +25,14 @@ public class NonAdjacentCoordinateStrategy extends AbstractCheatStrategy {
 
 
   /**
-   * @return A PlacementCommand of the ActivePlayerKnowledge's smallest Tile at a Coordinate
+   * @return A PlacementCommand of an ActivePlayerKnowledge's Tile at a Coordinate
    * that is not adjacent to a placed Tile on the GameBoard.
    */
   public QGameCommand computeHelper(ActivePlayerKnowledge knowledge) {
-    Tile t = this.getSmallestTile(knowledge.getActivePlayerTiles());
+    Tile t = knowledge.getActivePlayerTiles().get(0);
     Queue<Placement> onePlacement = new ArrayDeque<>();
     onePlacement.add(new Placement(getNonAdjacentCoordinate(t, knowledge.getBoard()), t));
     return new PlacementCommand(onePlacement);
-  }
-
-
-  private Tile getSmallestTile(List<Tile> tiles) {
-    if (tiles.isEmpty()) {
-      throw new IllegalStateException("Player Tiles should not be empty");
-    }
-    else {
-      Collections.sort(tiles, Tile.TileComparator);
-      return tiles.get(0);
-    }
   }
 
   /**
@@ -55,13 +44,12 @@ public class NonAdjacentCoordinateStrategy extends AbstractCheatStrategy {
     for (Placement p : placementAdjacentOptions) {
       for(Coordinate neighbor: p.coordinate().getNeighbors()) {
         if (!board.containsCoord(neighbor)
-                && !board.containsCoord(p.coordinate())
                 && board.getNumFreeNeighbors(neighbor) == 4) {
           return neighbor;
         }
       }
     }
     //shouldn't reach here
-    return new Coordinate(-5000,5000);
+    throw new IllegalArgumentException("Cannot find a non-adjacent coordinate");
   }
 }

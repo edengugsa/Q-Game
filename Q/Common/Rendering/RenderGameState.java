@@ -20,7 +20,7 @@ import Common.Tiles.Tile;
  * of remaining Referee tiles, as well as each player's score and Tiles.
  */
 public class RenderGameState extends JPanel {
-  JScrollPane scrollabeGameState;
+  JScrollPane scrollableGameState;
   JLabel gameStateImg;
   private int PADDING = 20;
   private int TILE_SIZE = 50;
@@ -30,17 +30,17 @@ public class RenderGameState extends JPanel {
 
   public RenderGameState(GameState gamestate) {
     this.gameStateImg = new JLabel(new ImageIcon(this.GameStateToPng(gamestate)));
-    this.scrollabeGameState = new JScrollPane(this.gameStateImg);
-    this.scrollabeGameState.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-    this.scrollabeGameState.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-    this.add(scrollabeGameState);
+    this.scrollableGameState = new JScrollPane(this.gameStateImg);
+    this.scrollableGameState.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+    this.scrollableGameState.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+    this.add(scrollableGameState);
     this.setVisible(true);
   }
 
   public void updateGameState(GameState gs) {
     this.gameStateImg.setIcon(new ImageIcon(this.GameStateToPng(gs)));
-    this.scrollabeGameState.revalidate();
-    this.scrollabeGameState.repaint();
+    this.scrollableGameState.revalidate();
+    this.scrollableGameState.repaint();
   }
 
   /**
