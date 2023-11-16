@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 import Common.GameCommands.QGameCommand;
 import Common.RuleBook.QRuleBook;
@@ -110,7 +111,8 @@ public class Referee {
   }
 
   private void sendObserversNewGameState(GameState newGs) {
-    for (observer o : this.observers) {
+    List<observer> observerCopy =  new ArrayList<>(observers);
+    for (observer o : observerCopy) {
       try {
         o.receiveState(newGs);
       }
@@ -122,7 +124,8 @@ public class Referee {
   }
 
   private void tellObserversGameOver() {
-    for (observer o : this.observers) {
+    List<observer> observerCopy =  new ArrayList<>(observers);
+    for (observer o : observerCopy) {
       try {
         o.gameOver();
       }
@@ -210,6 +213,18 @@ public class Referee {
     this.setupPlayers();
     this.setupObservers();
   }
+
+//  private void tryObserver(observerAction action) {
+//    List<observer> observerCopy =  new ArrayList<>(observers);
+//    for (observer o : observerCopy) {
+//      try {
+//        action.performAction(o);
+//      }
+//      catch (Exception e) {
+//        this.observers.remove(o);
+//      }
+//    }
+//  }
 
   private void setupObservers() {
     List<observer> observerCopy =  new ArrayList<>(observers);
