@@ -14,16 +14,13 @@ public class BadAskForTilesStrategy extends AbstractCheatStrategy {
     super(fallbackStrategy);
   }
 
-  /**
-   * Does the Player have more tiles than the Referee?
-   */
   @Override
-  public boolean canCheat(ActivePlayerKnowledge apk) {
-    return apk.getNumRefTilesRemaining() < apk.getNumPlayerTiles();
-  }
-
-  @Override
-  public QGameCommand computeHelper(ActivePlayerKnowledge knowledge) {
-    return new ExchangeCommand();
+  public QGameCommand compute(ActivePlayerKnowledge apk) {
+    if (apk.getNumRefTilesRemaining() < apk.getNumPlayerTiles()) {
+      return new ExchangeCommand();
+    }
+    else {
+      return this.fallbackStrategy.compute(apk);
+    }
   }
 }

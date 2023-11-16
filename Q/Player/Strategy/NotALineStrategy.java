@@ -25,16 +25,20 @@ public class NotALineStrategy extends AbstractCheatStrategy {
    * Does the Player have at least two Tiles?
    */
   @Override
-  public boolean canCheat(ActivePlayerKnowledge apk) {
-    return apk.getNumPlayerTiles() > 1;
+  public QGameCommand compute(ActivePlayerKnowledge apk) {
+    if (apk.getNumPlayerTiles() > 1) {
+      return this.computeHelper(apk);
+    }
+    else {
+      return this.fallbackStrategy.compute(apk);
+    }
   }
 
   /**
    * Returns a PlacementCommand with exactly two Placements that are not in the same row or col.
    * If that is not possible, it will revert to its fallback strategy.
    */
-  @Override
-  public QGameCommand computeHelper(ActivePlayerKnowledge apk) {
+  private QGameCommand computeHelper(ActivePlayerKnowledge apk) {
     GameBoard board = apk.getBoard();
     Deque<Placement> notInLinePlacements = new ArrayDeque<>();
     RuleBook rulebook = new RuleBook();

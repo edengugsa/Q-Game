@@ -11,7 +11,6 @@ import Common.GameBoard.GameBoard;
 import Common.GameCommands.ExchangeCommand;
 import Common.GameCommands.PlacementCommand;
 import Common.GameCommands.QGameCommand;
-import Common.RuleBook.BadAskForTilesRuleBook;
 import Common.RuleBook.RuleBook;
 import Common.State.ActivePlayerKnowledge;
 import Common.Tiles.Coordinate;
@@ -19,6 +18,7 @@ import Common.Tiles.Placement;
 import Common.Tiles.QColor;
 import Common.Tiles.QShape;
 import Common.Tiles.Tile;
+import Player.Strategy.BadAskForTilesStrategy;
 import Player.Strategy.DagStrategy;
 import Player.Strategy.LdasgStrategy;
 import Player.Strategy.NoFitStrategy;
@@ -47,13 +47,13 @@ public class testJCheat {
     // Non adjacent JCheat
     QGameCommand cmdAllen = allen.takeTurn(ref.getGameState().getActivePlayerKnowledge());
     Queue<Placement> expPlacements = new ArrayDeque<>();
-    expPlacements.add(new Placement(new Coordinate(0, -2), new Tile(QColor.BLUE, QShape.star)));
+    expPlacements.add(new Placement(new Coordinate(0, -2), new Tile(QColor.YELLOW, QShape.diamond)));
     QGameCommand expected = new PlacementCommand(expPlacements);
     assertEquals(expected.toString(), cmdAllen.toString());
 
     // Tile not owned Jcheat
     QGameCommand cmdBeth = bethany.takeTurn(ref.getGameState().getActivePlayerKnowledge());
-    assertFalse(ref.getGameState().getActivePlayerKnowledge().getActivePlayerTiles().contains(new Tile(QColor.YELLOW, QShape.square)));
+    assertFalse(ref.getGameState().getActivePlayerKnowledge().getActivePlayerTiles().contains(((PlacementCommand)cmdBeth).getPlacements().remove()));
 
     // Not in a line
     QGameCommand cmdCindy = cindy.takeTurn(ref.getGameState().getActivePlayerKnowledge());
@@ -66,14 +66,14 @@ public class testJCheat {
     // Doesn't match neighbors
     QGameCommand cmdDarryl = darryl.takeTurn(ref.getGameState().getActivePlayerKnowledge());
     Queue<Placement> expPlacementsDarryl = new ArrayDeque<>();
-    expPlacementsDarryl.add(new Placement(new Coordinate(0, -1), new Tile(QColor.YELLOW, QShape.diamond)));
+    expPlacementsDarryl.add(new Placement(new Coordinate(0, -1), new Tile(QColor.ORANGE, QShape.square)));
     QGameCommand expectedDarryl = new PlacementCommand(expPlacementsDarryl);
     assertEquals(expectedDarryl.toString(), cmdDarryl.toString());
   }
 
   @Test
   public void testJCheat2() {
-    player allen = new playerImpl("Allen", new LdasgStrategy(new BadAskForTilesRuleBook()));
+    player allen = new playerImpl("Allen", new BadAskForTilesStrategy(new LdasgStrategy()));
     List<Tile> allenTiles = new ArrayList<>();
     allenTiles.add(new Tile(QColor.GREEN, QShape.star));
     allenTiles.add(new Tile(QColor.GREEN, QShape.circle));
@@ -87,7 +87,7 @@ public class testJCheat {
 
   @Test
   public void testJCheat3() {
-    player allen = new playerImpl("Allen", new LdasgStrategy(new BadAskForTilesRuleBook()));
+    player allen = new playerImpl("Allen", new BadAskForTilesStrategy(new LdasgStrategy()));
     List<Tile> allenTiles = new ArrayList<>();
     allenTiles.add(new Tile(QColor.BLUE, QShape.circle));
     allenTiles.add(new Tile(QColor.GREEN, QShape.circle));

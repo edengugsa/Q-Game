@@ -11,8 +11,6 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Queue;
 import Common.JsonUtils;
-import Common.Rendering.GameBoardPainter;
-import Common.Rendering.GameBoardPanel;
 import Common.Tiles.Placement;
 
 import Common.Scorer.Scorer;

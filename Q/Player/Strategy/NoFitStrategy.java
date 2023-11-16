@@ -29,7 +29,7 @@ public class NoFitStrategy extends AbstractCheatStrategy {
    * fallback strategy.
    */
   @Override
-  public QGameCommand computeHelper(ActivePlayerKnowledge apk) {
+  public QGameCommand compute(ActivePlayerKnowledge apk) {
     List<Tile> playerTiles = apk.getActivePlayerTiles();
     GameBoard gameboard = apk.getBoard();
 

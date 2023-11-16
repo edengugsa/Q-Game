@@ -18,7 +18,6 @@ import Common.Tiles.QColor;
 import Common.Tiles.QShape;
 import Common.Tiles.Tile;
 import Player.Strategy.BadAskForTilesStrategy;
-import Player.Strategy.CheatStrategy;
 import Player.Strategy.NoFitStrategy;
 import Player.Strategy.NonAdjacentCoordinateStrategy;
 import Player.Strategy.NotALineStrategy;
@@ -116,7 +115,7 @@ public class JsonUtils {
     };
   }
 
-  private static CheatStrategy JCheatToCheatStrategy(String jStrategy, String jCheat) {
+  private static Strategy JCheatToCheatStrategy(String jStrategy, String jCheat) {
     Strategy fallbackStrategy = JStrategyToStrategy(jStrategy);
     return switch (jCheat) {
       case "non-adjacent-coordinate" -> new NonAdjacentCoordinateStrategy(fallbackStrategy);

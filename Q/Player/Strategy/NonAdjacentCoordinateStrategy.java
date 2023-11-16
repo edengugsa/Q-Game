@@ -28,7 +28,7 @@ public class NonAdjacentCoordinateStrategy extends AbstractCheatStrategy {
    * @return A PlacementCommand of an ActivePlayerKnowledge's Tile at a Coordinate
    * that is not adjacent to a placed Tile on the GameBoard.
    */
-  public QGameCommand computeHelper(ActivePlayerKnowledge knowledge) {
+  public QGameCommand compute(ActivePlayerKnowledge knowledge) {
     Tile t = knowledge.getActivePlayerTiles().get(0);
     Queue<Placement> onePlacement = new ArrayDeque<>();
     onePlacement.add(new Placement(getNonAdjacentCoordinate(t, knowledge.getBoard()), t));

@@ -34,7 +34,7 @@ public class TileNotOwnedStrategy extends AbstractCheatStrategy {
    * If the Tiles the Player does not own cannot be placed on the board, it will revert to its
    * fallback strategy.
    */
-  public QGameCommand computeHelper(ActivePlayerKnowledge apk) {
+  public QGameCommand compute(ActivePlayerKnowledge apk) {
     List<Tile> tilesPlayerDoesNotOwn = this.getTilesPlayerDoesNotOwn(apk.getActivePlayerTiles());
     GameBoard gameboard = apk.getBoard();
 

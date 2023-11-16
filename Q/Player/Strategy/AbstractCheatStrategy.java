@@ -10,28 +10,11 @@ import Common.State.ActivePlayerKnowledge;
  * Concrete classes that extend this CheatStrategy will decide which rule their GameCommand will
  * violate.
  */
-public abstract class AbstractCheatStrategy implements CheatStrategy {
-  Strategy fallbackStrategy;
+public abstract class AbstractCheatStrategy implements Strategy {
+  protected Strategy fallbackStrategy;
 
   AbstractCheatStrategy(Strategy fallbackStrategy) {
     this.fallbackStrategy = fallbackStrategy;
   }
 
-  /**
-   * Most Cheat Strategies can always cheat.
-   */
-  public boolean canCheat(ActivePlayerKnowledge apk) {
-    return true;
-  }
-
-  public abstract QGameCommand computeHelper(ActivePlayerKnowledge apk);
-
-  public QGameCommand compute(ActivePlayerKnowledge apk) {
-    if (canCheat(apk)) {
-      return this.computeHelper(apk);
-    }
-    else {
-      return this.fallbackStrategy.compute(apk);
-    }
-  }
 }
