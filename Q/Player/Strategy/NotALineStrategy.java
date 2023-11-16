@@ -1,31 +1,60 @@
 package Player.Strategy;
 
 import java.util.ArrayDeque;
-import java.util.Collections;
-import java.util.List;
 import java.util.Queue;
 
+import Common.GameBoard.GameBoard;
+import Common.GameCommands.PlacementCommand;
 import Common.GameCommands.QGameCommand;
+import Common.RuleBook.RuleBook;
 import Common.State.ActivePlayerKnowledge;
 import Common.Tiles.Placement;
 import Common.Tiles.Tile;
 
-public class NotALineStrategy implements Strategy{
-  @Override
-  public QGameCommand compute(ActivePlayerKnowledge knowledge) {
-    List<Tile> tiles = knowledge.getActivePlayerTiles();
-    Collections.sort(knowledge.getActivePlayerTiles(), Tile.TileComparator);
+/**
+ *  Represents a Strategy that produces a PlacementCommand of two Placements that are not in the same
+ *  row or column.
+ */
+public class NotALineStrategy extends AbstractCheatStrategy {
 
-    Queue<Placement> res = new ArrayDeque<>();
-    for (Tile t : tiles) {
-      List<Placement> options = knowledge.getBoard().placementAdjacentOptions(t);
-      if (!options.isEmpty()) {
-        res.add(options.get(0));
+  public NotALineStrategy(Strategy fallbackStrategy) {
+    super(fallbackStrategy);
+  }
+
+  /**
+   * Does the Player have at least two Tiles?
+   */
+  @Override
+  public boolean canCheat(ActivePlayerKnowledge apk) {
+    return apk.getNumPlayerTiles() > 1;
+  }
+
+  /**
+   * Returns a PlacementCommand with exactly two Placements that are not in the same row or col.
+   * If it is not possible, it will revert to its fallback strategy.
+   */
+  @Override
+  public QGameCommand computeHelper(ActivePlayerKnowledge apk) {
+    GameBoard board = apk.getBoard();
+    Queue<Placement> notInLinePlacements = new ArrayDeque<>();
+    RuleBook rulebook = new RuleBook();
+
+    for (Tile t : apk.getActivePlayerTiles()) {
+      for (Placement p : board.placementAdjacentOptions(t)) {
+        if (rulebook.matchesNeighbors(board, p)) {
+          notInLinePlacements.add(p);
+          if (notInLinePlacements.isEmpty()) {
+            break;
+          }
+          else {
+            if (!rulebook.contiguous(notInLinePlacements)) {
+              return new PlacementCommand(notInLinePlacements);
+            }
+          }
+        }
       }
     }
-
-
-
-    return null;
+    return this.fallbackStrategy.compute(apk);
   }
+
 }

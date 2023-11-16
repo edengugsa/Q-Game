@@ -36,6 +36,9 @@ public class ActivePlayerKnowledge {
   public List<Tile> getActivePlayerTiles() { return new ArrayList<>(this.activePlayerTiles); }
   public int getNumRefTilesRemaining() { return this.refTilesRemaining; }
   public int getNumPlayerTiles() { return this.activePlayerTiles.size(); }
+  public Queue<PublicPlayerState> getOpponentStates() {
+    return this.opponentStates;
+  }
 
 
 

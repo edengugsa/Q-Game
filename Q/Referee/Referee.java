@@ -123,6 +123,7 @@ public class Referee {
 
   private void tellObserversGameOver() {
     //sendObserversNewGameState(game);
+
     for (observer o : this.observers) {
       try {
         o.gameOver();
@@ -231,7 +232,7 @@ public class Referee {
     for (int i = 0; i < numPlayers; i++) {
       try {
         player actualPlayer = this.players.get(game.currentPlayerName());
-        actualPlayer.setup(game.getGameBoard(), game.currentPlayerTiles());
+        actualPlayer.setup(game, game.currentPlayerTiles());
         game.bump();
       }
       catch (Exception e) {

@@ -18,7 +18,7 @@ import Common.Tiles.Tile;
 public class FlawedStrategy implements Strategy {
 
   @Override
-  public QGameCommand compute(ActivePlayerKnowledge knowledge) {
+  public QGameCommand compute(ActivePlayerKnowledge apk) {
     Queue<Placement> illegal = new ArrayDeque<>();
     illegal.add(new Placement(new Coordinate(1000000,10), new Tile(QColor.GREEN, QShape.circle)));
     illegal.add(new Placement(new Coordinate(10,10), new Tile(QColor.GREEN, QShape.circle)));

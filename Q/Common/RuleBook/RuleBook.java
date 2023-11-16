@@ -156,7 +156,7 @@ public class RuleBook implements QRuleBook {
    */
   protected boolean matchesNeighbors(Placement p) {
     Coordinate[] neighbors = p.coordinate().getNeighbors(); //
-    // [0] = @below, [1] = @above, [2] = @left, [3] = @right
+    // [0] = @below, [1] = @above, [2] = @left  , [3] = @right
     return matchesShapeOrColor(p.tile(), neighbors[0], neighbors[1])
             && matchesShapeOrColor(p.tile(), neighbors[2], neighbors[3]);
   }
@@ -166,7 +166,7 @@ public class RuleBook implements QRuleBook {
    * A set of coordinates are contiguous if they are all in either the same row
    * or the same column.
    */
-  protected boolean contiguous(Queue<Placement> placements) {
+  public boolean contiguous(Queue<Placement> placements) {
     List<Coordinate> coords = new ArrayList<>();
     for (Placement p : placements) {
       coords.add(p.coordinate());

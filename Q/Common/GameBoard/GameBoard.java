@@ -30,7 +30,6 @@ public class GameBoard {
   /**
    * Returns all the Placements on this GameBoard where the given Tile is adjacent.
    */
-
   public List<Placement> placementAdjacentOptions(Tile tile) {
     Set<Coordinate> allEmptySpots = this.getEmptySpots();
     ArrayList<Placement> options = new ArrayList<>();

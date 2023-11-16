@@ -10,7 +10,7 @@ import Common.Tiles.Tile;
 
 public class NotALineRuleBook extends RuleBook {
   @Override
-  protected boolean contiguous(Queue<Placement> placements) {
+  public boolean contiguous(Queue<Placement> placements) {
     if (placements.size() == 1) {
       return false;
     }
