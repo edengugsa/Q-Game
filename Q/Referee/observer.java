@@ -98,11 +98,11 @@ public class observer {
   }
 
   /**
-   * Saves the current GameState to a Json file. the .json extension is automatically appended.
+   * Saves the current GameState to a Json file. fileName should have the .json extension
    */
   public void save(String fileName) throws IOException {
     JsonObject stateToSave = JsonUtils.GameStateToJState(gameStates.get(this.currentGameStateIdx));
-    try (FileWriter fileWriter = new FileWriter(fileName + ".json")) {
+    try (FileWriter fileWriter = new FileWriter(fileName)) {
       new Gson().toJson(stateToSave, fileWriter);
       fileWriter.flush();
     }

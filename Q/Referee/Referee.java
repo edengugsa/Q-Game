@@ -122,7 +122,8 @@ public class Referee {
   }
 
   private void tellObserversGameOver() {
-    sendObserversNewGameState(game.getCopy());
+    //sendObserversNewGameState(game);
+
     for (observer o : this.observers) {
       try {
         o.gameOver();

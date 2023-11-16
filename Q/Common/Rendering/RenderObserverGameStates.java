@@ -3,6 +3,7 @@ package Common.Rendering;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 
 import Referee.observer;
@@ -86,8 +87,17 @@ public class RenderObserverGameStates extends JFrame {
    * Saves the current GameState as a Json at the given path.
    */
   public void saveGameState() throws IOException {
-    String fileName = JOptionPane.showInputDialog("Enter a file name to save the game state to");
-    observer.save(fileName);
+
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+    int option = fileChooser.showSaveDialog(this);
+    if(option == JFileChooser.APPROVE_OPTION){
+      observer.save(fileChooser.getSelectedFile().getName());
+//      File file = fileChooser.getSelectedFile();
+    }
+
+//    String fileName = JOptionPane.showInputDialog("Enter a file name to save the game state to");
+//    observer.save(fileName);
   }
 
 
