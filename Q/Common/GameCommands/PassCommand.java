@@ -49,4 +49,9 @@ public class PassCommand implements QGameCommand {
     return JsonParser.parseString("pass");
   }
 
+  @Override
+  public boolean doesPlayerGetNewTiles() {
+    return false;
+  }
+
 }

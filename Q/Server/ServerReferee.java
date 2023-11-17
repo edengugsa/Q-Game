@@ -6,14 +6,12 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import Common.RuleBook.RuleBook;
 import Player.player;
 import Referee.Referee;
 
 public class ServerReferee {
   ServerSocket serverSocket;
   List<ProxyPlayer> proxyPlayerList;
-
 
   ServerReferee(int port) throws IOException {
     this.serverSocket = new ServerSocket(port);
@@ -32,27 +30,23 @@ public class ServerReferee {
    * Listens for 20 seconds on its socket for clients to connect. Returns a list of ProxyPlayer for
    * every remove client that connected and sent a valid JName.
    */
-  List<player> signup() {
+  public List<player> signup() {
     List<player> proxyPlayersList = new ArrayList<>();
 
-    while(proxyPlayersList.size() < 4) {
+    while(proxyPlayersList.size() < 2) {
       try {
         Socket playerSocket = this.serverSocket.accept();
+        // get name from player, instantiate ProxyPlayer with name
+        // TODO wrap constructor with 3 second timer
         ProxyPlayer p = new ProxyPlayer(playerSocket);
-        this.tryToGetName(p);
         proxyPlayersList.add(p);
         System.out.println("Added new Player: " + p.name());
       }
       catch(Exception e) {
-        System.out.println("Server Referee signup threw");
-        System.out.println(e.getMessage());
+        System.out.println("ServerReferee::signup " + e.getMessage());
       }
     }
     return proxyPlayersList;
-  }
-
-  private void tryToGetName(PlayerProxy p) {
-    p.name();
   }
 
   public void run() {
@@ -62,7 +56,7 @@ public class ServerReferee {
       ref.runGame();
     }
     catch (Exception e) {
-      System.out.println("Server Referee run threw");
+      System.out.println("Server::run: " + e.getMessage());
     }
   }
 

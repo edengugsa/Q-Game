@@ -59,4 +59,9 @@ public class ExchangeCommand implements QGameCommand {
   public JsonElement toJSON() {
     return JsonParser.parseString("exchange");
   }
+
+  @Override
+  public boolean doesPlayerGetNewTiles() {
+    return true;
+  }
 }

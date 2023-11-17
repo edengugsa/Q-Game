@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
 import java.util.*;
 
@@ -167,10 +168,9 @@ public class QGameToJson {
     return jTiles;
   }
 
-  public static JsonObject WinBooleanToJsonBool(Boolean win) {
-    JsonObject winJson = new JsonObject();
-    winJson.addProperty("win", win.booleanValue());
-    return winJson;
+  public static JsonElement WinBooleanToJsonBool(Boolean win) {
+    JsonPrimitive winBool = new JsonPrimitive(win);
+    return winBool;
   }
 
   public static JsonObject PlayerStateToJPlayer(PlayerState ps) {

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 
 import Common.GameCommands.QGameCommand;
 import Common.RuleBook.QRuleBook;
@@ -55,7 +54,6 @@ public class Referee {
     this.scorer = new Scorer();
     this.disqualifiedPlayers = new ArrayList<>();
     this.observers = new ArrayList<>();
-    this.setupPlayers();
   }
 
   /**
@@ -69,7 +67,8 @@ public class Referee {
     this.scorer = new Scorer();
     this.disqualifiedPlayers = new ArrayList<>();
     this.observers = new ArrayList<>();
-    this.setGame();
+    this.createGameState(players);
+    this.setNameToPlayersMap(players);
   }
 
   public Referee(List<player> players) {
@@ -148,9 +147,9 @@ public class Referee {
         if (game.currentPlayer().getHand().isEmpty()) {
           return;
         }
-        game.renewPlayerTiles(cmd);
-        updatePlayer();
-        game.bump();
+        this.game.renewPlayerTiles(cmd);
+        this.updatePlayer(cmd);
+        this.game.bump();
       }
       else {
         disqualify();
@@ -164,8 +163,10 @@ public class Referee {
   /**
    * Updates the AI player with their new tiles after their turn has been completed
    */
-  private void updatePlayer() {
-    this.currentPlayer().newTiles(game.currentPlayerTiles());
+  private void updatePlayer(QGameCommand cmd) {
+    if (cmd.doesPlayerGetNewTiles()) {
+      this.currentPlayer().newTiles(game.currentPlayerTiles());
+    }
   }
 
   private player currentPlayer() {
@@ -205,14 +206,11 @@ public class Referee {
   /**
    * Sets this Referee's storage of player into a name->player map using the given list of player.
    */
-  private List<String> setNameToPlayersMap(List<player> players) {
+  private void setNameToPlayersMap(List<player> players) {
     this.players = new HashMap<>();
-    List<String> names = new ArrayList<>();
     for (player p : players) {
       this.players.put(p.name(), p);
-      names.add(p.name());
     }
-    return names;
   }
 
   /**
@@ -264,16 +262,16 @@ public class Referee {
   }
 
   /**
-   * Builds this Referee's representation of the State
-   * This must be called after the createPlayers() method has been called.
+   * Creates a GameState with the given list of players. The GameState will have a GameBoard
+   * with a Tile and players with 6 Tiles each.
    */
-  private void setGame() {
+  private void createGameState(List<player> players) {
     Queue<PlayerState> playerStates = new ArrayDeque<>();
-    for (player p : this.players.values()) {
+    for (player p : players) {
       playerStates.add(new PlayerStateImpl(p.name()));
     }
     this.game = new GameState(playerStates);
-    game.dealToAll(ruleBook.tilesPerPlayer());
+    this.game.dealToAll(this.ruleBook.tilesPerPlayer());
   }
 
   /**

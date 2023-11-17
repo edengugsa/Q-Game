@@ -71,4 +71,9 @@ public class PlacementCommand implements QGameCommand {
   private Placement first() {
     return this.placements.peek();
   }
+
+  public boolean doesPlayerGetNewTiles() {
+    return true;
+  }
 }
+

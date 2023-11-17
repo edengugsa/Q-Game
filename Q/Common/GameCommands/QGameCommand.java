@@ -37,4 +37,5 @@ public interface QGameCommand {
    */
   JsonElement toJSON();
 
+  boolean doesPlayerGetNewTiles();
 }
