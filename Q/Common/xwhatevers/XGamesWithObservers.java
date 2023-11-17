@@ -7,7 +7,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import Common.JsonUtils;
+import Common.JsonToQGame;
+import Common.QGameToJson;
 import Common.State.GameState;
 import Player.player;
 import Referee.Referee;
@@ -25,8 +26,8 @@ public class XGamesWithObservers {
           = new JsonStreamParser(new BufferedReader(new InputStreamReader(System.in)));
 
   public static void main(String[] args) {
-    GameState gamestate = JsonUtils.JStateToGameState(parser.next().getAsJsonObject());
-    List<player> players = JsonUtils.JActorsToPlayerList(parser.next().getAsJsonArray());
+    GameState gamestate = JsonToQGame.JStateToGameState(parser.next().getAsJsonObject());
+    List<player> players = JsonToQGame.JActorsToPlayerList(parser.next().getAsJsonArray());
 
     List<observer> observers = new ArrayList<>();
     if (args.length > 0 && (args[0].equals("–show") || args[0].equals("-show"))) {
@@ -34,6 +35,6 @@ public class XGamesWithObservers {
     }
 
     WinnersAndCheaters results = new Referee(players, observers, gamestate).runGame();
-    System.out.println(JsonUtils.WinnersAndCheatersToJson(results));
+    System.out.println(QGameToJson.WinnersAndCheatersToJson(results));
   }
 }

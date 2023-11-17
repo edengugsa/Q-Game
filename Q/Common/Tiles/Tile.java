@@ -6,7 +6,8 @@ import java.awt.*;
 import java.util.Comparator;
 import java.util.Objects;
 
-import Common.JsonUtils;
+import Common.JsonToQGame;
+import Common.QGameToJson;
 
 /**
  * Represents a tile in The Q Game. A tile has two attributes: Color and QShape.
@@ -54,6 +55,6 @@ public record Tile(QColor color, QShape shape) {
 
 
   public JsonElement toJSON() {
-    return JsonUtils.TileToJTile(this);
+    return QGameToJson.TileToJTile(this);
   }
 }

@@ -1,4 +1,5 @@
 package Player;
+import java.io.IOException;
 import java.util.List;
 
 import Common.GameBoard.GameBoard;
@@ -18,7 +19,7 @@ public interface player {
     /**
      * Configures this player with the state of the game board and its tiles.
      */
-    void setup(GameState state, List<Tile> hand);
+    void setup(ActivePlayerKnowledge apk, List<Tile> hand);
 
     /**
      * @return this player's requested QGameCommand based on the given knowledge about the game.

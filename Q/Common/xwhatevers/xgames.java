@@ -2,10 +2,10 @@ package Common.xwhatevers;
 import com.google.gson.JsonStreamParser;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
-import Referee.observer;
-import Common.JsonUtils;
+
+import Common.JsonToQGame;
+import Common.QGameToJson;
 import Common.State.GameState;
 import Player.player;
 import Referee.Referee;
@@ -19,15 +19,15 @@ public class xgames {
           = new JsonStreamParser(new BufferedReader(new InputStreamReader(System.in)));
 
   public static void main(String[] args) {
-      GameState gamestate = JsonUtils.JStateToGameState(parser.next().getAsJsonObject());
+      GameState gamestate = JsonToQGame.JStateToGameState(parser.next().getAsJsonObject());
 
-      List<player> players = JsonUtils.JActorsToPlayerList(parser.next().getAsJsonArray());
+      List<player> players = JsonToQGame.JActorsToPlayerList(parser.next().getAsJsonArray());
 
 //      // TODO REMOVE OBSERVER
 //      List<observer> observers = new ArrayList<>();
 //      observers.add(new observer());
 
       WinnersAndCheaters results = new Referee(players, gamestate).runGame();
-      System.out.println(JsonUtils.WinnersAndCheatersToJson(results));
+      System.out.println(QGameToJson.WinnersAndCheatersToJson(results));
   }
 }

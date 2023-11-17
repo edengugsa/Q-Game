@@ -1,6 +1,5 @@
 package Referee;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayDeque;
@@ -11,7 +10,8 @@ import java.util.Queue;
 
 
 import Common.GameBoard.GameBoard;
-import Common.JsonUtils;
+import Common.JsonToQGame;
+import Common.QGameToJson;
 import Common.RuleBook.RuleBook;
 import Common.State.GameState;
 import Common.State.PlayerState;
@@ -78,7 +78,7 @@ public class testReferee {
     gameBoard.extend(new Coordinate(1, 0), new Tile(QColor.BLUE, QShape.clover));
     gameBoard.extend(new Coordinate(2, 0), new Tile(QColor.GREEN, QShape.clover));
     gameBoard.extend(new Coordinate(2, 1), new Tile(QColor.GREEN, QShape.star));
-    System.out.println(JsonUtils.GameStateToJState(new GameState(initTestPlayers(), gameBoard)));
+    System.out.println(QGameToJson.GameStateToJState(new GameState(initTestPlayers(), gameBoard)));
     assertEquals(0,0);
 //    return new State(initTestPlayers(), gameBoard);
   }

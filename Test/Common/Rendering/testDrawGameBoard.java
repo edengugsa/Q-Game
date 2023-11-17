@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.util.*;
 
 import Common.GameBoard.GameBoard;
-import Common.JsonUtils;
+import Common.JsonToQGame;
 import Common.State.PlayerState;
 import Common.State.PlayerStateImpl;
 import Common.Tiles.Coordinate;
@@ -17,7 +17,7 @@ import Common.Tiles.Tile;
  * This class reads in a JMap from stdin, renders it, and saves it as a png image.
  */
 public class testDrawGameBoard {
-  private static final JsonUtils utils = new JsonUtils();
+  private static final JsonToQGame utils = new JsonToQGame();
 
 //  public static void main(String[] args) throws IOException {
 //

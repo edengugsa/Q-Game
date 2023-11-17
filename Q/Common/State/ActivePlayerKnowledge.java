@@ -1,4 +1,5 @@
 package Common.State;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -36,10 +37,24 @@ public class ActivePlayerKnowledge {
   public List<Tile> getActivePlayerTiles() { return new ArrayList<>(this.activePlayerTiles); }
   public int getNumRefTilesRemaining() { return this.refTilesRemaining; }
   public int getNumPlayerTiles() { return this.activePlayerTiles.size(); }
-  public Queue<PublicPlayerState> getOpponentStates() {
-    return this.opponentStates;
+//  public Queue<PublicPlayerState> getOpponentStates() {
+//    return this.opponentStates;
+//  }
+
+  public String getActivePlayerName() {
+    assert this.opponentStates.peek() != null;
+    return this.opponentStates.peek().name();
   }
 
+  public int getActivePlayerScore() {
+    return this.opponentStates.peek().score();
+  }
+
+  public Queue<PublicPlayerState> getOpponentStates() {
+    Queue<PublicPlayerState> copyOfOopponentStates = new ArrayDeque<>(this.opponentStates);
+    copyOfOopponentStates.remove();
+    return copyOfOopponentStates;
+  }
 
 
 }

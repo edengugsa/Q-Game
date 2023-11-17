@@ -7,6 +7,10 @@ import com.google.gson.JsonObject;
 import java.util.*;
 
 import Common.GameBoard.GameBoard;
+import Common.GameCommands.ExchangeCommand;
+import Common.GameCommands.PassCommand;
+import Common.GameCommands.PlacementCommand;
+import Common.GameCommands.QGameCommand;
 import Common.State.ActivePlayerKnowledge;
 import Common.State.GameState;
 import Common.State.PlayerState;
@@ -33,15 +37,8 @@ import Player.playerTakeTurnException;
 import Player.playerWinException;
 import Referee.WinnersAndCheaters;
 
-public class JsonUtils {
+public class JsonToQGame {
 
-  public static JsonArray NamesToJNames(List<String> names) {
-    JsonArray jNames = new JsonArray();
-    for (String name : names) {
-      jNames.add(name);
-    }
-    return jNames;
-  }
 
   /**
    * Converts a JState to a State
@@ -72,27 +69,6 @@ public class JsonUtils {
       players.add(JActorSpecToPlayer(JActorSpec.getAsJsonArray()));
     }
     return players;
-  }
-
-
-  /**
-   * Converts the given WinnersAndCheaters to a JsonArray of a list of winners sorted alphabetically
-   * by their name and a list of cheaters sorted by the order in which they were removed.
-   */
-  public static JsonArray WinnersAndCheatersToJson(WinnersAndCheaters w) {
-    JsonArray res = new JsonArray();
-    w.winners.sort(String::compareTo);
-    JsonArray winners = new JsonArray();
-    for (String winner : w.winners) {
-      winners.add(winner);
-    }
-    JsonArray cheaters = new JsonArray();
-    for (String cheater : w.cheaters) {
-      cheaters.add(cheater);
-    }
-    res.add(winners);
-    res.add(cheaters);
-    return res;
   }
 
 
@@ -149,34 +125,7 @@ public class JsonUtils {
     };
   }
 
-  /**
-   * Converts the given hashmap of Coordinates and Tiles to a JMap. Tiles is a non-empty hashmap!
-   * @param tiles
-   */
-  public static JsonArray HashMapToJMap(Map<Coordinate, Tile> tiles) {
 
-    List<Map.Entry<Coordinate, Tile>> tilesAsList = sortGameboard(tiles);
-
-    JsonArray jMap = new JsonArray();
-    JsonArray jRow = new JsonArray();
-    int rowIdx = tilesAsList.get(0).getKey().row(); // first tile's row value
-    jRow.add(rowIdx);
-
-    for (Map.Entry<Coordinate, Tile> entry : tilesAsList) {
-      if (rowIdx != entry.getKey().row()) { // encountered a new row
-        jMap.add(jRow); // add the completed row to the map
-        rowIdx = entry.getKey().row(); // update rowIdx
-        jRow = new JsonArray(); // start the new row
-        jRow.add(rowIdx);
-      }
-      JsonArray jCell = new JsonArray();
-      jCell.add(entry.getKey().col()); // ColumnIndex
-      jCell.add(TileToJTile(entry.getValue())); // JTile
-      jRow.add(jCell);
-    }
-    jMap.add(jRow); // add the final row to the map
-    return jMap;
-  }
 
   /**
    * Converts the given JPlacements to a list of Placements
@@ -239,21 +188,7 @@ public class JsonUtils {
     return new GameBoard(JMapToHashmap(jMap));
   }
 
-  public static JsonObject GameStateToJState(GameState gs) {
-    JsonObject jState = new JsonObject();
-    jState.add("map", HashMapToJMap(gs.getGameBoard().getMap()));
-    JsonArray jTiles = new JsonArray();
-    for (Tile t : gs.getFromDeck(gs.tilesRemaining())) {
-      jTiles.add(TileToJTile(t));
-    }
-    jState.add("tile*", jTiles);
-    JsonArray players = new JsonArray();
-    for (PlayerState p : gs.players()) {
-      players.add(PlayerStateToJPlayer(p));
-    }
-    jState.add("players", players);
-    return jState;
-  }
+
 
   /**
    * Converts the given JPub to a PublicPlayerKnowledge
@@ -265,22 +200,6 @@ public class JsonUtils {
     PlayerStateImpl activePlayer = JPlayerToPlayerState(players.get(0).getAsJsonObject());
     Queue<PublicPlayerState> opponentStates = convertPlayersToQueueOfPublicPlayerStates(players);
     return new ActivePlayerKnowledge(opponentStates, gameBoard, refTilesRemaining, activePlayer.getHand());
-  }
-  public static JsonObject PlayerStateToJPlayer(PlayerState ps) {
-    JsonObject jPlayer = new JsonObject();
-    jPlayer.addProperty("score", ps.score());
-    jPlayer.addProperty("name", ps.name());
-    jPlayer.add("tile*", TilesToJTiles(ps.getHand()));
-
-    return jPlayer;
-  }
-
-  public static JsonArray TilesToJTiles(List<Tile> tiles) {
-    JsonArray jTiles = new JsonArray();
-    for(Tile t: tiles) {
-      jTiles.add(TileToJTile(t));
-    }
-    return jTiles;
   }
 
   /**
@@ -294,15 +213,7 @@ public class JsonUtils {
     return states;
   }
 
-  /**
-   * Converts the given Tile to a JTile.
-   */
-  public static JsonObject TileToJTile(Tile t) {
-    JsonObject jTile = new JsonObject();
-    jTile.addProperty("color", t.color().toString());
-    jTile.addProperty("shape", t.shape().toString());
-    return jTile;
-  }
+
 
   /**
    * Converts the given JTile to a Tile with QColor and QShape.
@@ -320,5 +231,24 @@ public class JsonUtils {
       case "dag" -> new DagStrategy();
       default -> throw new IllegalArgumentException("Strategy doesn't exist");
     };
+  }
+
+  public static QGameCommand jChoiceToQGameCommand(JsonElement choice) {
+    if(choice.isJsonArray()) {
+      return new PlacementCommand(JPlacementsToPlacements(choice.getAsJsonArray()));
+      }
+    else if (choice.isJsonPrimitive()) {
+      String exchangeOrPass = choice.getAsString();
+      if (exchangeOrPass.equals("pass")) {
+        return new PassCommand();
+      }
+      else if (exchangeOrPass.equals("replace")) {
+        return new ExchangeCommand();
+      }
+      else {
+        throw new IllegalArgumentException("Invalid JChoice");
+      }
+    }
+    throw new IllegalArgumentException("Invalid JChoice");
   }
 }

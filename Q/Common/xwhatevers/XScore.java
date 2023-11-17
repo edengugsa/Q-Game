@@ -4,13 +4,11 @@ import com.google.gson.JsonStreamParser;
 import Common.GameBoard.GameBoard;
 
 
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Map;
 import java.util.Queue;
-import Common.JsonUtils;
+import Common.JsonToQGame;
 import Common.Tiles.Placement;
 
 import Common.Scorer.Scorer;
@@ -28,8 +26,8 @@ public class XScore {
 
     while (jsonStreamParser.hasNext()) {
       try {
-        GameBoard gm = JsonUtils.JMapToGameBoard(jsonStreamParser.next().getAsJsonArray());
-        Queue<Placement> placements = JsonUtils.JPlacementsToPlacements(jsonStreamParser.next().getAsJsonArray());
+        GameBoard gm = JsonToQGame.JMapToGameBoard(jsonStreamParser.next().getAsJsonArray());
+        Queue<Placement> placements = JsonToQGame.JPlacementsToPlacements(jsonStreamParser.next().getAsJsonArray());
 //        new GameBoardPainter(gm.getMap()).saveImage("png", "board");
         System.out.println(new Scorer().scorePlacement(placements, gm, false));
       } catch (Exception e) {

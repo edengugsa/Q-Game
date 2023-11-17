@@ -50,11 +50,11 @@ public class Referee {
       throw new IllegalStateException("Players and State aren't consistent");
     }
     this.game = game;
-    this.game.setNames(this.setNameToPlayersMap(players)); // Give the PlayerStates a name
     this.ruleBook = new RuleBook();
     this.scorer = new Scorer();
     this.disqualifiedPlayers = new ArrayList<>();
     this.observers = new ArrayList<>();
+    this.setupPlayers();
   }
 
   /**
@@ -68,8 +68,11 @@ public class Referee {
     this.scorer = new Scorer();
     this.disqualifiedPlayers = new ArrayList<>();
     this.observers = new ArrayList<>();
-    this.setNameToPlayersMap(players);
     this.setGame();
+  }
+
+  public Referee(List<player> players) {
+    this(players, new RuleBook());
   }
 
   public Referee(List<player> players, List<observer> observers, GameState game) {
@@ -167,18 +170,25 @@ public class Referee {
   }
 
   /**
-   * Tell Players if they won or not. If th winning player throws an exception, they're removed.
+   * Informs remaining Players who lost first, then remaining winner(s). If the winning player(s)
+   * throws an exception, they're removed from the game and winners list.
    */
   private void tellPlayersGameResult(List<String> winners) {
+    this.tellPlayersGameResult(winners, false); //update losers
+    this.tellPlayersGameResult(winners, true); //update winners
+  }
+
+  private void tellPlayersGameResult(List<String> winners, boolean didWin) {
     List<String> names = new ArrayList<>(this.game.getPlayersNames());
     for (String name : names) {
       player player = this.players.get(name);
-      try {
-        player.win(winners.contains(player.name()));
-      }
-      catch (Exception e) {
-        disqualify(name);
-        winners.remove(name);
+      if (winners.contains(player.name()) == didWin) {
+        try {
+          player.win(didWin);
+        }
+        catch (Exception e) {
+          disqualify(name);
+        }
       }
     }
   }
@@ -229,7 +239,7 @@ public class Referee {
     for (int i = 0; i < numPlayers; i++) {
       try {
         player actualPlayer = this.players.get(game.currentPlayerName());
-        actualPlayer.setup(game, game.currentPlayerTiles());
+        actualPlayer.setup(game.getActivePlayerKnowledge(), game.currentPlayerTiles());
         game.bump();
       }
       catch (Exception e) {

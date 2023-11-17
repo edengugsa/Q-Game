@@ -4,7 +4,6 @@ import java.util.List;
 import Common.GameBoard.GameBoard;
 import Common.GameCommands.QGameCommand;
 import Common.State.ActivePlayerKnowledge;
-import Common.State.GameState;
 import Common.Tiles.Tile;
 import Player.Strategy.Strategy;
 
@@ -31,9 +30,9 @@ public class playerImpl implements player {
   }
 
   @Override
-  public void setup(GameState state, List<Tile> hand) {
-    this.board = state.getGameBoard();
-    this.hand = hand;
+  public void setup(ActivePlayerKnowledge apk, List<Tile> hand) {
+    this.board = apk.getBoard();
+    this.hand = apk.getActivePlayerTiles();
   }
 
   @Override

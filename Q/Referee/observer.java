@@ -10,7 +10,8 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import Common.JsonUtils;
+import Common.JsonToQGame;
+import Common.QGameToJson;
 import Common.Rendering.RenderGameState;
 import Common.Rendering.RenderObserverGameStates;
 import Common.State.GameState;
@@ -99,7 +100,7 @@ public class observer {
    * Saves the current GameState to a file. Assumes fileName has the extension
    */
   public void save(String fileName) throws IOException {
-    JsonObject stateToSave = JsonUtils.GameStateToJState(gameStates.get(this.currentGameStateIdx));
+    JsonObject stateToSave = QGameToJson.GameStateToJState(gameStates.get(this.currentGameStateIdx));
     try (FileWriter fileWriter = new FileWriter(fileName)) {
       new Gson().toJson(stateToSave, fileWriter);
       fileWriter.flush();
