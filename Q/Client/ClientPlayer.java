@@ -1,5 +1,7 @@
 package Client;
 
+import com.google.gson.JsonPrimitive;
+
 import java.net.Socket;
 import java.util.List;
 
@@ -7,26 +9,48 @@ import Common.GameCommands.QGameCommand;
 import Common.State.ActivePlayerKnowledge;
 import Common.Tiles.Tile;
 import Player.Strategy.LdasgStrategy;
+import Player.Strategy.Strategy;
 import Player.playerImpl;
 import Player.player;
 
 
 public class ClientPlayer implements player {
   Socket server;
-  Player.player player;
+  player player;
+  ProxyReferee proxyReferee;
 
-  ClientPlayer(String ip, int port) {
-    connectToSever(ip, port);
-    this.player = new playerImpl("Alice", new LdasgStrategy());
+  public ClientPlayer(String ip, int port, String name) {
+    connectToServer(ip, port);
+    this.player = new playerImpl(name, new LdasgStrategy());
+  }
+
+  public ClientPlayer(String ip, int port, String name, Strategy strategy) {
+    this(ip, port, name);
+    this.player = new playerImpl(name, strategy);
+  }
+
+  public void run() {
     try {
-      new ProxyReferee(this.server, this);
+      this.proxyReferee =  new ProxyReferee(this.server, this);
     }
     catch (Exception e) {
-      throw new IllegalArgumentException("Cannot connect to proxy referee");
+      throw new IllegalArgumentException("Could not create Proxy Referee " + e.getMessage());
+    }
+    try {
+      this.proxyReferee.sendInformationToReferee(new JsonPrimitive(this.name()));
+    }
+    catch (Exception e) {
+      throw new IllegalArgumentException("could not send name: " + e.getMessage());
+    }
+    try {
+      this.proxyReferee.receiveInformationFromReferee();
+    }
+    catch (Exception e) {
+      throw new IllegalArgumentException("could not receive information from the ref: " + e.getMessage());
     }
   }
 
-  private void connectToSever(String ip, int port) {
+  private void connectToServer(String ip, int port) {
     try {
       this.server = new Socket(ip, port);
     }
@@ -37,7 +61,7 @@ public class ClientPlayer implements player {
 
   @Override
   public String name() {
-    return null;
+    return this.player.name();
   }
 
   @Override

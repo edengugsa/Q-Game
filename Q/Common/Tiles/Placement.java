@@ -37,7 +37,7 @@ public class Placement {
   public JsonObject toJson() {
     JsonObject jPlacement = new JsonObject();
     jPlacement.add("coordinate", this.coord.toJSON());
-    jPlacement.add("tile", this.tile.toJSON());
+    jPlacement.add("1tile", this.tile.toJSON());
     return jPlacement;
   }
 

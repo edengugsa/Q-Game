@@ -1,5 +1,7 @@
 package Common;
 
+import Common.Tiles.QColor;
+
 /**
  * Represents possible MNames.
  */
@@ -15,7 +17,13 @@ public enum MName {
     this.string = string;
   }
 
-
-
+  public static MName fromString(String mName) {
+    for (MName mNameString : MName.values()) {
+      if (mNameString.string.equalsIgnoreCase(mName)) {
+        return mNameString;
+      }
+    }
+    throw new IllegalArgumentException("No MName named " + mName);
+  }
 
 }

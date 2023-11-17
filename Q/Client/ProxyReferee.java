@@ -14,6 +14,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.List;
 
+import Common.GameCommands.ExchangeCommand;
 import Common.GameCommands.QGameCommand;
 import Common.JsonToQGame;
 import Common.MName;
@@ -32,6 +33,13 @@ public class ProxyReferee {
     this.socket = playerSocket;
     this.readFromServerRef = new JsonStreamParser(new BufferedReader(new InputStreamReader(socket.getInputStream())));
     this.writeToServerRef = new JsonWriter(new OutputStreamWriter(socket.getOutputStream()));
+    this.clientPlayer = clientPlayer;
+
+    // Send Name to the Server
+//    this.sendInformationToReferee(new JsonPrimitive(this.clientPlayer.name()));
+
+    // Start reading for ref
+//    this.receiveInformationFromReferee();
   }
 
   /**
@@ -59,11 +67,13 @@ public class ProxyReferee {
           throw new IllegalArgumentException("Received invalid MethodCall from the Server");
       }
     }
+    this.closeConnection();
   }
 
-  private void callTakeTurnOnClientPlayer(JsonArray methodCall) {
+  protected void callTakeTurnOnClientPlayer(JsonArray methodCall) {
     ActivePlayerKnowledge apk = JsonToQGame.MethodCallToActivePlayerKnowledge(methodCall);
     QGameCommand cmd = this.clientPlayer.takeTurn(apk);
+//    cmd = new ExchangeCommand(); // TODO REMOVE THIS
     this.sendInformationToReferee(cmd.toJSON());
   }
 
@@ -87,8 +97,19 @@ public class ProxyReferee {
     this.clientPlayer.win(winBool);
     this.sendInformationToReferee(new JsonPrimitive("void"));
     this.isGameOver = true;
+    this.closeConnection();
   }
 
+  private void closeConnection() {
+    try {
+      this.socket.close();
+    }
+    catch (Exception e) {
+      throw new IllegalStateException("closing socket failed: " + e.getMessage());
+    }
+  }
+
+  // TODO private?
   public void sendInformationToReferee(JsonElement toSend) {
     // todo duplicate code as ProxyPlayer::sendToClient
     try {
@@ -96,7 +117,7 @@ public class ProxyReferee {
       this.writeToServerRef.flush();
     }
     catch (Exception e) {
-      throw new IllegalStateException("Could not sent message to referee");
+      throw new IllegalStateException("Could not sent message to referee: " + e.getMessage());
     }
   }
 

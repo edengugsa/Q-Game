@@ -57,7 +57,7 @@ public class ExchangeCommand implements QGameCommand {
 
   @Override
   public JsonElement toJSON() {
-    return JsonParser.parseString("exchange");
+    return JsonParser.parseString("replace");
   }
 
   @Override

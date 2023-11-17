@@ -6,8 +6,12 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import Common.QGameToJson;
+import Common.RuleBook.RuleBook;
 import Player.player;
 import Referee.Referee;
+import Referee.WinnersAndCheaters;
+import Referee.observer;
 
 public class ServerReferee {
   ServerSocket serverSocket;
@@ -52,8 +56,13 @@ public class ServerReferee {
   public void run() {
     try {
       List<player> players = this.signup();
-      Referee ref = new Referee(players);
-      ref.runGame();
+      List<observer> observers = new ArrayList<>();
+      observers.add(new observer());
+      Referee ref = new Referee(players, observers, new RuleBook());
+      WinnersAndCheaters gameResults = ref.runGame();
+      System.out.println("Game Over: " + QGameToJson.WinnersAndCheatersToJson(gameResults));
+
+
     }
     catch (Exception e) {
       System.out.println("Server::run: " + e.getMessage());

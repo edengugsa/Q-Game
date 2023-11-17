@@ -44,10 +44,10 @@ public class playerImpl implements player {
   @Override
   public void win(boolean w) {
     if (w) {
-//      System.out.println(name + ": Winnner");
+      System.out.println(name + ": Winner");
     }
     else {
-//      System.out.println(name + ": Loser");
+      System.out.println(name + ": Loser");
     }
   }
 }

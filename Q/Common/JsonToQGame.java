@@ -236,7 +236,7 @@ public class JsonToQGame {
   public static QGameCommand jChoiceToQGameCommand(JsonElement choice) {
     if(choice.isJsonArray()) {
       return new PlacementCommand(JPlacementsToPlacements(choice.getAsJsonArray()));
-      }
+    }
     else if (choice.isJsonPrimitive()) {
       String exchangeOrPass = choice.getAsString();
       if (exchangeOrPass.equals("pass")) {
@@ -246,19 +246,24 @@ public class JsonToQGame {
         return new ExchangeCommand();
       }
       else {
-        throw new IllegalArgumentException("Invalid JChoice");
+        throw new IllegalArgumentException("Invalid JChoice string " + choice.getAsString());
       }
     }
-    throw new IllegalArgumentException("Invalid JChoice");
+    throw new IllegalArgumentException("Invalid JChoice: " + choice);
   }
 
+  /**
+   * Returns the Method Name from a Method Call Json
+   */
   public static MName getMName(JsonElement element) {
-    if (element.isJsonArray()) {
-      return MName.valueOf(element.getAsJsonArray().get(0).getAsString());
-    }
-    else {
-      throw new IllegalArgumentException("not a json array");
-    }
+    return MName.fromString(element.getAsJsonArray().get(0).getAsString());
+
+//    if (element.isJsonArray()) {
+//      return MName.valueOf(element.getAsJsonArray().get(0).getAsString());
+//    }
+//    else {
+//      throw new IllegalArgumentException("not a json array");
+//    }
   }
 
   public static ActivePlayerKnowledge MethodCallToActivePlayerKnowledge(JsonArray methodCall) {

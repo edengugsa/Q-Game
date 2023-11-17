@@ -38,7 +38,7 @@ public class ProxyPlayer implements player {
     this.readFromClientPlayer = new JsonStreamParser(new BufferedReader(new InputStreamReader(playerSocket.getInputStream())));
     this.writeToClientPlayer = new JsonWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
     try {
-      this.playerName = this.readFromClientPlayer.next().toString();
+      this.playerName = this.readFromClientPlayer.next().getAsString();
     }
     catch (Exception e) {
       throw new IllegalStateException("ProxyPlayer::ProxyPlayer could not read name.");
@@ -60,8 +60,17 @@ public class ProxyPlayer implements player {
     JsonArray tiles = QGameToJson.ListOfTilesToJsonArray(hand);
     JsonArray toSend = QGameToJson.FormatJson("setup", new ArrayList<>(Arrays.asList(jPub, tiles)));
     this.sendToClient(toSend);
-
+    this.handlePlayerAcknowledgement(this.readFromClientPlayer.next());
 //    System.out.println("Proxy Player setup: " + toSend);
+  }
+
+  /**
+   * Did this player respond with "void"?
+   */
+  private void handlePlayerAcknowledgement(JsonElement response) {
+    if (!response.getAsString().equals("void")) {
+      throw new IllegalStateException("Player did not respond with void");
+    }
   }
 
   @Override
@@ -78,6 +87,7 @@ public class ProxyPlayer implements player {
   public void win(boolean win) {
     JsonArray toSend = QGameToJson.FormatJson("win", new ArrayList<>(Arrays.asList(QGameToJson.WinBooleanToJsonBool(win))));
     this.sendToClient(toSend);
+    this.handlePlayerAcknowledgement(this.readFromClientPlayer.next());
 //    System.out.println("win");
   }
 
@@ -85,6 +95,7 @@ public class ProxyPlayer implements player {
   public void newTiles(List<Tile> tiles) {
     JsonArray toSend = QGameToJson.FormatJson("new-tiles", new ArrayList<>(Arrays.asList(QGameToJson.ListOfTilesToJsonArray(tiles))));
     this.sendToClient(toSend);
+    this.handlePlayerAcknowledgement(this.readFromClientPlayer.next());
 //    System.out.println("new tiles");
   }
 

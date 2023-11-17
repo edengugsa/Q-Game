@@ -16,6 +16,7 @@ import Common.GameCommands.PassCommand;
 import Common.GameCommands.PlacementCommand;
 import Common.GameCommands.QGameCommand;
 import Common.JsonToQGame;
+import Common.QGameToJson;
 import Common.RuleBook.RuleBook;
 import Common.State.GameState;
 import Common.State.PlayerState;
@@ -33,7 +34,7 @@ public class testStrategy {
   public static void main(String[] args) {
     GameState gs = initPlacement1();
 //    gs.render();
-    System.out.println(JsonToQGame.HashMapToJMap(gs.getGameBoard().getMap()));
+    System.out.println(QGameToJson.HashMapToJMap(gs.getGameBoard().getMap()));
 //    Queue<Placement> expectedPlacements = new ArrayDeque<>();
 //    expectedPlacements.add(
 //            new Placement(new Coordinate(3,1), new Tile(QColor.GREEN, QShape.diamond)));
