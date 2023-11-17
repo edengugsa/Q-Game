@@ -65,10 +65,10 @@ public class observer {
   private void saveGameStateAsPng(GameState state, int idx) {
     String fileName = "Tmp/" + idx + ".png";
     try {
-      ImageIO.write(new RenderGameState(state).GameStateToPng(state), "png", new File(fileName));
+      ImageIO.write(new RenderGameState(state).GameStateToImage(state), "png", new File(fileName));
     }
     catch(Exception e) {
-//      System.out.println("Could not save game state " + fileName + ": " + e);
+      throw new IllegalArgumentException("Cannot save png");
     }
   }
 

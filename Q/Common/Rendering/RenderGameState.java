@@ -29,7 +29,7 @@ public class RenderGameState extends JPanel {
   private static int TEXT_HEIGHT = 70;
 
   public RenderGameState(GameState gamestate) {
-    this.gameStateImg = new JLabel(new ImageIcon(this.GameStateToPng(gamestate)));
+    this.gameStateImg = new JLabel(new ImageIcon(this.GameStateToImage(gamestate)));
     this.scrollableGameState = new JScrollPane(this.gameStateImg);
     this.scrollableGameState.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
     this.scrollableGameState.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -38,7 +38,7 @@ public class RenderGameState extends JPanel {
   }
 
   public void updateGameState(GameState gs) {
-    this.gameStateImg.setIcon(new ImageIcon(this.GameStateToPng(gs)));
+    this.gameStateImg.setIcon(new ImageIcon(this.GameStateToImage(gs)));
     this.scrollableGameState.revalidate();
     this.scrollableGameState.repaint();
   }
@@ -46,9 +46,9 @@ public class RenderGameState extends JPanel {
   /**
    * @return an image showing this class' GameState.
    */
-  public BufferedImage GameStateToPng(GameState gs) {
+  public BufferedImage GameStateToImage(GameState gs) {
     BufferedImage gameBoardImg = new GameBoardPainter(gs.getGameBoard().getMap()).reveal();
-    BufferedImage playerStatesImg = ListOfPlayerStatestoPng(gs.players());
+    BufferedImage playerStatesImg = ListOfPlayerStatestoImage(gs.players());
     BufferedImage refTilesImg = this.refTilesImg(gs);
     int height = Math.max(gameBoardImg.getHeight(), Math.max(playerStatesImg.getHeight(), refTilesImg.getHeight()));
     int width = gameBoardImg.getWidth() + playerStatesImg.getWidth() + refTilesImg.getWidth() + PADDING; // 20 for padding
@@ -62,7 +62,7 @@ public class RenderGameState extends JPanel {
     return combined;
   }
 
-  private BufferedImage ListOfPlayerStatestoPng(List<PlayerState> playerStates) {
+  private BufferedImage ListOfPlayerStatestoImage(List<PlayerState> playerStates) {
     int width = TILE_SIZE * 6;
     int height = playerStates.size() * (TILE_SIZE + 4 * PADDING);
 
@@ -73,7 +73,7 @@ public class RenderGameState extends JPanel {
 
     int i = 0;
     for (PlayerState ps : playerStates) {
-      g.drawImage(PlayerStateToPng(ps), 0, i * (TEXT_HEIGHT + PADDING/2 + TILE_SIZE), null);
+      g.drawImage(PlayerStateToImage(ps), 0, i * (TEXT_HEIGHT + PADDING/2 + TILE_SIZE), null);
       i++;
     }
 
@@ -85,7 +85,7 @@ public class RenderGameState extends JPanel {
    * Renders this PlayerState as an image. It displays the player's name, score, tiles remaining,
    * and their tiles.
    */
-  private BufferedImage PlayerStateToPng(PlayerState ps) {
+  private BufferedImage PlayerStateToImage(PlayerState ps) {
     BufferedImage playerTilesImage = new GameBoardPainter(this.createGameBoardFromTiles(ps.getHand()).getMap()).reveal();
     BufferedImage combined = new BufferedImage(TILE_SIZE*TILES_PER_PLAYER+PADDING, playerTilesImage.getHeight() + TEXT_HEIGHT, BufferedImage.TYPE_INT_RGB);
     Graphics g = combined.getGraphics();
