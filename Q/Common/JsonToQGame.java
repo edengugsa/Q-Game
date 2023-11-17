@@ -3,6 +3,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import java.util.*;
 
@@ -35,7 +36,6 @@ import Player.playerSetupException;
 import Player.Strategy.Strategy;
 import Player.playerTakeTurnException;
 import Player.playerWinException;
-import Referee.WinnersAndCheaters;
 
 public class JsonToQGame {
 
@@ -251,4 +251,47 @@ public class JsonToQGame {
     }
     throw new IllegalArgumentException("Invalid JChoice");
   }
+
+  public static MName getMName(JsonElement element) {
+    if (element.isJsonArray()) {
+      return MName.valueOf(element.getAsJsonArray().get(0).getAsString());
+    }
+    else {
+      throw new IllegalArgumentException("not a json array");
+    }
+  }
+
+  public static ActivePlayerKnowledge MethodCallToActivePlayerKnowledge(JsonArray methodCall) {
+    JsonObject jPub = methodCall.get(1).getAsJsonArray().get(0).getAsJsonObject();
+    return JPubToActivePlayerKnowledge(jPub);
+  }
+
+  public static List<Tile> ListOfJTileToListOfTile(JsonArray jTiles) {
+    List<Tile> tiles = new ArrayList<>();
+    for (JsonElement jTile : jTiles) {
+      tiles.add(JTileToTile(jTile.getAsJsonObject()));
+    }
+    return tiles;
+  }
+
+  /**
+   * @param index of JTile* in the arguments array.
+   */
+  public static List<Tile> MethodCallToListOfTiles(JsonArray methodCall, int index) {
+    JsonArray jTiles = methodCall.get(1).getAsJsonArray().get(index).getAsJsonArray();
+    return ListOfJTileToListOfTile(jTiles);
+  }
+
+  public static List<Tile> SetupMethodCallToListOfTiles(JsonArray methodCall) {
+    return MethodCallToListOfTiles(methodCall, 1);
+  }
+
+  public static List<Tile> NewTilesMethodCallToListOfTiles(JsonArray methodCall) {
+    return MethodCallToListOfTiles(methodCall, 0);
+  }
+
+  public static boolean WinMethodCallToListOfTiles(JsonArray methodCall) {
+    return methodCall.get(1).getAsJsonArray().get(0).getAsJsonPrimitive().getAsBoolean();
+  }
+
 }

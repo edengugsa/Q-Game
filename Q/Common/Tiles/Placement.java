@@ -1,5 +1,7 @@
 package Common.Tiles;
 
+import com.google.gson.JsonObject;
+
 import java.util.Objects;
 
 /**
@@ -30,6 +32,13 @@ public class Placement {
    */
   public Tile tile() {
     return this.tile;
+  }
+
+  public JsonObject toJson() {
+    JsonObject jPlacement = new JsonObject();
+    jPlacement.add("coordinate", this.coord.toJSON());
+    jPlacement.add("tile", this.tile.toJSON());
+    return jPlacement;
   }
 
   @Override

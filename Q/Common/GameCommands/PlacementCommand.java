@@ -1,5 +1,6 @@
 package Common.GameCommands;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.util.ArrayDeque;
@@ -53,10 +54,15 @@ public class PlacementCommand implements QGameCommand {
 
   @Override
   public JsonElement toJSON() {
-    JsonObject obj = new JsonObject();
-    obj.add("coordinate", first().coordinate().toJSON());
-    obj.add("1tile", first().tile().toJSON());
-    return obj;
+    JsonArray jPlacements = new JsonArray();
+    for (Placement p : this.placements) {
+      jPlacements.add(p.toJson());
+    }
+    return jPlacements;
+//    JsonObject obj = new JsonObject();
+//    obj.add("coordinate", first().coordinate().toJSON());
+//    obj.add("1tile", first().tile().toJSON());
+//    return obj;
   }
 
   @Override
