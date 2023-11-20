@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import Common.GameCommands.QGameCommand;
 import Common.RuleBook.QRuleBook;
@@ -15,6 +16,7 @@ import Common.Scorer.Scorer;
 import Common.State.GameState;
 import Common.State.PlayerState;
 import Common.State.PlayerStateImpl;
+import Common.TimeUtils;
 import Player.player;
 
 /**
@@ -38,6 +40,8 @@ public class Referee {
   private Map<String, player> players;
   private final List<String> disqualifiedPlayers;
   private List<observer> observers;
+
+  static int TAKE_TURN_TIMEOUT = 6;
 
   /**
    * FOR TESTING. Resumes a Game from a previous state.
@@ -104,11 +108,20 @@ public class Referee {
 
   private void runGameHelper() {
     while (!ruleBook.gameOver(game)) {
-      this.currentPlayerTakeTurn();
+      this.tryTakeTurn();
       sendObserversNewGameState(game.getCopy());
       if (ruleBook.gameOver(game)) {
         break;
       }
+    }
+  }
+
+  private void tryTakeTurn() {
+    try {
+      int b = TimeUtils.callWithTimeOut(() -> currentPlayerTakeTurn(), TAKE_TURN_TIMEOUT);
+    }
+    catch (InterruptedException | ExecutionException | TimeoutException e) {
+      disqualify();
     }
   }
 
@@ -126,8 +139,7 @@ public class Referee {
   }
 
   private void tellObserversGameOver() {
-    List<observer> observerCopy =  new ArrayList<>(observers);
-    for (observer o : observerCopy) {
+    for (observer o : observers) {
       try {
         o.gameOver();
       }
@@ -138,14 +150,14 @@ public class Referee {
   }
 
 
-  private void currentPlayerTakeTurn(){
+  private int currentPlayerTakeTurn(){
     try {
       QGameCommand cmd = currentPlayer().takeTurn(game.getActivePlayerKnowledge());
       if (cmd.isLegal(ruleBook, game)) {
         game.execute(cmd);
         game.score(cmd, this.scorer);
         if (game.currentPlayer().getHand().isEmpty()) {
-          return;
+          return 0;
         }
         this.game.renewPlayerTiles(cmd);
         this.updatePlayer(cmd);
@@ -158,6 +170,7 @@ public class Referee {
     catch (Exception e) {
       disqualify();
     }
+    return 0;
   }
 
   /**
@@ -222,17 +235,6 @@ public class Referee {
     this.setupObservers();
   }
 
-//  private void tryObserver(observerAction action) {
-//    List<observer> observerCopy =  new ArrayList<>(observers);
-//    for (observer o : observerCopy) {
-//      try {
-//        action.performAction(o);
-//      }
-//      catch (Exception e) {
-//        this.observers.remove(o);
-//      }
-//    }
-//  }
 
   private void setupObservers() {
     List<observer> observerCopy =  new ArrayList<>(observers);
@@ -289,16 +291,6 @@ public class Referee {
 
 
 
-  /**
-   * Pauses runtime for a given number of seconds.
-   */
-  private void catchBreath(int seconds) {
-    try {
-      TimeUnit.SECONDS.sleep(seconds);
-    }
-    catch (Exception e) {
-      e.getMessage();
-    }
-  }
+
 
 }

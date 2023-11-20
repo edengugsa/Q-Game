@@ -214,7 +214,6 @@ public class JsonToQGame {
   }
 
 
-
   /**
    * Converts the given JTile to a Tile with QColor and QShape.
    */

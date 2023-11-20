@@ -21,6 +21,7 @@ import Common.JsonToQGame;
 import Common.QGameToJson;
 import Common.State.ActivePlayerKnowledge;
 import Common.Tiles.Tile;
+import Common.TimeUtils;
 import Player.player;
 
 /**
@@ -32,19 +33,21 @@ public class ProxyPlayer implements player {
   JsonWriter writeToClientPlayer;
   Gson gson = new Gson();
   String playerName;
+  static final int RESPONSE_TIMEOUT = 6;
 
-  ProxyPlayer(Socket playerSocket) throws IOException {
+  ProxyPlayer(Socket playerSocket) {
     this.socket = playerSocket;
-    this.readFromClientPlayer = new JsonStreamParser(new BufferedReader(new InputStreamReader(playerSocket.getInputStream())));
-    this.writeToClientPlayer = new JsonWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
     try {
+      this.readFromClientPlayer = new JsonStreamParser(new BufferedReader(new InputStreamReader(playerSocket.getInputStream())));
+      this.writeToClientPlayer = new JsonWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
       this.playerName = this.readFromClientPlayer.next().getAsString();
     }
     catch (Exception e) {
-      throw new IllegalStateException("ProxyPlayer::ProxyPlayer could not read name.");
+      this.shutDown();
+      // Unable to create a new ProxyPlayer because we didn't
+//      throw new IllegalStateException("ProxyPlayer::ProxyPlayer could not read name.");
     }
   }
-
 
   @Override
   public String name() {
@@ -60,16 +63,19 @@ public class ProxyPlayer implements player {
     JsonArray tiles = QGameToJson.ListOfTilesToJsonArray(hand);
     JsonArray toSend = QGameToJson.FormatJson("setup", new ArrayList<>(Arrays.asList(jPub, tiles)));
     this.sendToClient(toSend);
-    this.handlePlayerAcknowledgement(this.readFromClientPlayer.next());
-//    System.out.println("Proxy Player setup: " + toSend);
+    this.handlePlayerAcknowledgement();
   }
 
   /**
-   * Did this player respond with "void"?
+   * Did this player respond with "void" within the RESPONSE_TIMEOUT?
    */
-  private void handlePlayerAcknowledgement(JsonElement response) {
-    if (!response.getAsString().equals("void")) {
-      throw new IllegalStateException("Player did not respond with void");
+  private void handlePlayerAcknowledgement() {
+    try {
+      String res = TimeUtils.callWithTimeOut(() -> this.readFromClientPlayer.next(), RESPONSE_TIMEOUT).getAsString();
+      if (!res.equals("void")) { this.shutDown();}
+    }
+    catch(Exception ignored) {
+      this.shutDown();
     }
   }
 
@@ -80,23 +86,46 @@ public class ProxyPlayer implements player {
     this.sendToClient(toSend);
 
     //    System.out.println("take turn player QGameCommand: " + cmd);
-    return JsonToQGame.jChoiceToQGameCommand(this.readFromClientPlayer.next());
+    return this.getCommandFromClientPlayer();
+  }
+
+  /**
+   * Returns this ProxyPlayer's client's requested QGameCommand. If the remote player doesn't
+   * respond within the RESPONSE_TIMEOUT, their socket is shut down.
+   */
+  private QGameCommand getCommandFromClientPlayer() {
+    try {
+      JsonElement res = TimeUtils.callWithTimeOut(() -> this.readFromClientPlayer.next(), RESPONSE_TIMEOUT);
+      return JsonToQGame.jChoiceToQGameCommand(res);
+    }
+    catch(Exception ignored) {
+      this.shutDown();
+    }
+    throw new IllegalArgumentException("Shouldn't get here");
   }
 
   @Override
   public void win(boolean win) {
     JsonArray toSend = QGameToJson.FormatJson("win", new ArrayList<>(Arrays.asList(QGameToJson.WinBooleanToJsonBool(win))));
     this.sendToClient(toSend);
-    this.handlePlayerAcknowledgement(this.readFromClientPlayer.next());
-//    System.out.println("win");
+    this.handlePlayerAcknowledgement();
+    this.shutDown();
+  }
+
+  protected void shutDown() {
+    try {
+      this.socket.close();
+    }
+    catch(IOException e) {
+      System.out.println("Could not shut down communication with " + this.name());
+    }
   }
 
   @Override
   public void newTiles(List<Tile> tiles) {
     JsonArray toSend = QGameToJson.FormatJson("new-tiles", new ArrayList<>(Arrays.asList(QGameToJson.ListOfTilesToJsonArray(tiles))));
     this.sendToClient(toSend);
-    this.handlePlayerAcknowledgement(this.readFromClientPlayer.next());
-//    System.out.println("new tiles");
+    this.handlePlayerAcknowledgement();
   }
 
   /**
@@ -108,7 +137,7 @@ public class ProxyPlayer implements player {
       this.writeToClientPlayer.flush();
     }
     catch (Exception e) {
-      throw new IllegalStateException("Could not sent message to player");
+      this.shutDown();
     }
   }
 }

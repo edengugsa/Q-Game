@@ -19,13 +19,9 @@ public class ClientPlayer implements player {
   player player;
   ProxyReferee proxyReferee;
 
-  public ClientPlayer(String ip, int port, String name) {
-    connectToServer(ip, port);
-    this.player = new playerImpl(name, new LdasgStrategy());
-  }
 
   public ClientPlayer(String ip, int port, String name, Strategy strategy) {
-    this(ip, port, name);
+    connectToServer(ip, port);
     this.player = new playerImpl(name, strategy);
   }
 

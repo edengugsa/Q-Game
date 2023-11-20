@@ -51,20 +51,12 @@ public class ProxyReferee {
       JsonArray methodCall = this.readFromServerRef.next().getAsJsonArray();
       MName mName = JsonToQGame.getMName(methodCall);
       switch (mName) {
-        case SETUP:
-          this.callSetUpOnClientPlayer(methodCall);
-          break;
-        case TAKE_TURN:
-          this.callTakeTurnOnClientPlayer(methodCall);
-          break;
-        case NEW_TILES:
-          this.callNewTilesOnClientPlayer(methodCall);
-          break;
-        case WIN:
-          this.callWinOnClientPlayer(methodCall);
-          break;
-        default:
-          throw new IllegalArgumentException("Received invalid MethodCall from the Server");
+        case SETUP -> this.callSetUpOnClientPlayer(methodCall);
+        case TAKE_TURN -> this.callTakeTurnOnClientPlayer(methodCall);
+        case NEW_TILES -> this.callNewTilesOnClientPlayer(methodCall);
+        case WIN -> this.callWinOnClientPlayer(methodCall);
+        default ->
+                throw new IllegalArgumentException("Received invalid MethodCall from the Server");
       }
     }
     this.closeConnection();
@@ -72,8 +64,8 @@ public class ProxyReferee {
 
   protected void callTakeTurnOnClientPlayer(JsonArray methodCall) {
     ActivePlayerKnowledge apk = JsonToQGame.MethodCallToActivePlayerKnowledge(methodCall);
+
     QGameCommand cmd = this.clientPlayer.takeTurn(apk);
-//    cmd = new ExchangeCommand(); // TODO REMOVE THIS
     this.sendInformationToReferee(cmd.toJSON());
   }
 

@@ -8,6 +8,7 @@ public class StartQGame {
     try {
       ServerReferee server = new ServerReferee(33331);
       server.run();
+      server.shutDown();
     }
     catch (Exception e) {
       System.out.println("Start QGame server failed");
