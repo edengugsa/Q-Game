@@ -58,6 +58,7 @@ public class Referee {
     this.scorer = new Scorer();
     this.disqualifiedPlayers = new ArrayList<>();
     this.observers = new ArrayList<>();
+    this.setNameToPlayersMap(players);
   }
 
   /**

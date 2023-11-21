@@ -22,6 +22,9 @@ import Common.Tiles.Placement;
 import Common.Tiles.QColor;
 import Common.Tiles.QShape;
 import Common.Tiles.Tile;
+import Player.PlayerSetupInf;
+import Player.PlayerTakeTurnInf;
+import Player.PlayerWinInf;
 import Player.Strategy.BadAskForTilesStrategy;
 import Player.Strategy.NoFitStrategy;
 import Player.Strategy.NonAdjacentCoordinateStrategy;
@@ -32,6 +35,7 @@ import Player.playerImpl;
 import Player.Strategy.DagStrategy;
 import Player.Strategy.LdasgStrategy;
 import Player.playerNewTilesException;
+import Player.playerNewTilesInf;
 import Player.playerSetupException;
 import Player.Strategy.Strategy;
 import Player.playerTakeTurnException;
@@ -111,6 +115,27 @@ public class JsonToQGame {
     return new playerImpl(name, JCheatToCheatStrategy(strategyName, JActorSpec.get(3).getAsString()));
   }
 
+  private static player PlayerWithCountJExn(String name, String strategyName, JsonArray JActorSpec) {
+    int when = JActorSpec.get(3).getAsInt();
+    Strategy strategy = JStrategyToStrategy(strategyName);
+    return switch(JActorSpec.get(2).getAsString()) {
+      case "setup" -> new PlayerSetupInf(name, strategy, when);
+      case "new-tiles" -> new playerNewTilesInf(name, strategy, when);
+      case "take-turn" -> new PlayerTakeTurnInf(name, strategy, when);
+      case "win" -> new PlayerWinInf(name, strategy, when);
+      default -> throw new IllegalArgumentException("Invalid Player: [JName, JStrategy, JExn, Count]");
+    };
+  }
+
+  private static player PlayerWithAnotherCheat(String name, String strategyName, JsonArray JActorSpec) {
+    if (JActorSpec.get(2).getAsString().equals("a cheat")) {
+      return PlayerWithJCheat(name, strategyName, JActorSpec);
+    }
+    else {
+      return PlayerWithCountJExn(name, strategyName, JActorSpec);
+    }
+  }
+
 
   private static player JActorSpecToPlayer(JsonArray JActorSpec) throws IllegalArgumentException {
     String name = JActorSpec.get(0).getAsString();
@@ -119,7 +144,7 @@ public class JsonToQGame {
     return switch (JActorSpec.size()) {
       case 2 -> new playerImpl(name, strategy);
       case 3 -> PlayerWithJExn(name, strategy, JActorSpec);
-      case 4 -> PlayerWithJCheat(name, JActorSpec.get(1).getAsString(), JActorSpec);
+      case 4 -> PlayerWithAnotherCheat(name, JActorSpec.get(1).getAsString(), JActorSpec);
       default ->
               throw new IllegalArgumentException("JActorSpec must contain either 2, 3, or 4 elements.");
     };

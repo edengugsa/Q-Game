@@ -1,12 +1,8 @@
 package Player;
-import java.io.IOException;
 import java.util.List;
 
-import Common.GameBoard.GameBoard;
 import Common.GameCommands.QGameCommand;
 import Common.State.ActivePlayerKnowledge;
-import Common.State.GameState;
-import Common.State.QGameBoardState;
 import Common.Tiles.Tile;
 
 public interface player {

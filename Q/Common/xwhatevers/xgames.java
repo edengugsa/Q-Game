@@ -2,6 +2,7 @@ package Common.xwhatevers;
 import com.google.gson.JsonStreamParser;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import Common.JsonToQGame;
@@ -10,6 +11,7 @@ import Common.State.GameState;
 import Player.player;
 import Referee.Referee;
 import Referee.WinnersAndCheaters;
+import Referee.observer;
 
 /**
  * Reads in a JState and JActors, runs a complete game of Q, and then outputs the winners and cheaters.
@@ -20,10 +22,9 @@ public class xgames {
 
   public static void main(String[] args) {
       GameState gamestate = JsonToQGame.JStateToGameState(parser.next().getAsJsonObject());
-
       List<player> players = JsonToQGame.JActorsToPlayerList(parser.next().getAsJsonArray());
 
-//      // TODO REMOVE OBSERVER
+      // TODO REMOVE OBSERVER
 //      List<observer> observers = new ArrayList<>();
 //      observers.add(new observer());
 

@@ -17,7 +17,7 @@ import Referee.WinnersAndCheaters;
 import Referee.observer;
 
 public class ServerReferee {
-  static final int SIGNUP_TIMEOUT = 10;
+  static final int SIGNUP_TIMEOUT = 20;
   static final int NAME_TIMEOUT = 3;
   static final int MIN_NUM_PLAYERS = 2;
   static final int MAX_NUM_PLAYERS = 4;
