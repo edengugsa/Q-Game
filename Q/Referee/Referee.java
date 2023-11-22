@@ -16,6 +16,7 @@ import Common.Scorer.Scorer;
 import Common.State.GameState;
 import Common.State.PlayerState;
 import Common.State.PlayerStateImpl;
+import Common.Tiles.Tile;
 import Common.TimeUtils;
 import Player.player;
 
@@ -41,7 +42,7 @@ public class Referee {
   private final List<String> disqualifiedPlayers;
   private List<observer> observers;
 
-  static int TAKE_TURN_TIMEOUT = 6;
+  static int PLAYER_RESPONSE_TIMEOUT = 6;
 
   /**
    * FOR TESTING. Resumes a Game from a previous state.
@@ -107,9 +108,12 @@ public class Referee {
     return winnersAndCheaters;
   }
 
+  /**
+   * Runs every player turn and sends the game state to observers after every turn.
+   */
   private void runGameHelper() {
     while (!ruleBook.gameOver(game)) {
-      this.tryTakeTurn();
+      currentPlayerTakeTurn();
       sendObserversNewGameState(game.getCopy());
       if (ruleBook.gameOver(game)) {
         break;
@@ -117,15 +121,35 @@ public class Referee {
     }
   }
 
-  private void tryTakeTurn() {
+  /**
+   * The current player takes a turn. If the move is not legal or they took too long, they are
+   * disqualified.
+   */
+  private void currentPlayerTakeTurn(){
     try {
-      int b = TimeUtils.callWithTimeOut(() -> currentPlayerTakeTurn(), TAKE_TURN_TIMEOUT);
+      QGameCommand cmd = TimeUtils.callWithTimeOut(() -> currentPlayer().takeTurn(game.getActivePlayerKnowledge()), PLAYER_RESPONSE_TIMEOUT);
+      if (cmd.isLegal(ruleBook, game)) {
+        game.execute(cmd);
+        game.score(cmd, this.scorer);
+        if (game.currentPlayer().getHand().isEmpty()) {
+          return;
+        }
+        this.game.renewPlayerTiles(cmd);
+        this.updatePlayer(cmd);
+        this.game.bump();
+      }
+      else {
+        disqualify("taking too long on takeTurn()");
+      }
     }
-    catch (InterruptedException | ExecutionException | TimeoutException e) {
-      disqualify();
+    catch (Exception e) {
+      disqualify("throwing an exception or taking too long on takeTurn()");
     }
   }
 
+  /**
+   * Sends a new game state to the observers, kicking them out if they throw an exception.
+   */
   private void sendObserversNewGameState(GameState newGs) {
     List<observer> observerCopy =  new ArrayList<>(observers);
     for (observer o : observerCopy) {
@@ -139,6 +163,9 @@ public class Referee {
     }
   }
 
+  /**
+   * Informs the observers that the game is over, kicking them out if they throw an exception.
+   */
   private void tellObserversGameOver() {
     for (observer o : observers) {
       try {
@@ -151,35 +178,17 @@ public class Referee {
   }
 
 
-  private int currentPlayerTakeTurn(){
-    try {
-      QGameCommand cmd = currentPlayer().takeTurn(game.getActivePlayerKnowledge());
-      if (cmd.isLegal(ruleBook, game)) {
-        game.execute(cmd);
-        game.score(cmd, this.scorer);
-        if (game.currentPlayer().getHand().isEmpty()) {
-          return 0;
-        }
-        this.game.renewPlayerTiles(cmd);
-        this.updatePlayer(cmd);
-        this.game.bump();
-      }
-      else {
-        disqualify();
-      }
-    }
-    catch (Exception e) {
-      disqualify();
-    }
-    return 0;
-  }
-
   /**
    * Updates the AI player with their new tiles after their turn has been completed
    */
   private void updatePlayer(QGameCommand cmd) {
     if (cmd.doesPlayerGetNewTiles()) {
-      this.currentPlayer().newTiles(game.currentPlayerTiles());
+      try {
+        int b = TimeUtils.callWithTimeOut(() -> tryCallingNewTilesOnPlayer(this.currentPlayer(), game.currentPlayerTiles()), PLAYER_RESPONSE_TIMEOUT);
+      }
+      catch (InterruptedException | ExecutionException | TimeoutException e) {
+        throw new IllegalStateException("Player took too long on newTiles()");
+      }
     }
   }
 
@@ -196,21 +205,37 @@ public class Referee {
     this.tellPlayersGameResult(winners, true); //update winners
   }
 
+  /**
+   * Trys to inform a player that they won, kicking them out if they cheated in any way.
+   */
+  private int tryWin(player player, boolean didWin) {
+    try {
+      player.win(didWin);
+    }
+    catch (Exception e) {
+      disqualify(player.name(), " throwing exception on win()");
+    }
+    return 0;
+  }
+
+  /**
+   * Trys to tell the players their game result and kicks them out if they take too long.
+   */
   private void tellPlayersGameResult(List<String> winners, boolean didWin) {
     List<String> names = new ArrayList<>(this.game.getPlayersNames());
     for (String name : names) {
       player player = this.players.get(name);
       if (winners.contains(player.name()) == didWin) {
         try {
-          player.win(didWin);
+          int b = TimeUtils.callWithTimeOut(() -> tryWin(player, didWin), PLAYER_RESPONSE_TIMEOUT);
         }
-        catch (Exception e) {
-          disqualify(name);
+        catch (InterruptedException | ExecutionException | TimeoutException e) {
+          winners.remove(name);
+          disqualify(name, " taking too long on win()");
         }
       }
     }
   }
-
 
   private WinnersAndCheaters generateResults() {
     List<String> winners = ruleBook.determineWinners(game.players());
@@ -255,13 +280,33 @@ public class Referee {
     for (int i = 0; i < numPlayers; i++) {
       try {
         player actualPlayer = this.players.get(game.currentPlayerName());
-        actualPlayer.setup(game.getActivePlayerKnowledge(), game.currentPlayerTiles());
+        int b = TimeUtils.callWithTimeOut(() -> tryCallingSetupOnPlayer(actualPlayer), PLAYER_RESPONSE_TIMEOUT);
         game.bump();
       }
-      catch (Exception e) {
-        disqualify();
+      catch (InterruptedException | ExecutionException | TimeoutException e) {
+        disqualify("taking too long on setup()");
       }
     }
+  }
+
+  private int tryCallingSetupOnPlayer(player player) {
+    try {
+      player.setup(game.getActivePlayerKnowledge(), game.currentPlayerTiles());
+    }
+    catch (Exception e) {
+      disqualify("throwing exception on setup()");
+    }
+    return 0;
+  }
+
+  private int tryCallingNewTilesOnPlayer(player player, List<Tile> tiles) {
+    try {
+      player.newTiles(tiles);
+    }
+    catch (Exception e) {
+      disqualify("throwing exception on newTiles()");
+    }
+    return 0;
   }
 
   /**
@@ -280,11 +325,12 @@ public class Referee {
   /**
    * Disqualifies the current player. Goes to the next Player in State.
    */
-  private void disqualify() {
-    disqualify(game.currentPlayerName());
+  private void disqualify(String reason) {
+    disqualify(game.currentPlayerName(), reason);
   }
 
-  private void disqualify(String playerName) {
+  private void disqualify(String playerName, String reason) {
+    System.out.println("Disqualified " + game.currentPlayerName() + " for " + reason);
     game.addToRefDeck(game.getHand(playerName));
     disqualifiedPlayers.add(playerName);
     game.removePlayer(playerName);

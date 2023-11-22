@@ -17,10 +17,13 @@ import Common.Rendering.RenderObserverGameStates;
 import Common.State.GameState;
 
 /**
- * Represents an Observer of the Q Game. An Observer can browse through the game at different points
- * of time.
+ * Represents an Observer of the Q Game with a GUI. The GUI displays a GameState and three buttons:
+ * prev, next, and save.
+ *
+ * Prev and Next tells the GUI to display the previous or next GameState. Save lets the user
+ * save the GameState currently on view as a file of their choice.
  */
-public class observer {
+public class observer implements IObserver {
   private List<GameState> gameStates;
   private int currentGameStateIdx;
   private RenderObserverGameStates renderObserverGameStates;

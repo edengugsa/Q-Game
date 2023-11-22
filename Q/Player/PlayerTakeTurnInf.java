@@ -16,7 +16,7 @@ public class PlayerTakeTurnInf extends abstractInfPlayer {
   // or an actual gameCommand
   @Override
   public QGameCommand takeTurn(ActivePlayerKnowledge apk) {
-    if (this.when > 0) {
+    if (this.when > 1) {
       this.when--;
       return super.takeTurn(apk);
     }

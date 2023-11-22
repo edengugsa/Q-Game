@@ -25,10 +25,10 @@ public class xbaddies {
     List<player> players = JsonToQGame.JActorsToPlayerList(parser.next().getAsJsonArray());
 
       // TODO REMOVE OBSERVER
-      List<observer> observers = new ArrayList<>();
-      observers.add(new observer());
+//      List<observer> observers = new ArrayList<>();
+//      observers.add(new observer());
 
-    WinnersAndCheaters results = new Referee(players, observers, gamestate).runGame();
+    WinnersAndCheaters results = new Referee(players, gamestate).runGame();
     System.out.println(QGameToJson.WinnersAndCheatersToJson(results));
   }
 }

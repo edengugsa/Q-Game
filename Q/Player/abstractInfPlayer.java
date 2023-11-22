@@ -15,7 +15,7 @@ public class abstractInfPlayer extends playerImpl {
   protected void infLoop() {
     int i = 1;
     while (true) {
-      System.out.println("inf looping" + i);
+//      System.out.println("inf looping" + i);
       i++;
     }
   }

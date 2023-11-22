@@ -8,7 +8,6 @@ import java.util.List;
 import Common.GameCommands.QGameCommand;
 import Common.State.ActivePlayerKnowledge;
 import Common.Tiles.Tile;
-import Player.Strategy.LdasgStrategy;
 import Player.Strategy.Strategy;
 import Player.playerImpl;
 import Player.player;

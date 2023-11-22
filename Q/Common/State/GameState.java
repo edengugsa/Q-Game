@@ -282,7 +282,7 @@ public class GameState {
         return new ArrayList<>(ps.getHand());
       }
     }
-    throw new IllegalArgumentException("No such player");
+    throw new IllegalArgumentException("No such player named: " + name);
   }
 
   public void removePlayer(String name) {
@@ -292,7 +292,7 @@ public class GameState {
         return;
       }
     }
-    throw new IllegalArgumentException("No such player");
+    throw new IllegalArgumentException("No such player: " + name);
   }
 
   /**

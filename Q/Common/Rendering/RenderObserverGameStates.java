@@ -10,8 +10,8 @@ import javax.swing.*;
 import Common.State.GameState;
 
 /**
- * Renders a component that lets an Observer browse through GameStates and save a
- * GameState as a json file.
+ * Renders a component that lets an Observer browse through GameStates by clicking the next or
+ * previous buttons. It allows a observer to save a GameState as a json file.
  */
 public class RenderObserverGameStates extends JFrame {
  RenderObserverButtons buttons;

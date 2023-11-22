@@ -16,7 +16,7 @@ public class PlayerSetupInf extends abstractInfPlayer {
   // or an actual gameCommand
   @Override
   public void setup(ActivePlayerKnowledge apk, List<Tile> hand) {
-    if (this.when > 0) {
+    if (this.when > 1) {
       this.when--;
       super.setup(apk, hand);
     }
