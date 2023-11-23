@@ -80,7 +80,7 @@ public class ProxyReferee {
     ActivePlayerKnowledge apk = JsonToQGame.MethodCallToActivePlayerKnowledge(methodCall);
     List<Tile> tiles = JsonToQGame.SetupMethodCallToListOfTiles(methodCall);
 
-    this.clientPlayer.setup(apk, tiles); // does clientPlayer need to return "void"?
+    this.clientPlayer.setup(apk, tiles);
     this.sendInformationToReferee(new JsonPrimitive("void"));
   }
 

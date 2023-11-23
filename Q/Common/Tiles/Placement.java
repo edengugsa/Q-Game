@@ -5,8 +5,7 @@ import com.google.gson.JsonObject;
 import java.util.Objects;
 
 /**
- * Represents a PlayerState's REQUEST to place a tile at a specific coordinate on the game board.
- * Does NOT represent a tile currently at a location on the board.
+ * Represents a Tile placed at a Coordinate.
  */
 public class Placement {
   private final Coordinate coord;

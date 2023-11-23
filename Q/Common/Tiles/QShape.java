@@ -3,7 +3,7 @@ package Common.Tiles;
 import java.util.Comparator;
 
 /**
- * Enumeration representing the shape on a Q Game tile.
+ * Represents the possible shapes of a Q Game tile.
  */
 public enum QShape {
   circle("circle", 4),

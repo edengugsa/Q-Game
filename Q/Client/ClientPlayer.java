@@ -21,11 +21,16 @@ public class ClientPlayer implements player {
   player player;
   ProxyReferee proxyReferee;
 
-
   public ClientPlayer(String ip, int port, String name, Strategy strategy) {
     connectToServer(ip, port);
     this.player = new playerImpl(name, strategy);
   }
+
+  public ClientPlayer(String ip, int port, player player) {
+    connectToServer(ip, port);
+    this.player = player;
+  }
+
 
   /**
    * Starts running this Client Player.

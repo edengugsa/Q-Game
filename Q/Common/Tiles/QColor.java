@@ -3,10 +3,8 @@ package Common.Tiles;
 import java.awt.*;
 import java.util.Comparator;
 
-import java.util.Objects;
-
 /**
- * Enumeration representing the shape on a Q Game tile.
+ * Represents the possible colors of a QGame Tile.
  */
 public enum QColor {
   RED("red", 1),

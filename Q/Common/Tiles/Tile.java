@@ -10,7 +10,7 @@ import Common.JsonToQGame;
 import Common.QGameToJson;
 
 /**
- * Represents a tile in The Q Game. A tile has two attributes: Color and QShape.
+ * Represents a Tile in The Q Game that has a QShape and QColor.
  */
 public record Tile(QColor color, QShape shape) {
 

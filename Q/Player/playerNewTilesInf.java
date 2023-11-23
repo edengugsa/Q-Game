@@ -12,7 +12,7 @@ public class playerNewTilesInf extends abstractInfPlayer {
   
   @Override
   public void newTiles(List<Tile> hand) {
-    System.out.println("when: " + when + " new Tiles called on " + this.name());
+//    System.out.println("when: " + when + " new Tiles called on " + this.name());
     if (this.when > 1) {
       super.newTiles(hand);
       this.when--;

@@ -115,7 +115,7 @@ public class ServerReferee {
       if (this.listOfPlayerProxies.size() >= MIN_NUM_PLAYERS) {
         Referee ref = new Referee(players, new RuleBook());
         gameResults = ref.runGame();
-//        System.out.println("Game Over: " + QGameToJson.WinnersAndCheatersToJson(gameResults));
+        System.out.println("Game Over: " + QGameToJson.WinnersAndCheatersToJson(gameResults));
       }
       return gameResults;
   }

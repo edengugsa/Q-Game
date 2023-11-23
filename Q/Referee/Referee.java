@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import Common.GameCommands.QGameCommand;
+import Common.QGameToJson;
 import Common.RuleBook.QRuleBook;
 import Common.RuleBook.RuleBook;
 import Common.Scorer.Scorer;
@@ -75,6 +76,8 @@ public class Referee {
     this.observers = new ArrayList<>();
     this.createGameState(players);
     this.setNameToPlayersMap(players);
+    System.out.println(QGameToJson.GameStateToJState(this.game));
+
   }
 
   public Referee(List<player> players) {
@@ -158,7 +161,7 @@ public class Referee {
       }
       catch (Exception e) {
         this.observers.remove(o);
-        System.out.println("Removed observer in send observer new game state");
+//        System.out.println("Removed observer in send observer new game state");
       }
     }
   }
@@ -209,12 +212,7 @@ public class Referee {
    * Trys to inform a player that they won, kicking them out if they cheated in any way.
    */
   private int tryWin(player player, boolean didWin) {
-    try {
-      player.win(didWin);
-    }
-    catch (Exception e) {
-      disqualify(player.name(), " throwing exception on win()");
-    }
+    player.win(didWin);
     return 0;
   }
 
@@ -290,12 +288,7 @@ public class Referee {
   }
 
   private int tryCallingSetupOnPlayer(player player) {
-    try {
-      player.setup(game.getActivePlayerKnowledge(), game.currentPlayerTiles());
-    }
-    catch (Exception e) {
-      disqualify("throwing exception on setup()");
-    }
+    player.setup(game.getActivePlayerKnowledge(), game.currentPlayerTiles());
     return 0;
   }
 
@@ -330,7 +323,7 @@ public class Referee {
   }
 
   private void disqualify(String playerName, String reason) {
-    System.out.println("Disqualified " + game.currentPlayerName() + " for " + reason);
+//    System.out.println("Disqualified " + game.currentPlayerName() + " for " + reason);
     game.addToRefDeck(game.getHand(playerName));
     disqualifiedPlayers.add(playerName);
     game.removePlayer(playerName);

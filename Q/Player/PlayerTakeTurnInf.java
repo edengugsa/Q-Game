@@ -16,6 +16,10 @@ public class PlayerTakeTurnInf extends abstractInfPlayer {
   // or an actual gameCommand
   @Override
   public QGameCommand takeTurn(ActivePlayerKnowledge apk) {
+    if (this.name().equals("Allen")) {
+      System.out.println("when: " + when + " new Tiles called on " + this.name());
+    }
+
     if (this.when > 1) {
       this.when--;
       return super.takeTurn(apk);
