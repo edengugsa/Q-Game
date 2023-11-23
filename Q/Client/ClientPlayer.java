@@ -12,7 +12,10 @@ import Player.Strategy.Strategy;
 import Player.playerImpl;
 import Player.player;
 
-
+/**
+ * Represents a player that can join and play in a remote QGame. This ClientPlayer uses a player
+ * with a strategy to respond to the Referee's requests and take turns.
+ */
 public class ClientPlayer implements player {
   Socket server;
   player player;
@@ -24,9 +27,15 @@ public class ClientPlayer implements player {
     this.player = new playerImpl(name, strategy);
   }
 
+  /**
+   * Starts running this Client Player.
+   * 1. Creates a new ProxyReferee to receive commands from the Server's Referee.
+   * 2. Sends its name to the Server.
+   * 3. Starts listening for method calls from the Server's Referee.
+   */
   public void run() {
     try {
-      this.proxyReferee =  new ProxyReferee(this.server, this);
+      this.proxyReferee = new ProxyReferee(this.server, this);
     }
     catch (Exception e) {
       throw new IllegalArgumentException("Could not create Proxy Referee " + e.getMessage());

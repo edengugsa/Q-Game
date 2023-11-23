@@ -14,15 +14,22 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.List;
 
-import Common.GameCommands.ExchangeCommand;
 import Common.GameCommands.QGameCommand;
 import Common.JsonToQGame;
 import Common.MName;
 import Common.State.ActivePlayerKnowledge;
 import Common.Tiles.Tile;
 
+/**
+ * Represents a proxy to the Referee for a ClientPlayer. This Proxy has an JsonStreamParser
+ * to receive commands from a remote Referee and a JsonWriter to send its ClientPlayer's response.
+ *
+ * It receives Jsons from the Referee and converts them to its data representations to forward to
+ * its Client. It then converts the Client's responses into their Json representations to send back
+ * to the Server's Referee.
+ */
 public class ProxyReferee {
-  Socket socket; // used to send
+  Socket socket;
   JsonStreamParser readFromServerRef;
   JsonWriter writeToServerRef;
   ClientPlayer clientPlayer;

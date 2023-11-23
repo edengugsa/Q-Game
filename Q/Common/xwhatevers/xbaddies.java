@@ -15,13 +15,18 @@ import Referee.WinnersAndCheaters;
 import Referee.Referee;
 import Referee.observer;
 
+/**
+ * Testing script for Players that take too long to complete an API call.
+ * Reads in a GameState and List of Players from stdin, runs a complete game, and prints out
+ * the winners and cheaters.
+ * Players that take too long will be disqualified.
+ */
 public class xbaddies {
   private static final JsonStreamParser parser
           = new JsonStreamParser(new BufferedReader(new InputStreamReader(System.in)));
 
   public static void main(String[] args) {
     GameState gamestate = JsonToQGame.JStateToGameState(parser.next().getAsJsonObject());
-
     List<player> players = JsonToQGame.JActorsToPlayerList(parser.next().getAsJsonArray());
 
       // TODO REMOVE OBSERVER

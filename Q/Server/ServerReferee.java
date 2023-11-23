@@ -14,11 +14,18 @@ import Common.TimeUtils;
 import Player.player;
 import Referee.Referee;
 import Referee.WinnersAndCheaters;
-import Referee.observer;
 
+/**
+ * Represents a Server to run the QGame on a specified port. This Server waits for enough players
+ * to start a game and then creates a Referee to run the game to completion.
+ *
+ * For every remote client that joins the game, this class makes a new ProxyPlayer to convert our
+ * data representations into their JSON representation to send over to a client.
+ */
 public class ServerReferee {
   static final int SIGNUP_TIMEOUT = 20;
   static final int NAME_TIMEOUT = 3;
+  static final int MAX_NUM_SIGNUPS = 2;
   static final int MIN_NUM_PLAYERS = 2;
   static final int MAX_NUM_PLAYERS = 4;
   ServerSocket serverSocket;
@@ -30,8 +37,10 @@ public class ServerReferee {
   }
 
   /**
-   * Adds a new ProxyPlayer to this Server for every Player that requests to join this game and
-   * provided a valid JName. This method will anywhere from 0 to the MAX_NUM_PLAYERS to join.
+   * EFFECT: adds a new ProxyPlayer to this.listOfPlayerProxies for every client that connects and
+   * provides a valid JName within NAME_TIMEOUT seconds. This method will add anywhere from
+   * 0 to the MAX_NUM_PLAYERS ProxyPlayers.
+   * @return 0 upon completion
    */
   public int signup() {
     this.listOfPlayerProxies = new ArrayList<>();
@@ -42,12 +51,12 @@ public class ServerReferee {
         playerSocket = this.serverSocket.accept();
         try {
           int p = TimeUtils.callWithTimeOut(() -> this.signupAPlayer(playerSocket), NAME_TIMEOUT);
-          System.out.println("Players so far " + this.listOfPlayerProxies.size());
+//          System.out.println("Players so far " + this.listOfPlayerProxies.size());
         }
         catch (InterruptedException | ExecutionException | TimeoutException e) {
           // unable to sign up a player
           playerSocket.close();
-          System.out.println("ServerReferee::signup 60 " + e.getMessage());
+//          System.out.println("ServerReferee::signup 60 " + e.getMessage());
         }
       }
       catch (IOException ignored) {
@@ -58,54 +67,55 @@ public class ServerReferee {
   }
 
   /**
-   *
+   * Waits SIGNUP_TIMEOUT seconds at most MAX_NUM_SIGNUPS number of times for a valid number
+   * of clients to join the game.
    */
   protected void trySignup() {
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < MAX_NUM_SIGNUPS; i++) {
       try {
-        System.out.println("starting iteration wait: " + (i+1));
+//        System.out.println("starting iteration wait: " + (i+1));
         TimeUtils.callWithTimeOut(this::signup, SIGNUP_TIMEOUT);
       }
       catch (Exception e) {
-        System.out.println("tried to sign up but surpassed 20s limit: " + e.getMessage());
+//        System.out.println("tried to sign up but surpassed 20s limit: " + e.getMessage());
       }
       // if we get enough players on the first iteration
       if (this.listOfPlayerProxies.size() >= MIN_NUM_PLAYERS) {
-        System.out.println("Found " + this.listOfPlayerProxies.size() + " to join our game");
+//        System.out.println("Found " + this.listOfPlayerProxies.size() + " to join our game");
         break;
       }
     }
-    System.out.println("Found " + this.listOfPlayerProxies.size() + " to join our game");
+//    System.out.println("Found " + this.listOfPlayerProxies.size() + " to join our game");
   }
 
 
   /**
-   * Signs up a new Proxy Player.
+   * Creates a new ProxyPlayer for a client that connected to this server and provided a valid JName.
+   * @param socket to communicate with the client
    * @return 0 upon completion
    */
   protected int signupAPlayer(Socket socket) {
     ProxyPlayer player = new ProxyPlayer(socket);
     if (player.name() != null) {
       this.listOfPlayerProxies.add(player);
-      System.out.println("Added new Player: " + player.name());
+//      System.out.println("Added new Player: " + player.name());
     }
-
     return 0;
   }
 
+  /**
+   * Run an entire game to completion.
+   * @return the game results
+   */
   public WinnersAndCheaters run() {
       this.trySignup();
       ArrayList<player> players = new ArrayList<>(this.listOfPlayerProxies);
       WinnersAndCheaters gameResults = new WinnersAndCheaters(new ArrayList<>(), new ArrayList<>());
-      System.out.println("players list: " + this.listOfPlayerProxies);
 
       if (this.listOfPlayerProxies.size() >= MIN_NUM_PLAYERS) {
-        System.out.println("Started game with " + this.listOfPlayerProxies.size());
-        List<observer> observers = new ArrayList<>();
-//        observers.add(new observer()); // TODO SHOULD GO SOMEHWERE ELSE
-        Referee ref = new Referee(players, observers, new RuleBook());
+        Referee ref = new Referee(players, new RuleBook());
         gameResults = ref.runGame();
-        System.out.println("Game Over: " + QGameToJson.WinnersAndCheatersToJson(gameResults));
+//        System.out.println("Game Over: " + QGameToJson.WinnersAndCheatersToJson(gameResults));
       }
       return gameResults;
   }
@@ -118,7 +128,5 @@ public class ServerReferee {
       System.out.println("Could not server");
     }
   }
-
-
 
 }

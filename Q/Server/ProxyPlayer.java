@@ -25,7 +25,10 @@ import Common.TimeUtils;
 import Player.player;
 
 /**
- * Represents a proxy to a remote player that the ServerReferee uses.
+ * Represents a proxy to a remote player that the Referee uses.
+ * The Referee will call methods in the player interface on this ProxyPlayer when needed. This
+ * class will convert our data definitions to their Json counterpart and send it to the remote
+ * player over its socket.
  */
 public class ProxyPlayer implements player {
   Socket socket; // used to send
@@ -67,7 +70,7 @@ public class ProxyPlayer implements player {
   }
 
   /**
-   * Did this player respond with "void" within the RESPONSE_TIMEOUT?
+   * Did this player respond with "void" within the RESPONSE_TIMEOUT? If not, they are disqualified.
    */
   private void handlePlayerAcknowledgement() {
     try {
@@ -75,7 +78,7 @@ public class ProxyPlayer implements player {
       if (!res.equals("void")) { this.shutDown();}
     }
     catch(Exception ignored) {
-      this.shutDown();
+      this.shutDown(); // TODO should they throw exception instead of shutting down?
     }
   }
 
