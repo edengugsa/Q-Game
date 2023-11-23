@@ -3,6 +3,7 @@ package Common.xwhatevers;
 import com.google.gson.JsonStreamParser;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,18 +23,25 @@ import Referee.observer;
  * Players that take too long will be disqualified.
  */
 public class xbaddies {
-  private static final JsonStreamParser parser
-          = new JsonStreamParser(new BufferedReader(new InputStreamReader(System.in)));
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
+    int b = xbaddiesHelper();
+    System.exit(0);
+  }
+
+  private static int xbaddiesHelper() throws IOException {
+    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    JsonStreamParser parser = new JsonStreamParser(new BufferedReader(new InputStreamReader(System.in)));
+
     GameState gamestate = JsonToQGame.JStateToGameState(parser.next().getAsJsonObject());
     List<player> players = JsonToQGame.JActorsToPlayerList(parser.next().getAsJsonArray());
 
-      // TODO REMOVE OBSERVER
+    // TODO REMOVE OBSERVER
 //      List<observer> observers = new ArrayList<>();
 //      observers.add(new observer());
 
     WinnersAndCheaters results = new Referee(players, gamestate).runGame();
     System.out.println(QGameToJson.WinnersAndCheatersToJson(results));
+    return 0;
   }
 }
