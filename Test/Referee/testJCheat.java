@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 
@@ -18,6 +19,9 @@ import Common.Tiles.Placement;
 import Common.Tiles.QColor;
 import Common.Tiles.QShape;
 import Common.Tiles.Tile;
+import Player.PlayerSetupInf;
+import Player.PlayerTakeTurnInf;
+import Player.PlayerWinInf;
 import Player.Strategy.BadAskForTilesStrategy;
 import Player.Strategy.DagStrategy;
 import Player.Strategy.LdasgStrategy;
@@ -27,6 +31,7 @@ import Player.Strategy.NotALineStrategy;
 import Player.Strategy.TileNotOwnedStrategy;
 import Player.player;
 import Player.playerImpl;
+import Player.playerNewTilesInf;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -102,5 +107,45 @@ public class testJCheat {
     exp.add(new Placement(new Coordinate(0, -3), new Tile(QColor.GREEN, QShape.diamond)));
 
     assertEquals(new PlacementCommand(exp).toString(), cmdAllen.toString());
+  }
+
+  @Test
+  public void testInfPlayer1() {
+    List<player> players = new ArrayList<>();
+    player allen = new PlayerTakeTurnInf("Allen", new LdasgStrategy(), 1);
+    player bethany = new PlayerSetupInf("Bethany", new LdasgStrategy(), 2);
+    player cindy = new PlayerSetupInf("Cindy", new DagStrategy(), 1);
+    player darryl = new PlayerWinInf("Darryl", new DagStrategy(), 1);
+
+    players.add(allen);
+    players.add(bethany);
+    players.add(cindy);
+    players.add(darryl);
+    Referee ref = new Referee(players, new RuleBook());
+    List<String> winners = new ArrayList<>(Arrays.asList("Bethany"));
+    List<String> disqualified = new ArrayList<>(Arrays.asList("Cindy", "Allen", "Darryl"));
+
+    WinnersAndCheaters expected = new WinnersAndCheaters(winners, disqualified);
+    assertEquals(ref.runGame(), expected);
+  }
+
+  @Test
+  public void testInfPlayer2() {
+    List<player> players = new ArrayList<>();
+    player allen = new PlayerTakeTurnInf("Allen", new LdasgStrategy(), 1);
+    player bethany = new playerNewTilesInf("Bethany", new LdasgStrategy(), 2);
+    player cindy = new PlayerSetupInf("Cindy", new DagStrategy(), 1);
+    player darryl = new PlayerWinInf("Darryl", new DagStrategy(), 1);
+
+    players.add(allen);
+    players.add(bethany);
+    players.add(cindy);
+    players.add(darryl);
+    Referee ref = new Referee(players, new RuleBook());
+    List<String> winners = new ArrayList<>();
+    List<String> disqualified = new ArrayList<>(Arrays.asList("Cindy", "Allen", "Bethany", "Darryl"));
+
+    WinnersAndCheaters expected = new WinnersAndCheaters(winners, disqualified);
+    assertEquals(ref.runGame(), expected);
   }
 }
