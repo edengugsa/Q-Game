@@ -13,20 +13,20 @@ import Player.playerImpl;
 import Player.player;
 
 /**
- * Represents a player that can join and play in a remote QGame. This ClientPlayer uses a player
+ * Represents a player that can join and play in a remote QGame. This client uses a player
  * with a strategy to respond to the Referee's requests and take turns.
  */
-public class ClientPlayer implements player {
+public class client implements player {
   Socket server;
   player player;
   ProxyReferee proxyReferee;
 
-  public ClientPlayer(String ip, int port, String name, Strategy strategy) {
+  public client(String ip, int port, String name, Strategy strategy) {
     connectToServer(ip, port);
     this.player = new playerImpl(name, strategy);
   }
 
-  public ClientPlayer(String ip, int port, player player) {
+  public client(String ip, int port, player player) {
     connectToServer(ip, port);
     this.player = player;
   }

@@ -30,7 +30,6 @@ public class RuleBook implements QRuleBook {
 
   GameBoard mock;
 
-
   /**
    * @return true if the given Placements is allowed on the given GameState
    * 1. Does the player own the tiles?
@@ -72,7 +71,7 @@ public class RuleBook implements QRuleBook {
 
   @Override
   public boolean gameOver(GameState game) {
-    return game.numPlayers() == 0 || this.roundWithoutPlacements(game) || game.currentPlayerTiles().isEmpty();
+    return game.numPlayers() == 0 || this.roundWithoutPlacements(game) || game.playerPlacedAllTiles;
   }
 
   @Override

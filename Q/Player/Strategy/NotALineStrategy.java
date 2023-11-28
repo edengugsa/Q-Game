@@ -35,7 +35,7 @@ public class NotALineStrategy extends AbstractCheatStrategy {
   }
 
   /**
-   * Returns a PlacementCommand with exactly two Placements that are not in the same row or col.
+   * Returns a PlacementCommand with Placements that are not in the same row or col.
    * If that is not possible, it will revert to its fallback strategy.
    */
   private QGameCommand computeHelper(ActivePlayerKnowledge apk) {
@@ -47,16 +47,9 @@ public class NotALineStrategy extends AbstractCheatStrategy {
       for (Placement p : board.placementAdjacentOptions(t)) {
         if (rulebook.matchesNeighbors(board, p)) {
           notInLinePlacements.add(p);
-          if (notInLinePlacements.size() < 2) {
-            break;
-          }
-          else {
-            if (rulebook.contiguous(notInLinePlacements)) {
-              notInLinePlacements.removeLast();
-            }
-            else {
-              return new PlacementCommand(notInLinePlacements);
-            }
+          board.extend(p.coordinate(), p.tile());
+          if (!rulebook.contiguous(notInLinePlacements)) {
+            return new PlacementCommand(notInLinePlacements);
           }
         }
       }

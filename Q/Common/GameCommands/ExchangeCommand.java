@@ -1,6 +1,10 @@
 package Common.GameCommands;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import Common.RuleBook.QRuleBook;
 import Common.Scorer.Scorer;
 import Common.State.GameState;
@@ -25,10 +29,12 @@ public class ExchangeCommand implements QGameCommand {
    */
   @Override
   public void execute(GameState game) {
-      for (Tile t : game.currentPlayerTiles()) {
+
+    for (Tile t : game.currentPlayerTiles()) {
         game.takeTileFromActivePlayer(t);
         game.deal(1);
       }
+    game.addToRefDeck(game.currentPlayerTiles());
   }
 
   @Override

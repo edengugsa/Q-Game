@@ -21,8 +21,8 @@ import Common.State.ActivePlayerKnowledge;
 import Common.Tiles.Tile;
 
 /**
- * Represents a proxy to the Referee for a ClientPlayer. This Proxy has an JsonStreamParser
- * to receive commands from a remote Referee and a JsonWriter to send its ClientPlayer's response.
+ * Represents a proxy to the Referee for a client. This Proxy has an JsonStreamParser
+ * to receive commands from a remote Referee and a JsonWriter to send its client's response.
  *
  * It receives Jsons from the Referee and converts them to its data representations to forward to
  * its Client. It then converts the Client's responses into their Json representations to send back
@@ -32,18 +32,18 @@ public class ProxyReferee {
   Socket socket;
   JsonStreamParser readFromServerRef;
   JsonWriter writeToServerRef;
-  ClientPlayer clientPlayer;
+  client client;
   Gson gson = new Gson();
   boolean isGameOver = false;
 
-  public ProxyReferee(Socket playerSocket, ClientPlayer clientPlayer) throws IOException {
+  public ProxyReferee(Socket playerSocket, client client) throws IOException {
     this.socket = playerSocket;
     this.readFromServerRef = new JsonStreamParser(new BufferedReader(new InputStreamReader(socket.getInputStream())));
     this.writeToServerRef = new JsonWriter(new OutputStreamWriter(socket.getOutputStream()));
-    this.clientPlayer = clientPlayer;
+    this.client = client;
 
     // Send Name to the Server
-//    this.sendInformationToReferee(new JsonPrimitive(this.clientPlayer.name()));
+//    this.sendInformationToReferee(new JsonPrimitive(this.client.name()));
 
     // Start reading for ref
 //    this.receiveInformationFromReferee();
@@ -51,7 +51,7 @@ public class ProxyReferee {
 
   /**
    * Reads Methods Calls from the Referee, parses them, and calls the
-   * appropriate method on the ClientPlayer.
+   * appropriate method on the client.
    */
   public void receiveInformationFromReferee() {
     while(!isGameOver && this.readFromServerRef.hasNext()) {
@@ -72,7 +72,7 @@ public class ProxyReferee {
   protected void callTakeTurnOnClientPlayer(JsonArray methodCall) {
     ActivePlayerKnowledge apk = JsonToQGame.MethodCallToActivePlayerKnowledge(methodCall);
 
-    QGameCommand cmd = this.clientPlayer.takeTurn(apk);
+    QGameCommand cmd = this.client.takeTurn(apk);
     this.sendInformationToReferee(cmd.toJSON());
   }
 
@@ -80,20 +80,20 @@ public class ProxyReferee {
     ActivePlayerKnowledge apk = JsonToQGame.MethodCallToActivePlayerKnowledge(methodCall);
     List<Tile> tiles = JsonToQGame.SetupMethodCallToListOfTiles(methodCall);
 
-    this.clientPlayer.setup(apk, tiles);
+    this.client.setup(apk, tiles);
     this.sendInformationToReferee(new JsonPrimitive("void"));
   }
 
   protected void callNewTilesOnClientPlayer(JsonArray methodCall) {
     List<Tile> tiles = JsonToQGame.NewTilesMethodCallToListOfTiles(methodCall);
 
-    this.clientPlayer.newTiles(tiles);
+    this.client.newTiles(tiles);
     this.sendInformationToReferee(new JsonPrimitive("void"));
   }
 
   protected void callWinOnClientPlayer(JsonArray methodCall) {
     boolean winBool = JsonToQGame.WinMethodCallToListOfTiles(methodCall);
-    this.clientPlayer.win(winBool);
+    this.client.win(winBool);
     this.sendInformationToReferee(new JsonPrimitive("void"));
     this.isGameOver = true;
     this.closeConnection();

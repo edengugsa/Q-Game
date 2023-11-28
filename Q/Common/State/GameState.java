@@ -29,6 +29,7 @@ public class GameState {
   public Stack<QGameCommand> roundHistory; // store all the commands in the current round
   public boolean playerPlacedAllTiles;
 
+
   /**
    * Public constructor for the State. Prepares the game for playing
    * by building the deck and the game board, and handing each player a given amount of tiles.
@@ -182,12 +183,6 @@ public class GameState {
     }
   }
 
-
-
-
-
-
-
   /**
    * @return the given amount of tiles from this State's deck
    * @throws IllegalStateException if the number of tiles in the deck is fewer than the requested amount
@@ -261,6 +256,9 @@ public class GameState {
     }
   }
 
+  /**
+   * @return a copy of the current player's tiles.
+   */
   public List<Tile> currentPlayerTiles() {
     return new ArrayList<Tile>(this.currentPlayer().getHand());
   }

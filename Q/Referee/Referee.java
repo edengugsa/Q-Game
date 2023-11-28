@@ -118,7 +118,7 @@ public class Referee {
     while (!ruleBook.gameOver(game)) {
       currentPlayerTakeTurn();
       sendObserversNewGameState(game.getCopy());
-      if (ruleBook.gameOver(game)) {
+      if (ruleBook.gameOver(game)) { // TODO UNnecessary
         break;
       }
     }
@@ -134,9 +134,6 @@ public class Referee {
       if (cmd.isLegal(ruleBook, game)) {
         game.execute(cmd);
         game.score(cmd, this.scorer);
-        if (game.currentPlayer().getHand().isEmpty()) {
-          return;
-        }
         this.game.renewPlayerTiles(cmd);
         this.updatePlayer(cmd);
         this.game.bump();
@@ -204,12 +201,13 @@ public class Referee {
    * throws an exception, they're removed from the game and winners list.
    */
   private void tellPlayersGameResult(List<String> winners) {
-    this.tellPlayersGameResult(winners, false); //update losers
     this.tellPlayersGameResult(winners, true); //update winners
+    this.tellPlayersGameResult(winners, false); //update losers
   }
 
   /**
-   * Trys to inform a player that they won, kicking them out if they cheated in any way.
+   * Trys to inform a player that they won
+   * @return 0 upon completion
    */
   private int tryWin(player player, boolean didWin) {
     player.win(didWin);
@@ -293,12 +291,7 @@ public class Referee {
   }
 
   private int tryCallingNewTilesOnPlayer(player player, List<Tile> tiles) {
-    try {
-      player.newTiles(tiles);
-    }
-    catch (Exception e) {
-      disqualify("throwing exception on newTiles()");
-    }
+    player.newTiles(tiles);
     return 0;
   }
 
