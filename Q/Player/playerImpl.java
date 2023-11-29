@@ -50,4 +50,11 @@ public class playerImpl implements player {
 //      System.out.println(name + ": Loser");
     }
   }
+
+  @Override
+  public String toString() {
+    return this.name;
+  }
+
+
 }

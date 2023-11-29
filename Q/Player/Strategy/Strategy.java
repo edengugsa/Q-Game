@@ -13,7 +13,7 @@ public interface Strategy {
 
   /**
    * @param apk the knowledge about the game
-   * @return QGameAction this strategy's selected action based on the active player's knowledge about the game.
+   * @return QGameAction this strategy's selected action based on the active client's knowledge about the game.
    */
   QGameCommand compute(ActivePlayerKnowledge apk);
 

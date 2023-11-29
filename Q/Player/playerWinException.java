@@ -3,7 +3,7 @@ package Player;
 import Player.Strategy.Strategy;
 
 /**
- * Represents a faulty player that throws an error when the win() method is called
+ * Represents a faulty client that throws an error when the win() method is called
  */
 public class playerWinException extends playerImpl {
 

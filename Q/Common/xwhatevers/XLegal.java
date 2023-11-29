@@ -49,7 +49,7 @@ public class XLegal {
     Queue<PlayerState> playerList = new ArrayDeque<>();
     PlayerState player = JsonUtils.JPlayerToPlayerState(activePlayer);
     playerList.add(player);
-    playerList.add(new PlayerStateImpl("dummy", new ArrayList<>(), 3)); // dummy player
+    playerList.add(new PlayerStateImpl("dummy", new ArrayList<>(), 3)); // dummy client
     PlacementCommand pc = new PlacementCommand(placements);
 
     if (new RuleBook().allows(pc, gameboard)) {

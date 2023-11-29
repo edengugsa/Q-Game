@@ -31,7 +31,7 @@ public class Scorer {
   // set of Placements for one turn
   private Queue<Placement> placements;
   private GameBoard board;
-  // did the player who made this placement place ALL their tiles?
+  // did the client who made this placement place ALL their tiles?
   private boolean placedAll;
 
   /**

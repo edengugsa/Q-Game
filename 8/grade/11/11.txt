@@ -8,21 +8,21 @@
 '(#hasheq((map . ((0 (0 #hasheq((color . "red") (shape . "star"))))))
           (players
            .
-           (#hasheq((name . "player1")
+           (#hasheq((name . "client1")
                     (score . 0)
                     (tile*
                      .
                      (#hasheq((color . "orange") (shape . "star"))
                       #hasheq((color . "green") (shape . "star")))))
-            #hasheq((name . "player2")
+            #hasheq((name . "client2")
                     (score . 0)
                     (tile* . (#hasheq((color . "blue") (shape . "star")))))))
           (tile* . ()))
-  (("player1" "dag" "a cheat" "not-a-line") ("player2" "dag")))
+  (("client1" "dag" "a cheat" "not-a-line") ("client2" "dag")))
 (*** expected)
-'((("player2") ("player1")))
+'((("client2") ("client1")))
 (*** but received)
-'(((plain fast with-newline plain-unicode) ((("player2") ()))))
+'(((plain fast with-newline plain-unicode) ((("client2") ()))))
 
 
 (testing /course/cs4500f23/ta/tedium-workdir/testfest-results/8/11/Tests/3-in.json /course/cs4500f23/ta/tedium-workdir/testfest-results/8/11/Tests/3-out.json)

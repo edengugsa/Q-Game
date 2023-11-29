@@ -17,7 +17,7 @@ import Common.Tiles.Tile;
 
 /**
  * Represents functionality to render a State. The image will display the GameBoard, the number
- * of remaining Referee tiles, as well as each player's score and Tiles.
+ * of remaining Referee tiles, as well as each client's score and Tiles.
  */
 public class RenderGameState extends JPanel {
   JScrollPane scrollableGameState;
@@ -82,7 +82,7 @@ public class RenderGameState extends JPanel {
 
 
   /**
-   * Renders this PlayerState as an image. It displays the player's name, score, tiles remaining,
+   * Renders this PlayerState as an image. It displays the client's name, score, tiles remaining,
    * and their tiles.
    */
   private BufferedImage PlayerStateToImage(PlayerState ps) {

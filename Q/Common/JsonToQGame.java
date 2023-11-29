@@ -7,6 +7,7 @@ import com.google.gson.JsonPrimitive;
 
 import java.util.*;
 
+import Client.ClientConfig;
 import Common.GameBoard.GameBoard;
 import Common.GameCommands.ExchangeCommand;
 import Common.GameCommands.PassCommand;
@@ -40,9 +41,50 @@ import Player.playerSetupException;
 import Player.Strategy.Strategy;
 import Player.playerTakeTurnException;
 import Player.playerWinException;
+import Referee.RefereeConfig;
+import Referee.RefereeStateConfig;
+import Server.ServerConfig;
 
 public class JsonToQGame {
 
+    public static ClientConfig ClientConfigJSONToClientConfig(JsonObject o) {
+      return new ClientConfig(o.get("port").getAsInt(), o.get("host").getAsString(),
+            o.get("wait").getAsInt(), o.get("quiet").getAsBoolean(),
+              JActorsToPlayerList(o.get("players").getAsJsonArray()));
+  }
+
+  public static ServerConfig ServerConfigJSONToServerConfig(JsonObject o) {
+      return new ServerConfig(o.get("port").getAsInt(), o.get("server-tries").getAsInt(),
+              o.get("server-wait").getAsInt(), o.get("wait-for-signup").getAsInt(),
+              o.get("quiet").getAsBoolean(),
+              RefereeConfigJSONToRefereeConfig(o.get("ref-spec").getAsJsonObject()));
+  }
+
+
+  public static RefereeConfig RefereeConfigJSONToRefereeConfig(JsonObject o) {
+    return new RefereeConfig(JStateToGameState(o.get("state0").getAsJsonObject()), o.get("quiet").getAsBoolean(),
+            RefereeStateConfigJsonToRefereeStateConfig(o.get("config-s").getAsJsonObject()),
+            o.get("per-turn").getAsInt(), o.get("observe").getAsBoolean());
+  }
+
+  public static RefereeStateConfig RefereeStateConfigJsonToRefereeStateConfig(JsonObject o) {
+      return new RefereeStateConfig(o.get("qbo").getAsInt(), o.get("fbo").getAsInt());
+  }
+
+  /**
+   * Converts a JsonElement to a JName
+   * @throws IllegalArgumentException if element isn't a valid JName:
+   * 1. between 1-20 characters
+   * 2. satisfies "^[a-zA-Z0-9]+$"
+   */
+  public static String JsonToJName(String name) {
+      if (name.length() > 0 && name.length() <= 20 && name.matches("^[a-zA-Z0-9]+$")) {
+        return name;
+      }
+      else {
+        throw new IllegalArgumentException("Provided a name that isn't between 1-20 chars or has invalid characters");
+      }
+  }
 
   /**
    * Converts a JState to a State
@@ -74,8 +116,6 @@ public class JsonToQGame {
     }
     return players;
   }
-
-
 
   private static player PlayerWithJExn(String name, Strategy strategy, JsonArray JActorSpec) {
     return switch (JActorSpec.get(2).getAsString()) {
@@ -213,8 +253,6 @@ public class JsonToQGame {
     return new GameBoard(JMapToHashmap(jMap));
   }
 
-
-
   /**
    * Converts the given JPub to a PublicPlayerKnowledge
    */
@@ -228,7 +266,7 @@ public class JsonToQGame {
   }
 
   /**
-   * Converts a JPub's player to a Queue of opponent's PublicPlayerStates
+   * Converts a JPub's client to a Queue of opponent's PublicPlayerStates
    */
   protected static Queue<PublicPlayerState> convertPlayersToQueueOfPublicPlayerStates(JsonArray players) {
     Queue<PublicPlayerState> states = new ArrayDeque<>();

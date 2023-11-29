@@ -12,7 +12,7 @@ import Common.Tiles.QShape;
 import Common.Tiles.Tile;
 
 /**
- * A flawed strategy (for testing purposes). Returns pseudorandom placements that the player may or may not
+ * A flawed strategy (for testing purposes). Returns pseudorandom placements that the client may or may not
  * be able to make.
  */
 public class FlawedStrategy implements Strategy {

@@ -13,7 +13,7 @@ import Common.Tiles.Placement;
  * Represents a strategy for choosing a GameCommand for The Q Game.
  * </p>
  * This strategy first tries to find as many possible tile placements on the map, starting with the
- * "smallest" tile in the player's hand. This Strategy ranks the "smallest" Tile's possible
+ * "smallest" tile in the client's hand. This Strategy ranks the "smallest" Tile's possible
  * placements based on the number of neighboring. Tiles it has. The more neighbors the better.
  */
 public class LdasgStrategy extends LexicoStrategy {

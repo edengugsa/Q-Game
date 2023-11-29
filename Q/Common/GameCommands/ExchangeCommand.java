@@ -24,8 +24,8 @@ public class ExchangeCommand implements QGameCommand {
   }
 
   /**
-   * Exchanges all the given State's active player's tiles for new ones.
-   * Appends the player's old tiles to the end of State's deck.
+   * Exchanges all the given State's active client's tiles for new ones.
+   * Appends the client's old tiles to the end of State's deck.
    */
   @Override
   public void execute(GameState game) {

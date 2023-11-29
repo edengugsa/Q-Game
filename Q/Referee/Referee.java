@@ -112,7 +112,7 @@ public class Referee {
   }
 
   /**
-   * Runs every player turn and sends the game state to observers after every turn.
+   * Runs every client turn and sends the game state to observers after every turn.
    */
   private void runGameHelper() {
     while (!ruleBook.gameOver(game)) {
@@ -125,7 +125,7 @@ public class Referee {
   }
 
   /**
-   * The current player takes a turn. If the move is not legal or they took too long, they are
+   * The current client takes a turn. If the move is not legal or they took too long, they are
    * disqualified.
    */
   private void currentPlayerTakeTurn(){
@@ -179,7 +179,7 @@ public class Referee {
 
 
   /**
-   * Updates the AI player with their new tiles after their turn has been completed
+   * Updates the AI client with their new tiles after their turn has been completed
    */
   private void updatePlayer(QGameCommand cmd) {
     if (cmd.doesPlayerGetNewTiles()) {
@@ -197,7 +197,7 @@ public class Referee {
   }
 
   /**
-   * Informs remaining Players who lost first, then remaining winner(s). If the winning player(s)
+   * Informs remaining Players who lost first, then remaining winner(s). If the winning client(s)
    * throws an exception, they're removed from the game and winners list.
    */
   private void tellPlayersGameResult(List<String> winners) {
@@ -206,7 +206,7 @@ public class Referee {
   }
 
   /**
-   * Trys to inform a player that they won
+   * Trys to inform a client that they won
    * @return 0 upon completion
    */
   private int tryWin(player player, boolean didWin) {
@@ -239,7 +239,7 @@ public class Referee {
   }
 
   /**
-   * Sets this Referee's storage of player into a name->player map using the given list of player.
+   * Sets this Referee's storage of client into a name->client map using the given list of client.
    */
   private void setNameToPlayersMap(List<player> players) {
     this.players = new HashMap<>();
@@ -309,7 +309,7 @@ public class Referee {
   }
 
   /**
-   * Disqualifies the current player. Goes to the next Player in State.
+   * Disqualifies the current client. Goes to the next Player in State.
    */
   private void disqualify(String reason) {
     disqualify(game.currentPlayerName(), reason);

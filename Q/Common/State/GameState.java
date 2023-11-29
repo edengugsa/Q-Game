@@ -32,7 +32,7 @@ public class GameState {
 
   /**
    * Public constructor for the State. Prepares the game for playing
-   * by building the deck and the game board, and handing each player a given amount of tiles.
+   * by building the deck and the game board, and handing each client a given amount of tiles.
    * @param players the queue of players in turn order.
    */
   public GameState(Queue<PlayerState> players) throws IllegalStateException {
@@ -80,8 +80,8 @@ public class GameState {
   }
 
   /**
-   * Bumps to the next player turn.
-   * @return the active player name
+   * Bumps to the next client turn.
+   * @return the active client name
    */
   public String bump() {
     players.add(players.remove());
@@ -120,7 +120,7 @@ public class GameState {
   }
 
   /**
-   * Updates the score of this State's current player with the given number of points.
+   * Updates the score of this State's current client with the given number of points.
    */
   public void updateScore(int points) {
     this.currentPlayer().reward(points);
@@ -128,7 +128,7 @@ public class GameState {
 
   /**
    * @return PublicPlayerKnowledge ->
-   * (All the information about this State that the active player is allowed to know)
+   * (All the information about this State that the active client is allowed to know)
    */
   public PublicKnowledge publicKnowledge() {
     return new PublicKnowledge(
@@ -139,7 +139,7 @@ public class GameState {
 
   /**
    * @return ActivePlayerKnowledge ->
-   * (All the information about this State that the active player is allowed to know)
+   * (All the information about this State that the active client is allowed to know)
    */
   public ActivePlayerKnowledge getActivePlayerKnowledge() {
     return new ActivePlayerKnowledge(
@@ -206,7 +206,7 @@ public class GameState {
    * placed more tiles than there are ref tiles, they get all the reftiles. If they placed all their
    * tiles, they don't get any tiles.
    *
-   * @param numTiles the number of tiles placed by the current player
+   * @param numTiles the number of tiles placed by the current client
    */
   public void renewPlayerTiles(int numTiles) {
     playerPlacedAllTiles = this.currentPlayerTiles().size() == 0;
@@ -257,7 +257,7 @@ public class GameState {
   }
 
   /**
-   * @return a copy of the current player's tiles.
+   * @return a copy of the current client's tiles.
    */
   public List<Tile> currentPlayerTiles() {
     return new ArrayList<Tile>(this.currentPlayer().getHand());
@@ -268,7 +268,7 @@ public class GameState {
   }
   
   /**
-   * @return the player whose turn it currently is.
+   * @return the client whose turn it currently is.
    */
   public PlayerState currentPlayer() {
     return this.players.peek();
@@ -280,7 +280,7 @@ public class GameState {
         return new ArrayList<>(ps.getHand());
       }
     }
-    throw new IllegalArgumentException("No such player named: " + name);
+    throw new IllegalArgumentException("No such client named: " + name);
   }
 
   public void removePlayer(String name) {
@@ -290,7 +290,7 @@ public class GameState {
         return;
       }
     }
-    throw new IllegalArgumentException("No such player: " + name);
+    throw new IllegalArgumentException("No such client: " + name);
   }
 
   /**

@@ -25,7 +25,7 @@ import Common.Tiles.Tile;
 
 /**
  * This abstract class represents a lexicographic approach to forming a QGameCommand. It will choose
- * the "smallest" tile in the player's hand that can extend the current GameBoard. Classes that
+ * the "smallest" tile in the client's hand that can extend the current GameBoard. Classes that
  * extend this will choose how to sort the "smallest" Tile's possible placements.
  * <p />
  * If no placements are possible according to the RuleBook, it will try to Exchange before Passing.
@@ -47,7 +47,7 @@ public abstract class LexicoStrategy implements Strategy {
 
   /**
    * Constructs this LexicoStrategy which will adhere to the provided QRuleBook, and make decisions
-   * based on the player's list of tiles and the player's knowledge about the game.
+   * based on the client's list of tiles and the client's knowledge about the game.
    */
   public LexicoStrategy() {
     this.ruleBook = new RuleBook();

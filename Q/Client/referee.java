@@ -19,6 +19,7 @@ import Common.JsonToQGame;
 import Common.MName;
 import Common.State.ActivePlayerKnowledge;
 import Common.Tiles.Tile;
+import Player.player;
 
 /**
  * Represents a proxy to the Referee for a client. This Proxy has an JsonStreamParser
@@ -28,25 +29,19 @@ import Common.Tiles.Tile;
  * its Client. It then converts the Client's responses into their Json representations to send back
  * to the Server's Referee.
  */
-public class ProxyReferee {
+public class referee {
   Socket socket;
   JsonStreamParser readFromServerRef;
   JsonWriter writeToServerRef;
-  client client;
+  Player.player player;
   Gson gson = new Gson();
   boolean isGameOver = false;
 
-  public ProxyReferee(Socket playerSocket, client client) throws IOException {
+  public referee(Socket playerSocket, player player) throws IOException {
     this.socket = playerSocket;
     this.readFromServerRef = new JsonStreamParser(new BufferedReader(new InputStreamReader(socket.getInputStream())));
     this.writeToServerRef = new JsonWriter(new OutputStreamWriter(socket.getOutputStream()));
-    this.client = client;
-
-    // Send Name to the Server
-//    this.sendInformationToReferee(new JsonPrimitive(this.client.name()));
-
-    // Start reading for ref
-//    this.receiveInformationFromReferee();
+    this.player = player;
   }
 
   /**
@@ -72,7 +67,7 @@ public class ProxyReferee {
   protected void callTakeTurnOnClientPlayer(JsonArray methodCall) {
     ActivePlayerKnowledge apk = JsonToQGame.MethodCallToActivePlayerKnowledge(methodCall);
 
-    QGameCommand cmd = this.client.takeTurn(apk);
+    QGameCommand cmd = this.player.takeTurn(apk);
     this.sendInformationToReferee(cmd.toJSON());
   }
 
@@ -80,20 +75,20 @@ public class ProxyReferee {
     ActivePlayerKnowledge apk = JsonToQGame.MethodCallToActivePlayerKnowledge(methodCall);
     List<Tile> tiles = JsonToQGame.SetupMethodCallToListOfTiles(methodCall);
 
-    this.client.setup(apk, tiles);
+    this.player.setup(apk, tiles);
     this.sendInformationToReferee(new JsonPrimitive("void"));
   }
 
   protected void callNewTilesOnClientPlayer(JsonArray methodCall) {
     List<Tile> tiles = JsonToQGame.NewTilesMethodCallToListOfTiles(methodCall);
 
-    this.client.newTiles(tiles);
+    this.player.newTiles(tiles);
     this.sendInformationToReferee(new JsonPrimitive("void"));
   }
 
   protected void callWinOnClientPlayer(JsonArray methodCall) {
     boolean winBool = JsonToQGame.WinMethodCallToListOfTiles(methodCall);
-    this.client.win(winBool);
+    this.player.win(winBool);
     this.sendInformationToReferee(new JsonPrimitive("void"));
     this.isGameOver = true;
     this.closeConnection();
@@ -110,7 +105,7 @@ public class ProxyReferee {
 
   // TODO private?
   public void sendInformationToReferee(JsonElement toSend) {
-    // todo duplicate code as ProxyPlayer::sendToClient
+    // todo duplicate code as player::sendToClient
     try {
       gson.toJson(toSend, this.writeToServerRef);
       this.writeToServerRef.flush();

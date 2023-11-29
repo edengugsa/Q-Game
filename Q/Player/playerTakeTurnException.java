@@ -5,7 +5,7 @@ import Common.State.ActivePlayerKnowledge;
 import Player.Strategy.Strategy;
 
 /**
- * Represents a faulty player that throws an error when the takeTurn() method is called
+ * Represents a faulty client that throws an error when the takeTurn() method is called
  */
 public class playerTakeTurnException extends playerImpl {
 

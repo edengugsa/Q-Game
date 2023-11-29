@@ -32,7 +32,7 @@ public class RuleBook implements QRuleBook {
 
   /**
    * @return true if the given Placements is allowed on the given GameState
-   * 1. Does the player own the tiles?
+   * 1. Does the client own the tiles?
    * 2. are the placements in the same row or col?
    * 3. do the placements match its neighbors?
    * 4. are the placements adjacent to placed tiles?

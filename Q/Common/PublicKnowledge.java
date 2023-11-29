@@ -7,7 +7,7 @@ import Common.State.PublicPlayerState;
 
 /**
  * Represents information about all players
- * that a referee may wish to share with the active player.
+ * that a referee may wish to share with the active client.
  */
 public class PublicKnowledge {
   public final Queue<PublicPlayerState> opponentStates;

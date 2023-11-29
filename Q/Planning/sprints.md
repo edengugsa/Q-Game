@@ -33,7 +33,7 @@ for Players to "sign-up"
 
 **Sprint #3 Goals**
 
-Develop the client-server communication
+Develop the player-server communication
 Implement Methods for 
 
 
@@ -59,7 +59,7 @@ Implement Methods for
 # SUBJECT: Plan for Building The Q Game
 
 # High-level idea:
-- Referee will store the “truth” of the entire game state -- including the board itself and the cards that each client/player has for each turn
+- Referee will store the “truth” of the entire game state -- including the board itself and the cards that each player/player has for each turn
 - Referee will be in charge of updating the model after receiving the moves from each player
 
 # Sprint #1 Goals:
@@ -73,20 +73,20 @@ possession.
 
 Goal #2: Write the basic functionality for the game board.
 - An external method for expanding the board and placing tiles on the game board -- mutating the game state with a given move
-- An internal method for mutating the tiles for the respective client with a given move
+- An internal method for mutating the tiles for the respective player with a given move
 - An external method for scoring a placement of tiles.
 
 # Sprint 2 Goals: 
 Establish the Referee and its necessary methods for setting up and carrying out The Q Game.
 
 Referee must be able to...
-- Determine which client’s turn it is and send a respective client request when it’s their turn
+- Determine which player’s turn it is and send a respective player request when it’s their turn
 - Validate a player’s response
 - Referee should be able to query and alter the GameState by providing the GameState a move with the previously written methods.
 - Check for end game, report updated scores
 - Broadcast the GameState to all Players and Observers
 Repeat
-IF a client crashes/quits, game should continue.
+IF a player crashes/quits, game should continue.
 
 # Sprint 3 Goals: 
 Complete the Referee-Player Interface and a Player implementation to validate it.

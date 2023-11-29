@@ -6,7 +6,7 @@ package Server;
 public class StartQGame {
   public static void main(String[] args) {
     try {
-      ServerReferee server = new ServerReferee(33331);
+      server server = new server(33331);
       server.run();
       server.shutDown();
     }

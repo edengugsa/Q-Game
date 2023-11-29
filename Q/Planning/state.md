@@ -10,7 +10,7 @@
 
 Game state should have
 * The game Board where referee will place tiles
-* Each of the client’s tiles
+* Each of the player’s tiles
 * Spare tiles for the referee to exchange to the players
 
 The GameState data-representation needs to include the following fields;

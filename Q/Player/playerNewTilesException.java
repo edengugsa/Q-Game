@@ -5,7 +5,7 @@ import Common.Tiles.Tile;
 import Player.Strategy.Strategy;
 
 /**
- * Represents a faulty player that throws an error when the newTiles() method is called
+ * Represents a faulty client that throws an error when the newTiles() method is called
  */
 public class playerNewTilesException extends playerImpl {
 

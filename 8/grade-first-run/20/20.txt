@@ -8,7 +8,7 @@
 '(#hasheq((map . ((0 (0 #hasheq((color . "blue") (shape . "circle"))))))
           (players
            .
-           (#hasheq((name . "player1")
+           (#hasheq((name . "client1")
                     (score . 0)
                     (tile*
                      .
@@ -18,7 +18,7 @@
                       #hasheq((color . "blue") (shape . "square"))
                       #hasheq((color . "blue") (shape . "circle"))
                       #hasheq((color . "blue") (shape . "circle")))))
-            #hasheq((name . "player2")
+            #hasheq((name . "client2")
                     (score . 0)
                     (tile*
                      .
@@ -86,15 +86,15 @@
             #hasheq((color . "blue") (shape . "square"))
             #hasheq((color . "green") (shape . "diamond"))
             #hasheq((color . "orange") (shape . "8star")))))
-  (("player1" "dag" "a cheat" "no-fit")
-   ("player2" "dag")
+  (("client1" "dag" "a cheat" "no-fit")
+   ("client2" "dag")
    ("player3" "ldasg")
    ("player4" "ldasg" "a cheat" "non-adjacent-coordinate")))
 (*** expected)
 '((("player3") ()))
 (*** but received)
 '(((plain fast with-newline plain-unicode)
-   ((("player3") ("player4" "player1")))))
+   ((("player3") ("player4" "client1")))))
 
 
 (testing /course/cs4500f23/ta/tedium-workdir/testfest-results/8/20/Tests/4-in.json /course/cs4500f23/ta/tedium-workdir/testfest-results/8/20/Tests/4-out.json)
