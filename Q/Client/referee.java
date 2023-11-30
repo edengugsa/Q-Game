@@ -48,7 +48,7 @@ public class referee {
    * Reads Methods Calls from the Referee, parses them, and calls the
    * appropriate method on the client.
    */
-  public void receiveInformationFromReferee() {
+  protected void receiveInformationFromReferee() {
     while(!isGameOver && this.readFromServerRef.hasNext()) {
       JsonArray methodCall = this.readFromServerRef.next().getAsJsonArray();
       MName mName = JsonToQGame.getMName(methodCall);
@@ -66,30 +66,27 @@ public class referee {
 
   protected void callTakeTurnOnClientPlayer(JsonArray methodCall) {
     ActivePlayerKnowledge apk = JsonToQGame.MethodCallToActivePlayerKnowledge(methodCall);
-
     QGameCommand cmd = this.player.takeTurn(apk);
-    this.sendInformationToReferee(cmd.toJSON());
+    this.sendJsonToReferee(cmd.toJSON());
   }
 
   protected void callSetUpOnClientPlayer(JsonArray methodCall) {
     ActivePlayerKnowledge apk = JsonToQGame.MethodCallToActivePlayerKnowledge(methodCall);
     List<Tile> tiles = JsonToQGame.SetupMethodCallToListOfTiles(methodCall);
-
     this.player.setup(apk, tiles);
-    this.sendInformationToReferee(new JsonPrimitive("void"));
+    this.sendJsonToReferee(new JsonPrimitive("void"));
   }
 
   protected void callNewTilesOnClientPlayer(JsonArray methodCall) {
     List<Tile> tiles = JsonToQGame.NewTilesMethodCallToListOfTiles(methodCall);
-
     this.player.newTiles(tiles);
-    this.sendInformationToReferee(new JsonPrimitive("void"));
+    this.sendJsonToReferee(new JsonPrimitive("void"));
   }
 
   protected void callWinOnClientPlayer(JsonArray methodCall) {
     boolean winBool = JsonToQGame.WinMethodCallToListOfTiles(methodCall);
     this.player.win(winBool);
-    this.sendInformationToReferee(new JsonPrimitive("void"));
+    this.sendJsonToReferee(new JsonPrimitive("void"));
     this.isGameOver = true;
     this.closeConnection();
   }
@@ -103,9 +100,7 @@ public class referee {
     }
   }
 
-  // TODO private?
-  public void sendInformationToReferee(JsonElement toSend) {
-    // todo duplicate code as player::sendToClient
+  public void sendJsonToReferee(JsonElement toSend) {
     try {
       gson.toJson(toSend, this.writeToServerRef);
       this.writeToServerRef.flush();

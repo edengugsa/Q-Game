@@ -184,7 +184,7 @@ public class Referee {
   private void updatePlayer(QGameCommand cmd) {
     if (cmd.doesPlayerGetNewTiles()) {
       try {
-        int b = TimeUtils.callWithTimeOut(() -> tryCallingNewTilesOnPlayer(this.currentPlayer(), game.currentPlayerTiles()), PLAYER_RESPONSE_TIMEOUT);
+        TimeUtils.callWithTimeOut(() -> tryCallingNewTilesOnPlayer(this.currentPlayer(), game.currentPlayerTiles()), PLAYER_RESPONSE_TIMEOUT);
       }
       catch (InterruptedException | ExecutionException | TimeoutException e) {
         throw new IllegalStateException("Player took too long on newTiles()");
@@ -223,7 +223,7 @@ public class Referee {
       player player = this.players.get(name);
       if (winners.contains(player.name()) == didWin) {
         try {
-          int b = TimeUtils.callWithTimeOut(() -> tryWin(player, didWin), PLAYER_RESPONSE_TIMEOUT);
+          TimeUtils.callWithTimeOut(() -> tryWin(player, didWin), PLAYER_RESPONSE_TIMEOUT);
         }
         catch (InterruptedException | ExecutionException | TimeoutException e) {
           winners.remove(name);
@@ -276,7 +276,7 @@ public class Referee {
     for (int i = 0; i < numPlayers; i++) {
       try {
         player actualPlayer = this.players.get(game.currentPlayerName());
-        int b = TimeUtils.callWithTimeOut(() -> tryCallingSetupOnPlayer(actualPlayer), PLAYER_RESPONSE_TIMEOUT);
+        TimeUtils.callWithTimeOut(() -> tryCallingSetupOnPlayer(actualPlayer), PLAYER_RESPONSE_TIMEOUT);
         game.bump();
       }
       catch (InterruptedException | ExecutionException | TimeoutException e) {

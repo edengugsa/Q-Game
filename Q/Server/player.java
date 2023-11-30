@@ -38,7 +38,7 @@ public class player implements Player.player {
   String playerName;
   static final int RESPONSE_TIMEOUT = 6;
 
-  player(Socket playerSocket) {
+  public player(Socket playerSocket) {
     this.socket = playerSocket;
     try {
       this.readFromClientPlayer = new JsonStreamParser(new BufferedReader(new InputStreamReader(playerSocket.getInputStream())));
@@ -48,9 +48,7 @@ public class player implements Player.player {
       this.playerName = JsonToQGame.JsonToJName(reader.nextString());
     }
     catch (Exception e) {
-      System.out.println("player: " + e.getMessage());
       this.shutDown();
-      // Unable to create a new player because we didn't
     }
   }
 
@@ -71,26 +69,20 @@ public class player implements Player.player {
     this.handlePlayerAcknowledgement();
   }
 
-  /**
-   * Did this client respond with "void" within the RESPONSE_TIMEOUT? If not, they are disqualified.
-   */
-  private void handlePlayerAcknowledgement() {
-    try {
-      String res = TimeUtils.callWithTimeOut(() -> this.readFromClientPlayer.next(), RESPONSE_TIMEOUT).getAsString();
-      if (!res.equals("void")) { this.shutDown();}
-    }
-    catch(Exception ignored) {
-      this.shutDown(); // TODO should they throw exception instead of shutting down?
-    }
+  @Override
+  public void newTiles(List<Tile> tiles) {
+    JsonArray toSend = QGameToJson.FormatJson("new-tiles",
+            new ArrayList<>(List.of(QGameToJson.ListOfTilesToJsonArray(tiles))));
+    this.sendToClient(toSend);
+    this.handlePlayerAcknowledgement();
   }
 
   @Override
   public QGameCommand takeTurn(ActivePlayerKnowledge apk) {
     JsonObject jPub = QGameToJson.ActivePlayerKnowledgeToJPub(apk);
-    JsonArray toSend = QGameToJson.FormatJson("take-turn", new ArrayList<>(Arrays.asList(jPub)));
+    JsonArray toSend = QGameToJson.FormatJson("take-turn", new ArrayList<>(List.of(jPub)));
     this.sendToClient(toSend);
 
-    //    System.out.println("take turn client QGameCommand: " + cmd);
     return this.getCommandFromClientPlayer();
   }
 
@@ -126,11 +118,17 @@ public class player implements Player.player {
     }
   }
 
-  @Override
-  public void newTiles(List<Tile> tiles) {
-    JsonArray toSend = QGameToJson.FormatJson("new-tiles", new ArrayList<>(List.of(QGameToJson.ListOfTilesToJsonArray(tiles))));
-    this.sendToClient(toSend);
-    this.handlePlayerAcknowledgement();
+  /**
+   * Did this client respond with "void" within the RESPONSE_TIMEOUT? If not, they are disqualified.
+   */
+  private void handlePlayerAcknowledgement() {
+    try {
+      String res = TimeUtils.callWithTimeOut(() -> this.readFromClientPlayer.next(), RESPONSE_TIMEOUT).getAsString();
+      if (!res.equals("void")) { this.shutDown();}
+    }
+    catch(Exception ignored) {
+      this.shutDown();
+    }
   }
 
   /**

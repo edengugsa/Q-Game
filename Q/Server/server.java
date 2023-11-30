@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
-import Common.QGameToJson;
 import Common.RuleBook.RuleBook;
 import Common.TimeUtils;
 import Referee.Referee;
@@ -36,12 +35,48 @@ public class server {
   }
 
   /**
+   * Run an entire game to completion.
+   * @return the game results
+   */
+  public WinnersAndCheaters run() {
+    this.runSignup();
+    ArrayList<Player.player> players = new ArrayList<>(this.listOfPlayerProxies);
+    WinnersAndCheaters gameResults = new WinnersAndCheaters(new ArrayList<>(), new ArrayList<>());
+
+    if (this.listOfPlayerProxies.size() >= MIN_NUM_PLAYERS) {
+      Referee ref = new Referee(players, new RuleBook());
+      gameResults = ref.runGame();
+    }
+
+    this.shutDown();
+    return gameResults;
+  }
+
+  /**
+   * Waits SIGNUP_TIMEOUT seconds at most MAX_NUM_SIGNUPS number of times for a valid number
+   * of clients to join the game.
+   */
+  protected void runSignup() {
+    for (int i = 0; i < MAX_NUM_SIGNUPS; i++) {
+      try {
+        TimeUtils.callWithTimeOut(this::signupPlayers, SIGNUP_TIMEOUT);
+      }
+      catch (Exception ignored) {
+      }
+      // if we get enough players on the first iteration
+      if (this.listOfPlayerProxies.size() >= MIN_NUM_PLAYERS) {
+        break;
+      }
+    }
+  }
+
+  /**
    * EFFECT: adds a new player to this.listOfPlayerProxies for every client that connects and
    * provides a valid JName within NAME_TIMEOUT seconds. This method will add anywhere from
    * 0 to the MAX_NUM_PLAYERS ProxyPlayers.
    * @return 0 upon completion
    */
-  public int signup() {
+  protected int signupPlayers() {
     this.listOfPlayerProxies = new ArrayList<>();
 
     while (this.listOfPlayerProxies.size() < MAX_NUM_PLAYERS) {
@@ -49,13 +84,11 @@ public class server {
       try {
         playerSocket = this.serverSocket.accept();
         try {
-          int p = TimeUtils.callWithTimeOut(() -> this.signupAPlayer(playerSocket), NAME_TIMEOUT);
-//          System.out.println("Players so far " + this.listOfPlayerProxies.size());
+          TimeUtils.callWithTimeOut(() -> this.signupAPlayer(playerSocket), NAME_TIMEOUT);
         }
         catch (InterruptedException | ExecutionException | TimeoutException e) {
           // unable to sign up a client
           playerSocket.close();
-//          System.out.println("server::signup 60 " + e.getMessage());
         }
       }
       catch (IOException ignored) {
@@ -63,28 +96,6 @@ public class server {
     }
 
     return 0;
-  }
-
-  /**
-   * Waits SIGNUP_TIMEOUT seconds at most MAX_NUM_SIGNUPS number of times for a valid number
-   * of clients to join the game.
-   */
-  protected void trySignup() {
-    for (int i = 0; i < MAX_NUM_SIGNUPS; i++) {
-      try {
-//        System.out.println("starting iteration wait: " + (i+1));
-        TimeUtils.callWithTimeOut(this::signup, SIGNUP_TIMEOUT);
-      }
-      catch (Exception e) {
-//        System.out.println("tried to sign up but surpassed 20s limit: " + e.getMessage());
-      }
-      // if we get enough players on the first iteration
-      if (this.listOfPlayerProxies.size() >= MIN_NUM_PLAYERS) {
-//        System.out.println("Found " + this.listOfPlayerProxies.size() + " to join our game");
-        break;
-      }
-    }
-//    System.out.println("Found " + this.listOfPlayerProxies.size() + " to join our game");
   }
 
 
@@ -102,25 +113,9 @@ public class server {
     return 0;
   }
 
-  /**
-   * Run an entire game to completion.
-   * @return the game results
-   */
-  public WinnersAndCheaters run() {
-      this.trySignup();
-      ArrayList<Player.player> players = new ArrayList<>(this.listOfPlayerProxies);
-      WinnersAndCheaters gameResults = new WinnersAndCheaters(new ArrayList<>(), new ArrayList<>());
 
-      if (this.listOfPlayerProxies.size() >= MIN_NUM_PLAYERS) {
-        System.out.println("starting game with: " + players);
-        Referee ref = new Referee(players, new RuleBook());
-        gameResults = ref.runGame();
-        System.out.println("Game Over: " + QGameToJson.WinnersAndCheatersToJson(gameResults));
-      }
-      return gameResults;
-  }
 
-  public void shutDown() {
+  protected void shutDown() {
     try {
       this.serverSocket.close();
     }
