@@ -49,6 +49,7 @@ public class Referee {
   public Referee(List<player> players, RefereeConfig rc) {
     this(players, rc.getGameState());
     this.PLAYER_RESPONSE_TIMEOUT = rc.getPerTurn();
+    System.out.println("this.PLAYER_RESPONSE_TIMEOUT " + rc.getPerTurn());
     this.scorer = new Scorer(rc.getRefereeStateConfig());
     this.isQuiet = rc.isQuiet();
     if (rc.isObserve()) {
@@ -63,8 +64,8 @@ public class Referee {
     if (players.size() < 2 || players.size() > 4) {
       throw new IllegalStateException("Must have 2-4 players to begin game.");
     }
-    if (players.size() != game.numPlayers()) {
-      throw new IllegalStateException("Players and State aren't consistent");
+    if (!samePlayers(players, game.players())) {
+      throw new IllegalStateException("Given Players and GameState's Players aren't consistent");
     }
     this.game = game;
     this.ruleBook = new RuleBook();
@@ -72,6 +73,15 @@ public class Referee {
     this.disqualifiedPlayers = new ArrayList<>();
     this.observers = new ArrayList<>();
     this.setNameToPlayersMap(players);
+  }
+
+  private boolean samePlayers(List<player> players, List<PlayerState> playerstates) {
+    for (int i = 0; i < players.size() ; i++) {
+      if (!players.get(i).name().equals(playerstates.get(i).name())) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**

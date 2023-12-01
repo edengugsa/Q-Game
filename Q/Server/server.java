@@ -1,6 +1,7 @@
 package Server;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -39,6 +40,10 @@ public class server {
     this.listOfPlayerProxies = new ArrayList<>();
   }
 
+  // todo add input and output stream
+//  server(InputStream)
+
+
   public server(int port, ServerConfig config) {
     this(port);
     this.SIGNUP_TIMEOUT = config.serverWait;
@@ -71,6 +76,7 @@ public class server {
 
     if (this.listOfPlayerProxies.size() >= MIN_NUM_PLAYERS) {
       Referee ref = this.createReferee(players);
+      DebugUtil.debug(this.isQuiet, "Started game");
       gameResults = ref.runGame();
     }
 
@@ -98,7 +104,7 @@ public class server {
       }
       catch (Exception ignored) {
       }
-      // if we get enough players on the first iteration
+      // if we get enough players on this iteration
       if (this.listOfPlayerProxies.size() >= MIN_NUM_PLAYERS) {
         break;
       }
@@ -118,15 +124,18 @@ public class server {
       Socket playerSocket;
       try {
         playerSocket = this.serverSocket.accept();
+        DebugUtil.debug(this.isQuiet, "In signupPlayers: is socket closed? " + playerSocket.isClosed());
         try {
           TimeUtils.callWithTimeOut(() -> this.signupAPlayer(playerSocket), NAME_TIMEOUT);
+          DebugUtil.debug(this.isQuiet,"Successfully signed up a player: " + playerSocket );
         }
-        catch (InterruptedException | ExecutionException | TimeoutException e) {
-          // unable to sign up a client
+        catch (Exception e) {
+          DebugUtil.debug(this.isQuiet,"Couldn't sign up player bc of time out, closing socket: " + e.getMessage() );
           playerSocket.close();
         }
       }
-      catch (IOException ignored) {
+      catch (IOException e) {
+        DebugUtil.debug(this.isQuiet,"Couldn't accept socket:" + e.getMessage() );
       }
     }
 
@@ -143,7 +152,9 @@ public class server {
     player player = new player(socket);
     if (player.name() != null) {
       this.listOfPlayerProxies.add(player);
-      System.out.println("Added new Player: " + player.name());
+      DebugUtil.debug(this.isQuiet, "Player: " + player.name() + " is socket closed? " + socket.isClosed());
+      DebugUtil.debug(this.isQuiet, "Added new Player: " + player.name());
+      DebugUtil.debug(this.isQuiet, "Player: " + player.name() + " is socket closed? " + socket.isClosed());
     }
     return 0;
   }

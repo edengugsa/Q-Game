@@ -16,6 +16,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import Common.DebugUtil;
 import Common.GameCommands.PassCommand;
@@ -57,6 +59,12 @@ public class player implements Player.player {
       this.shutDown("didn't receive player's name");
     }
   }
+
+//  public player (String name, JsonStreamParser readFromClientPLayer, JsonWriter writeToClientPlayer) {
+//    this.readFromClientPlayer = readFromClientPLayer;
+//    this.writeToClientPlayer = writeToClientPlayer;
+//    this.playerName = name;
+//  }
 
   @Override
   public String name() {
@@ -101,7 +109,7 @@ public class player implements Player.player {
       JsonElement res = TimeUtils.callWithTimeOut(() -> this.readFromClientPlayer.next(), RESPONSE_TIMEOUT);
       return JsonToQGame.jChoiceToQGameCommand(res);
     }
-    catch(Exception e) {
+    catch(InterruptedException | ExecutionException | TimeoutException e) {
       this.shutDown("couldn't get a command: " + e.getMessage());
       throw new IllegalArgumentException("couldn't get command");
     }
@@ -119,6 +127,7 @@ public class player implements Player.player {
     try {
       this.socket.close();
       DebugUtil.debug(true, "Closing " + this.playerName + "'s socket bc: " + message);
+      System.out.println("Closing " + this.playerName + "'s socket bc: " + message);
     }
     catch(IOException e) {
       System.out.println("Could not shut down communication with " + this.name());

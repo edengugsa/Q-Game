@@ -49,6 +49,10 @@ public class client {
    * 3. Starts listening for method calls from the Server's Referee.
    */
   public void run() {
+
+  }
+
+  public void sendName() {
     try {
       this.referee = new referee(this.socket, this.player);
       DebugUtil.debug(isQuiet, this.player.name() + " joined the server");
@@ -63,11 +67,14 @@ public class client {
     catch (Exception e) {
       DebugUtil.debug(isQuiet, "could not send name: " + e.getMessage());
     }
+  }
+
+  public void proxyRefereeReceiveInfoFromServer() {
     try {
-      this.referee.receiveInformationFromReferee();
+      this.referee.receiveInformationFromServer();
     }
     catch (Exception e) {
-      DebugUtil.debug(isQuiet, "could not receive information from the ref: " + e.getMessage());
+      DebugUtil.debug(isQuiet, this.player.name() + " could not receive information from the server: " + e.getMessage());
     }
   }
 
@@ -80,7 +87,7 @@ public class client {
    * EFFECT: sets this.socket when this client successfully connects to a socket
    */
   private void connectToServer(String ip, int port) {
-    while (this.socket == null) {
+    while (!this.isConnected) {
       try {
         this.socket = new Socket(ip, port);
         this.isConnected = true;

@@ -15,6 +15,12 @@ import Common.JsonToQGame;
 import Common.TimeUtils;
 import Player.player;
 
+/**
+ * ./xserver 33331 < sample/4-server-config.json &
+ *
+ * ./xclients 33331 < sample/4-client-config.json  &
+ */
+
 public class XClients {
   public static void main(String[] args) {
 
@@ -24,24 +30,20 @@ public class XClients {
     ClientConfig cc = JsonToQGame.ClientConfigJSONToClientConfig(parser.next().getAsJsonObject());
     ExecutorService executor = Executors.newCachedThreadPool();
 
-    List<client> clients = new ArrayList<>(); // clients ordered by their turn
-    for (player p : cc.getPlayers()) {
-      client c = new client(cc.getHost(), port, p, cc.isQuiet());
-      clients.add(c);
-    }
-
-    for (client c : clients) {
-      System.out.println("looping through clients " + c.player.name());
-      while (!c.isConnected()) {
-        System.out.println("not connected " + c.player.name());
+      for (player p : cc.getPlayers()) {
+        client c = new client(cc.getHost(), port, p, cc.isQuiet());
+        c.sendName();
+        executor.execute(c::proxyRefereeReceiveInfoFromServer);
+        TimeUtils.catchBreath(cc.getWait());
       }
-      System.out.println("calling run " + c.player.name());
-      executor.execute(c::run);
-      System.out.println("finished calling run and going to start waiting " + c.player.name());
-      TimeUtils.catchBreath(cc.getWait());
-      System.out.println("done waiting " + c.player.name());
-    }
 
     executor.shutdown();
   }
 }
+
+
+
+
+
+
+

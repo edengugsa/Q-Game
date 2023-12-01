@@ -38,7 +38,7 @@ public class referee {
   Gson gson = new Gson();
   boolean isGameOver = false;
 
-  boolean isQuiet;
+  boolean isQuiet = false;
 
   public referee(Socket playerSocket, player player) throws IOException {
     this.socket = playerSocket;
@@ -51,9 +51,17 @@ public class referee {
    * Reads Methods Calls from the Referee, parses them, and calls the
    * appropriate method on the client.
    */
-  protected void receiveInformationFromReferee() {
+  protected void receiveInformationFromServer() {
     while(!isGameOver && this.readFromServerRef.hasNext()) {
-      JsonArray methodCall = this.readFromServerRef.next().getAsJsonArray();
+      JsonArray methodCall = null;
+      try {
+        methodCall = this.readFromServerRef.next().getAsJsonArray();
+        DebugUtil.debug(this.isQuiet, player.name() + ": " + methodCall);
+
+      }
+      catch (Exception e) {
+        DebugUtil.debug(this.isQuiet, player.name() + " .next() failed: " + e.getMessage());
+      }
       MName mName = JsonToQGame.getMName(methodCall);
       switch (mName) {
         case SETUP -> this.callSetUpOnClientPlayer(methodCall);
@@ -64,13 +72,14 @@ public class referee {
                 throw new IllegalArgumentException("Received invalid MethodCall from the Server");
       }
     }
-    this.closeConnection();
+//    this.closeConnection("received ");
   }
 
   protected void callTakeTurnOnClientPlayer(JsonArray methodCall) {
     ActivePlayerKnowledge apk = JsonToQGame.MethodCallToActivePlayerKnowledge(methodCall);
     QGameCommand cmd = this.player.takeTurn(apk);
     this.sendJsonToReferee(cmd.toJSON());
+    DebugUtil.debug(this.isQuiet, player.name() + ": took a turn");
   }
 
   protected void callSetUpOnClientPlayer(JsonArray methodCall) {
@@ -78,12 +87,14 @@ public class referee {
     List<Tile> tiles = JsonToQGame.SetupMethodCallToListOfTiles(methodCall);
     this.player.setup(apk, tiles);
     this.sendJsonToReferee(new JsonPrimitive("void"));
+    DebugUtil.debug(this.isQuiet, player.name() + " setup");
   }
 
   protected void callNewTilesOnClientPlayer(JsonArray methodCall) {
     List<Tile> tiles = JsonToQGame.NewTilesMethodCallToListOfTiles(methodCall);
     this.player.newTiles(tiles);
     this.sendJsonToReferee(new JsonPrimitive("void"));
+    DebugUtil.debug(this.isQuiet, player.name() + " got new tiles");
   }
 
   protected void callWinOnClientPlayer(JsonArray methodCall) {
@@ -91,12 +102,14 @@ public class referee {
     this.player.win(winBool);
     this.sendJsonToReferee(new JsonPrimitive("void"));
     this.isGameOver = true;
-    this.closeConnection();
+//    this.closeConnection("game is over.");
   }
 
-  private void closeConnection() {
+  private void closeConnection(String rsn) {
     try {
       this.socket.close();
+      DebugUtil.debug(this.isQuiet, "closing " + player.name() + "'s socket bc: " + rsn);
+
     }
     catch (Exception e) {
       throw new IllegalStateException("closing socket failed: " + e.getMessage());
