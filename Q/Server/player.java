@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import Common.DebugUtil;
+import Common.GameCommands.PassCommand;
 import Common.GameCommands.QGameCommand;
 import Common.JsonToQGame;
 import Common.QGameToJson;
@@ -31,11 +33,11 @@ import Common.TimeUtils;
  * client over its socket.
  */
 public class player implements Player.player {
-  Socket socket; // used to send
-  JsonStreamParser readFromClientPlayer;
-  JsonWriter writeToClientPlayer;
-  Gson gson = new Gson();
-  String playerName;
+  private final Socket socket; // used to send
+  private JsonStreamParser readFromClientPlayer;
+  private JsonWriter writeToClientPlayer;
+  private final Gson gson = new Gson();
+  private String playerName;
   static final int RESPONSE_TIMEOUT = 6;
 
   public player(Socket playerSocket) {
@@ -43,12 +45,16 @@ public class player implements Player.player {
     try {
       this.readFromClientPlayer = new JsonStreamParser(new BufferedReader(new InputStreamReader(playerSocket.getInputStream())));
       this.writeToClientPlayer = new JsonWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
-
+    }
+    catch (Exception e) {
+      this.shutDown("couldn't set up input/output streams");
+    }
+    try {
       JsonReader reader = new JsonReader(new InputStreamReader(playerSocket.getInputStream()));
       this.playerName = JsonToQGame.JsonToJName(reader.nextString());
     }
     catch (Exception e) {
-      this.shutDown();
+      this.shutDown("didn't receive player's name");
     }
   }
 
@@ -95,10 +101,10 @@ public class player implements Player.player {
       JsonElement res = TimeUtils.callWithTimeOut(() -> this.readFromClientPlayer.next(), RESPONSE_TIMEOUT);
       return JsonToQGame.jChoiceToQGameCommand(res);
     }
-    catch(Exception ignored) {
-      this.shutDown();
+    catch(Exception e) {
+      this.shutDown("couldn't get a command: " + e.getMessage());
+      throw new IllegalArgumentException("couldn't get command");
     }
-    throw new IllegalArgumentException("Shouldn't get here");
   }
 
   @Override
@@ -106,12 +112,13 @@ public class player implements Player.player {
     JsonArray toSend = QGameToJson.FormatJson("win", new ArrayList<>(List.of(QGameToJson.WinBooleanToJsonBool(win))));
     this.sendToClient(toSend);
     this.handlePlayerAcknowledgement();
-    this.shutDown();
+    this.shutDown("game is over");
   }
 
-  protected void shutDown() {
+  protected void shutDown(String message) {
     try {
       this.socket.close();
+      DebugUtil.debug(true, "Closing " + this.playerName + "'s socket bc: " + message);
     }
     catch(IOException e) {
       System.out.println("Could not shut down communication with " + this.name());
@@ -124,10 +131,10 @@ public class player implements Player.player {
   private void handlePlayerAcknowledgement() {
     try {
       String res = TimeUtils.callWithTimeOut(() -> this.readFromClientPlayer.next(), RESPONSE_TIMEOUT).getAsString();
-      if (!res.equals("void")) { this.shutDown();}
+      if (!res.equals("void")) { this.shutDown("invalid acknowledge Json");}
     }
-    catch(Exception ignored) {
-      this.shutDown();
+    catch(Exception e) {
+      this.shutDown("they did not send acknowledgement in time");
     }
   }
 
@@ -140,7 +147,7 @@ public class player implements Player.player {
       this.writeToClientPlayer.flush();
     }
     catch (Exception e) {
-      this.shutDown();
+      this.shutDown("Could not send json message to client: " + e.getMessage());
     }
   }
 

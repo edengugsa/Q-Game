@@ -54,10 +54,14 @@ public class JsonToQGame {
   }
 
   public static ServerConfig ServerConfigJSONToServerConfig(JsonObject o) {
-      return new ServerConfig(o.get("port").getAsInt(), o.get("server-tries").getAsInt(),
-              o.get("server-wait").getAsInt(), o.get("wait-for-signup").getAsInt(),
-              o.get("quiet").getAsBoolean(),
-              RefereeConfigJSONToRefereeConfig(o.get("ref-spec").getAsJsonObject()));
+      try {
+        return new ServerConfig(o.get("server-tries").getAsInt(),
+                o.get("server-wait").getAsInt(), o.get("wait-for-signup").getAsInt(),
+                o.get("quiet").getAsBoolean(),
+                RefereeConfigJSONToRefereeConfig(o.get("ref-spec").getAsJsonObject()));
+      } catch(Exception e) {
+        throw new IllegalStateException("invalid: " + o);
+      }
   }
 
 

@@ -18,7 +18,7 @@ public class RefereeStateConfig {
     return this.finishBonus;
   }
 
-  public int getQBonus(int fbo) {
+  public int getQBonus() {
     return this.qBonus;
   }
 }

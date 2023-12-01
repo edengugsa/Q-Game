@@ -14,6 +14,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.List;
 
+import Common.DebugUtil;
 import Common.GameCommands.QGameCommand;
 import Common.JsonToQGame;
 import Common.MName;
@@ -24,7 +25,7 @@ import Player.player;
 /**
  * Represents a proxy to the Referee for a client. This Proxy has an JsonStreamParser
  * to receive commands from a remote Referee and a JsonWriter to send its client's response.
- *
+ * <p>
  * It receives Jsons from the Referee and converts them to its data representations to forward to
  * its Client. It then converts the Client's responses into their Json representations to send back
  * to the Server's Referee.
@@ -36,6 +37,8 @@ public class referee {
   Player.player player;
   Gson gson = new Gson();
   boolean isGameOver = false;
+
+  boolean isQuiet;
 
   public referee(Socket playerSocket, player player) throws IOException {
     this.socket = playerSocket;
@@ -102,6 +105,7 @@ public class referee {
 
   public void sendJsonToReferee(JsonElement toSend) {
     try {
+      DebugUtil.debug(true, this.player.name() + "sent: " + toSend);
       gson.toJson(toSend, this.writeToServerRef);
       this.writeToServerRef.flush();
     }

@@ -3,6 +3,8 @@ package Client;
 import com.google.gson.JsonPrimitive;
 import java.net.Socket;
 
+import Common.DebugUtil;
+
 
 /**
  * Represents a client that can join and play in a remote QGame. This client uses a client
@@ -10,9 +12,10 @@ import java.net.Socket;
  */
 public class client {
   Socket socket;
-  Player.player player;
+  public Player.player player;
   referee referee;
   boolean isQuiet = false; // do we want debug output on standard error?
+  boolean isConnected = false;
 
   /**
    * Creates a client that joins a Q Game on the given ip address and port number and makes
@@ -48,22 +51,28 @@ public class client {
   public void run() {
     try {
       this.referee = new referee(this.socket, this.player);
+      DebugUtil.debug(isQuiet, this.player.name() + " joined the server");
     }
     catch (Exception e) {
-      throw new IllegalArgumentException("Could not create Proxy Referee " + e.getMessage());
+      DebugUtil.debug(isQuiet, "Could not create Proxy Referee " + e.getMessage());
     }
     try {
       this.referee.sendJsonToReferee(new JsonPrimitive(this.player.name()));
+      DebugUtil.debug(isQuiet, this.player.name() + " sent their name");
     }
     catch (Exception e) {
-      throw new IllegalArgumentException("could not send name: " + e.getMessage());
+      DebugUtil.debug(isQuiet, "could not send name: " + e.getMessage());
     }
     try {
       this.referee.receiveInformationFromReferee();
     }
     catch (Exception e) {
-      throw new IllegalArgumentException("could not receive information from the ref: " + e.getMessage());
+      DebugUtil.debug(isQuiet, "could not receive information from the ref: " + e.getMessage());
     }
+  }
+
+  public boolean isConnected() {
+    return this.isConnected;
   }
 
   /**
@@ -74,9 +83,10 @@ public class client {
     while (this.socket == null) {
       try {
         this.socket = new Socket(ip, port);
+        this.isConnected = true;
       }
       catch (Exception ignored) {
-        throw new IllegalArgumentException("Could not join the server");
+//        DebugUtil.debug(isQuiet, "Could not join the server");
       }
     }
   }

@@ -9,6 +9,7 @@ import java.util.Queue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
+import Common.DebugUtil;
 import Common.GameCommands.QGameCommand;
 import Common.QGameToJson;
 import Common.RuleBook.QRuleBook;
@@ -37,13 +38,23 @@ import Player.player;
 public class Referee {
 
   private final QRuleBook ruleBook;
-  private final Scorer scorer;
+  private Scorer scorer;
   private GameState game;
   private Map<String, player> players;
   private final List<String> disqualifiedPlayers;
   private List<observer> observers;
+  int PLAYER_RESPONSE_TIMEOUT = 6;
+  boolean isQuiet = true;
 
-  static int PLAYER_RESPONSE_TIMEOUT = 6;
+  public Referee(List<player> players, RefereeConfig rc) {
+    this(players, rc.getGameState());
+    this.PLAYER_RESPONSE_TIMEOUT = rc.getPerTurn();
+    this.scorer = new Scorer(rc.getRefereeStateConfig());
+    this.isQuiet = rc.isQuiet();
+    if (rc.isObserve()) {
+      this.observers.add(new observer());
+    }
+  }
 
   /**
    * FOR TESTING. Resumes a Game from a previous state.
@@ -139,11 +150,11 @@ public class Referee {
         this.game.bump();
       }
       else {
-        disqualify("taking too long on takeTurn()");
+        disqualify("made an illegal move");
       }
     }
     catch (Exception e) {
-      disqualify("throwing an exception or taking too long on takeTurn()");
+      disqualify("throwing an exception or taking too long on takeTurn(): " + e.getMessage());
     }
   }
 
@@ -316,7 +327,7 @@ public class Referee {
   }
 
   private void disqualify(String playerName, String reason) {
-//    System.out.println("Disqualified " + game.currentPlayerName() + " for " + reason);
+    DebugUtil.debug(this.isQuiet, "Disqualified " + game.currentPlayerName() + " for " + reason);
     game.addToRefDeck(game.getHand(playerName));
     disqualifiedPlayers.add(playerName);
     game.removePlayer(playerName);

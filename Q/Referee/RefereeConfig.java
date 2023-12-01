@@ -16,11 +16,11 @@ import Common.State.GameState;
  *        { "observe"_ : Boolean }
  */
 public class RefereeConfig {
-  final GameState gameState;
-  final boolean quiet;
-  final RefereeStateConfig refereeStateConfig;
-  final int perTurn;
-  final boolean observe;
+  private final GameState gameState;
+  private final boolean quiet;
+  private final RefereeStateConfig refereeStateConfig;
+  private final int perTurn;
+  private final boolean observe;
 
   public RefereeConfig(GameState gameState, boolean quiet, RefereeStateConfig refereeStateConfig, int perTurn, boolean observe){
     this.gameState = gameState;

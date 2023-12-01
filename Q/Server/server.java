@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
+import Common.DebugUtil;
 import Common.RuleBook.RuleBook;
 import Common.TimeUtils;
 import Referee.Referee;
 import Referee.WinnersAndCheaters;
+import Referee.RefereeConfig;
 
 /**
  * Represents a Server to run the QGame on a specified port. This Server waits for enough players
@@ -21,17 +23,41 @@ import Referee.WinnersAndCheaters;
  * data representations into their JSON representation to send over to a client.
  */
 public class server {
-  static final int SIGNUP_TIMEOUT = 20;
-  static final int NAME_TIMEOUT = 3;
-  static final int MAX_NUM_SIGNUPS = 2;
-  static final int MIN_NUM_PLAYERS = 2;
-  static final int MAX_NUM_PLAYERS = 4;
-  ServerSocket serverSocket;
-  List<player> listOfPlayerProxies;
+  private int SIGNUP_TIMEOUT = 20;
+  private int NAME_TIMEOUT = 3;
+  private int MAX_NUM_SIGNUPS = 2;
+  private int MIN_NUM_PLAYERS = 2;
+  private int MAX_NUM_PLAYERS = 4;
+  private ServerSocket serverSocket;
+  private List<player> listOfPlayerProxies;
+  private boolean isQuiet = true;
 
-  server(int port) throws IOException {
-    this.serverSocket = new ServerSocket(port);
+  private RefereeConfig refereeConfig;
+
+  server(int port) {
+    this.createServer(port);
     this.listOfPlayerProxies = new ArrayList<>();
+  }
+
+  public server(int port, ServerConfig config) {
+    this(port);
+    this.SIGNUP_TIMEOUT = config.serverWait;
+    this.MAX_NUM_SIGNUPS = config.serverTries;
+    this.NAME_TIMEOUT = config.waitForSignup;
+    this.isQuiet = config.quiet;
+    this.refereeConfig = config.refereeConfig;
+  }
+
+  /**
+   * EFFECT sets this.serverSocket to a ServerSocket running on the given port.
+   */
+  private void createServer(int port) {
+    try {
+      this.serverSocket = new ServerSocket(port);
+    }
+    catch(Exception ignored) {
+      DebugUtil.debug(this.isQuiet, "Could not create server socket");
+    }
   }
 
   /**
@@ -44,12 +70,21 @@ public class server {
     WinnersAndCheaters gameResults = new WinnersAndCheaters(new ArrayList<>(), new ArrayList<>());
 
     if (this.listOfPlayerProxies.size() >= MIN_NUM_PLAYERS) {
-      Referee ref = new Referee(players, new RuleBook());
+      Referee ref = this.createReferee(players);
       gameResults = ref.runGame();
     }
 
     this.shutDown();
     return gameResults;
+  }
+
+  private Referee createReferee(ArrayList<Player.player> players) {
+    if (this.refereeConfig == null) {
+      return new Referee(players);
+    }
+    else {
+      return new Referee(players, this.refereeConfig);
+    }
   }
 
   /**

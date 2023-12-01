@@ -7,6 +7,7 @@ import Common.Tiles.Placement;
 import Common.Tiles.QColor;
 import Common.Tiles.QShape;
 import Common.Tiles.Tile;
+import Referee.RefereeStateConfig;
 
 /**
  * Represents the rules and functionality for scoring a PlacementCommand.
@@ -22,7 +23,6 @@ import Common.Tiles.Tile;
  * Does NOT update PlayerState scores.
  */
 public class Scorer {
-
   private int PTS_PER_TILE;
   private int PTS_PER_CONTIG_TILE;
   private int Q_PTS;
@@ -34,14 +34,18 @@ public class Scorer {
   // did the client who made this placement place ALL their tiles?
   private boolean placedAll;
 
+  public Scorer(RefereeStateConfig rsc) {
+    this.PTS_FOR_PLACING_ALL = rsc.getFinishBonus();
+    this.Q_PTS = rsc.getQBonus();
+    this.PTS_PER_CONTIG_TILE = 1;
+    this.PTS_PER_TILE = 1;
+  }
+
   /**
    * Default constructor. Sets the number of points rewarded to default values.
    */
   public Scorer() {
-    this.Q_PTS = 8;
-    this.PTS_PER_CONTIG_TILE = 1;
-    this.PTS_PER_TILE = 1;
-    this.PTS_FOR_PLACING_ALL = 4;
+    this(new RefereeStateConfig(6, 6));
   }
 
   /**
