@@ -179,7 +179,6 @@ public class Referee {
       }
       catch (Exception e) {
         this.observers.remove(o);
-//        System.out.println("Removed observer in send observer new game state");
       }
     }
   }

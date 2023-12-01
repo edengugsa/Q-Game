@@ -14,7 +14,7 @@ public class client {
   Socket socket;
   public Player.player player;
   referee referee;
-  boolean isQuiet = false; // do we want debug output on standard error?
+  boolean isQuiet;
   boolean isConnected = false;
 
   /**
@@ -54,7 +54,7 @@ public class client {
 
   public void sendName() {
     try {
-      this.referee = new referee(this.socket, this.player);
+      this.referee = new referee(this.socket, this.player, this.isQuiet);
       DebugUtil.debug(isQuiet, this.player.name() + " joined the server");
     }
     catch (Exception e) {
@@ -76,10 +76,6 @@ public class client {
     catch (Exception e) {
       DebugUtil.debug(isQuiet, this.player.name() + " could not receive information from the server: " + e.getMessage());
     }
-  }
-
-  public boolean isConnected() {
-    return this.isConnected;
   }
 
   /**
