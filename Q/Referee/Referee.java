@@ -49,7 +49,6 @@ public class Referee {
   public Referee(List<player> players, RefereeConfig rc) {
     this(players, rc.getGameState());
     this.PLAYER_RESPONSE_TIMEOUT = rc.getPerTurn();
-    System.out.println("this.PLAYER_RESPONSE_TIMEOUT " + rc.getPerTurn());
     this.scorer = new Scorer(rc.getRefereeStateConfig());
     this.isQuiet = rc.isQuiet();
     if (rc.isObserve()) {

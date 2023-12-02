@@ -11,6 +11,6 @@ public class runPlayerApples {
   public static void main(String[] args) throws IOException {
     client client1 = new client("127.0.0.1", 33331,
             new player(new Socket("127.0.0.1", 33331)));
-    client1.run();
+//    client1.run();
   }
 }

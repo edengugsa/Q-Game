@@ -40,10 +40,6 @@ public class server {
     this.listOfPlayerProxies = new ArrayList<>();
   }
 
-  // todo add input and output stream
-//  server(InputStream)
-
-
   public server(int port, ServerConfig config) {
     this(port);
     this.SIGNUP_TIMEOUT = config.serverWait;
@@ -152,22 +148,17 @@ public class server {
     player player = new player(socket);
     if (player.name() != null) {
       this.listOfPlayerProxies.add(player);
-      DebugUtil.debug(this.isQuiet, "Player: " + player.name() + " is socket closed? " + socket.isClosed());
       DebugUtil.debug(this.isQuiet, "Added new Player: " + player.name());
-      DebugUtil.debug(this.isQuiet, "Player: " + player.name() + " is socket closed? " + socket.isClosed());
     }
     return 0;
   }
-
 
 
   protected void shutDown() {
     try {
       this.serverSocket.close();
     }
-    catch(IOException e) {
-      System.out.println("Could not server");
-    }
+    catch(IOException ignored) { }
   }
 
 }

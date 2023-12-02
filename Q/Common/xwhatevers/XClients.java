@@ -4,8 +4,6 @@ import com.google.gson.JsonStreamParser;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -16,11 +14,8 @@ import Common.TimeUtils;
 import Player.player;
 
 /**
- * ./xserver 33331 < sample/4-server-config.json &
- *
- * ./xclients 33331 < sample/4-client-config.json  &
+ * Reads in a ClientConfig and launches players on different threads.
  */
-
 public class XClients {
   public static void main(String[] args) {
 
@@ -30,12 +25,12 @@ public class XClients {
     ClientConfig cc = JsonToQGame.ClientConfigJSONToClientConfig(parser.next().getAsJsonObject());
     ExecutorService executor = Executors.newCachedThreadPool();
 
-      for (player p : cc.getPlayers()) {
-        client c = new client(cc.getHost(), port, p, cc.isQuiet());
-        c.sendName();
-        executor.execute(c::proxyRefereeReceiveInfoFromServer);
-        TimeUtils.catchBreath(cc.getWait());
-      }
+    for (player p : cc.getPlayers()) {
+      client c = new client(cc.getHost(), port, p, cc.isQuiet());
+      c.sendName();
+      executor.execute(c::proxyRefereeReceiveInfoFromServer);
+      TimeUtils.catchBreath(cc.getWait());
+    }
 
     executor.shutdown();
   }

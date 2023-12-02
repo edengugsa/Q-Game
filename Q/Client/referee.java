@@ -31,19 +31,17 @@ import Player.player;
  * to the Server's Referee.
  */
 public class referee {
-  Socket socket;
   JsonStreamParser readFromServerRef;
   JsonWriter writeToServerRef;
   Player.player player;
   Gson gson = new Gson();
   boolean isGameOver = false;
-
   boolean isQuiet;
 
-  public referee(Socket playerSocket, player player, boolean isQuiet) throws IOException {
-    this.socket = playerSocket;
-    this.readFromServerRef = new JsonStreamParser(new BufferedReader(new InputStreamReader(socket.getInputStream())));
-    this.writeToServerRef = new JsonWriter(new OutputStreamWriter(socket.getOutputStream()));
+  public referee(JsonStreamParser readFromServerRef,
+  JsonWriter writeToServerRef, player player, boolean isQuiet) {
+    this.readFromServerRef = readFromServerRef;
+    this.writeToServerRef = writeToServerRef;
     this.player = player;
     this.isQuiet = isQuiet;
   }

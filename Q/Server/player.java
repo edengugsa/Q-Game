@@ -9,7 +9,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.BufferedReader;
-import java.io.IOException;
+
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
-import Common.DebugUtil;
-import Common.GameCommands.PassCommand;
 import Common.GameCommands.QGameCommand;
 import Common.JsonToQGame;
 import Common.QGameToJson;
@@ -36,10 +34,10 @@ import Common.TimeUtils;
  */
 public class player implements Player.player {
   private final Socket socket; // used to send
-  private JsonStreamParser readFromClientPlayer;
-  private JsonWriter writeToClientPlayer;
+  private final JsonStreamParser readFromClientPlayer;
+  private final JsonWriter writeToClientPlayer;
   private final Gson gson = new Gson();
-  private String playerName;
+  private final String playerName;
   static final int RESPONSE_TIMEOUT = 6;
 
   public player(Socket playerSocket) {
@@ -49,22 +47,16 @@ public class player implements Player.player {
       this.writeToClientPlayer = new JsonWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
     }
     catch (Exception e) {
-      this.shutDown("couldn't set up input/output streams");
+      throw new IllegalStateException("couldn't set up input/output streams");
     }
     try {
       JsonReader reader = new JsonReader(new InputStreamReader(playerSocket.getInputStream()));
       this.playerName = JsonToQGame.JsonToJName(reader.nextString());
     }
     catch (Exception e) {
-      this.shutDown("didn't receive player's name");
+      throw new IllegalStateException("didn't receive player's name");
     }
   }
-
-//  public player (String name, JsonStreamParser readFromClientPLayer, JsonWriter writeToClientPlayer) {
-//    this.readFromClientPlayer = readFromClientPLayer;
-//    this.writeToClientPlayer = writeToClientPlayer;
-//    this.playerName = name;
-//  }
 
   @Override
   public String name() {
@@ -106,12 +98,11 @@ public class player implements Player.player {
    */
   private QGameCommand getCommandFromClientPlayer() {
     try {
-      JsonElement res = TimeUtils.callWithTimeOut(() -> this.readFromClientPlayer.next(), RESPONSE_TIMEOUT);
+      JsonElement res = TimeUtils.callWithTimeOut(this.readFromClientPlayer::next, RESPONSE_TIMEOUT);
       return JsonToQGame.jChoiceToQGameCommand(res);
     }
     catch(InterruptedException | ExecutionException | TimeoutException e) {
-      this.shutDown("couldn't get a command: " + e.getMessage());
-      throw new IllegalArgumentException("couldn't get command");
+      throw new IllegalArgumentException("couldn't get command " + e.getMessage());
     }
   }
 
@@ -120,18 +111,6 @@ public class player implements Player.player {
     JsonArray toSend = QGameToJson.FormatJson("win", new ArrayList<>(List.of(QGameToJson.WinBooleanToJsonBool(win))));
     this.sendToClient(toSend);
     this.handlePlayerAcknowledgement();
-    this.shutDown("game is over");
-  }
-
-  protected void shutDown(String message) {
-    try {
-      this.socket.close();
-      DebugUtil.debug(true, "Closing " + this.playerName + "'s socket bc: " + message);
-      System.out.println("Closing " + this.playerName + "'s socket bc: " + message);
-    }
-    catch(IOException e) {
-      System.out.println("Could not shut down communication with " + this.name());
-    }
   }
 
   /**
@@ -139,11 +118,11 @@ public class player implements Player.player {
    */
   private void handlePlayerAcknowledgement() {
     try {
-      String res = TimeUtils.callWithTimeOut(() -> this.readFromClientPlayer.next(), RESPONSE_TIMEOUT).getAsString();
-      if (!res.equals("void")) { this.shutDown("invalid acknowledge Json");}
+      String res = TimeUtils.callWithTimeOut(this.readFromClientPlayer::next, RESPONSE_TIMEOUT).getAsString();
+      if (!res.equals("void")) { throw new IllegalArgumentException("invalid acknowledge Json");}
     }
-    catch(Exception e) {
-      this.shutDown("they did not send acknowledgement in time");
+    catch (Exception e) {
+      throw new IllegalArgumentException("Proxy did not receive acknowledgement in time");
     }
   }
 
@@ -156,7 +135,7 @@ public class player implements Player.player {
       this.writeToClientPlayer.flush();
     }
     catch (Exception e) {
-      this.shutDown("Could not send json message to client: " + e.getMessage());
+      throw new IllegalArgumentException("Could not send json message to client: " + e.getMessage());
     }
   }
 
