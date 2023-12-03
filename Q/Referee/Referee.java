@@ -61,10 +61,10 @@ public class Referee {
    */
   public Referee(List<player> players, GameState game) {
     if (players.size() < 2 || players.size() > 4) {
-      throw new IllegalStateException("Must have 2-4 players to begin game.");
+      throw new RuntimeException("Must have 2-4 players to begin game.");
     }
     if (!samePlayers(players, game.players())) {
-      throw new IllegalStateException("Given Players and GameState's Players aren't consistent");
+      throw new RuntimeException("Given Players and GameState's Players aren't consistent");
     }
     this.game = game;
     this.ruleBook = new RuleBook();
@@ -75,6 +75,8 @@ public class Referee {
   }
 
   private boolean samePlayers(List<player> players, List<PlayerState> playerstates) {
+    if (players.size() != playerstates.size()) return false;
+
     for (int i = 0; i < players.size() ; i++) {
       if (!players.get(i).name().equals(playerstates.get(i).name())) {
         return false;
@@ -129,6 +131,7 @@ public class Referee {
     WinnersAndCheaters winnersAndCheaters = this.generateResults();
     this.tellPlayersGameResult(winnersAndCheaters.winners);
     return winnersAndCheaters;
+
   }
 
   /**
@@ -335,14 +338,11 @@ public class Referee {
   }
 
   private void disqualify(String playerName, String reason) {
+
     DebugUtil.debug(this.isQuiet, "Disqualified " + game.currentPlayerName() + " for " + reason);
     game.addToRefDeck(game.getHand(playerName));
     disqualifiedPlayers.add(playerName);
     game.removePlayer(playerName);
   }
-
-
-
-
 
 }

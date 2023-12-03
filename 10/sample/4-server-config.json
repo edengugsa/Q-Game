@@ -8,7 +8,7 @@
         },
         "observe": true,
         "per-turn": 6,
-        "quiet": true,
+        "quiet": false,
         "state0": {
             "map": [
                 [

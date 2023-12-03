@@ -1,0 +1,12 @@
+{
+  "host": "127.0.0.1",
+  "players": [
+    ["Allen","dag", "a cheat", "non-adjacent-coordinate"],
+    ["Bethany","dag", "win", 2],
+    ["Cindy","ldasg", "setup", 2],
+    ["Doug", "ldasg", "new-tiles", 1]
+  ],
+  "port": 30000,
+  "quiet": false,
+  "wait": 2
+}

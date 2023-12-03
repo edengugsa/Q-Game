@@ -30,7 +30,6 @@ public class xbaddies {
     GameState gamestate = JsonToQGame.JStateToGameState(parser.next().getAsJsonObject());
     List<player> players = JsonToQGame.JActorsToPlayerList(parser.next().getAsJsonArray());
 
-
     WinnersAndCheaters results = new Referee(players, gamestate).runGame();
 
     System.out.println(QGameToJson.WinnersAndCheatersToJson(results));

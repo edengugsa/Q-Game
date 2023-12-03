@@ -71,11 +71,13 @@ public class server {
     WinnersAndCheaters gameResults = new WinnersAndCheaters(new ArrayList<>(), new ArrayList<>());
 
     if (this.listOfPlayerProxies.size() >= MIN_NUM_PLAYERS) {
-      Referee ref = this.createReferee(players);
-      DebugUtil.debug(this.isQuiet, "Started game");
-      gameResults = ref.runGame();
+      try {
+        Referee ref = this.createReferee(players);
+        gameResults = ref.runGame();
+      } catch (Exception e) {
+        DebugUtil.debug(isQuiet, "Can't run game bc " + e.getMessage());
+      }
     }
-
     this.shutDown();
     return gameResults;
   }
@@ -95,6 +97,7 @@ public class server {
    */
   protected void runSignup() {
     for (int i = 0; i < MAX_NUM_SIGNUPS; i++) {
+      DebugUtil.debug(isQuiet, "Started " + i + " server try");
       try {
         TimeUtils.callWithTimeOut(this::signupPlayers, SIGNUP_TIMEOUT);
       }
@@ -114,16 +117,14 @@ public class server {
    * @return 0 upon completion
    */
   protected int signupPlayers() {
-    this.listOfPlayerProxies = new ArrayList<>();
+//    this.listOfPlayerProxies = new ArrayList<>();
 
     while (this.listOfPlayerProxies.size() < MAX_NUM_PLAYERS) {
       Socket playerSocket;
       try {
         playerSocket = this.serverSocket.accept();
-        DebugUtil.debug(this.isQuiet, "In signupPlayers: is socket closed? " + playerSocket.isClosed());
         try {
           TimeUtils.callWithTimeOut(() -> this.signupAPlayer(playerSocket), NAME_TIMEOUT);
-          DebugUtil.debug(this.isQuiet,"Successfully signed up a player: " + playerSocket );
         }
         catch (Exception e) {
           DebugUtil.debug(this.isQuiet,"Couldn't sign up player bc of time out, closing socket: " + e.getMessage() );
@@ -131,7 +132,7 @@ public class server {
         }
       }
       catch (IOException e) {
-        DebugUtil.debug(this.isQuiet,"Couldn't accept socket:" + e.getMessage() );
+//        DebugUtil.debug(this.isQuiet,"Couldn't accept socket:" + e.getMessage() );
       }
     }
 

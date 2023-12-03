@@ -323,13 +323,6 @@ public class JsonToQGame {
    */
   public static MName getMName(JsonElement element) {
     return MName.fromString(element.getAsJsonArray().get(0).getAsString());
-
-//    if (element.isJsonArray()) {
-//      return MName.valueOf(element.getAsJsonArray().get(0).getAsString());
-//    }
-//    else {
-//      throw new IllegalArgumentException("not a json array");
-//    }
   }
 
   public static ActivePlayerKnowledge MethodCallToActivePlayerKnowledge(JsonArray methodCall) {

@@ -1,0 +1,10 @@
+{
+  "host": "127.0.0.1",
+  "players": [["Jess","dag", "setup", 6],
+    ["Tray","dag", "win", 1],
+    ["Lily","ldasg", "a cheat", "not-a-line"],
+    ["Meg", "ldasg"]],
+  "port": 30000,
+  "quiet": false,
+  "wait": 2
+}

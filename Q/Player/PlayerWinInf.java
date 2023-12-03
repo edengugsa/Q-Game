@@ -12,7 +12,6 @@ public class PlayerWinInf extends abstractInfPlayer {
   // or an actual gameCommand
   @Override
   public void win(boolean w) {
-//    System.out.println("when: " + when + " win called on " + this.name());
     if (this.when > 1) {
       this.when--;
       super.win(w);

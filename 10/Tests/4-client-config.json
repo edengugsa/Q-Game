@@ -1,0 +1,6 @@
+{ "port" : 33331,
+  "host" : "127.0.0.1",
+  "wait" : 4,
+  "quiet" : true,
+  "players": [["Allen","dag", "take-turn", 6],["Bethany","dag"],["Cindy","ldasg", "setup", 2], ["Doug", "ldasg", "new-tiles", 1]]
+}
