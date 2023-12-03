@@ -94,15 +94,15 @@ public abstract class LexicoStrategy implements Strategy {
             this.playerTiles.remove(tile);
             mockBoard.extend(smallestPlacement.coordinate(), smallestPlacement.tile());
             return;
-          }
-          else {
-            placementsSoFar.remove(smallestPlacement);
-            if (this.placementsSoFar.size() > 0) {
-              break;
-            }
+        }
+        else {
+          placementsSoFar.remove(smallestPlacement);
+          if (this.placementsSoFar.size() > 0) {
+            break;
           }
         }
       }
+    }
 
     throw new IllegalStateException("Cannot place any tiles.");
   }
@@ -115,7 +115,7 @@ public abstract class LexicoStrategy implements Strategy {
   private void computePlacements() {
     this.placementsSoFar = new ArrayDeque<>();
 
-    while (playerTiles.size() > 0 && this.placementsSoFar.size() < this.ruleBook.maxPlacementSize()) {
+    while (playerTiles.size() > 0) {
       try {
         computeOnePlacement();
       }
