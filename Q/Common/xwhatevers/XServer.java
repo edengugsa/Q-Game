@@ -18,5 +18,6 @@ public class XServer {
     ServerConfig serverConfig = JsonToQGame.ServerConfigJSONToServerConfig(parser.next().getAsJsonObject(), port);
     server s = new server(serverConfig);
     System.out.println(QGameToJson.WinnersAndCheatersToJson(s.run()));
+    System.exit(0);
   }
 }
