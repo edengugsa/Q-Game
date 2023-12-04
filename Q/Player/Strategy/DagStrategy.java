@@ -4,9 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import Common.RuleBook.QRuleBook;
-import Common.RuleBook.RuleBook;
 import Common.Tiles.Coordinate;
-import Common.Tiles.Placement;
 
 /**
  * Represents the Dag Strategy for choosing Placements. This Strategy will sort a Tile's
@@ -31,11 +29,10 @@ public class DagStrategy extends LexicoStrategy  {
 
 
   /**
-   * @return a list of Placements sorted by this DagStrategy's Placement comparator
+   *
    */
-  protected List<Coordinate> sort(List<Coordinate> coordinate) {
+  protected void sort(List<Coordinate> coordinate) {
     Collections.sort(coordinate, this.DagComparator);
-    return coordinate;
   }
 
   /**

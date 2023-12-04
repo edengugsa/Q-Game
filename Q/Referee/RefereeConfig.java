@@ -1,5 +1,6 @@
 package Referee;
 
+import Common.Scorer.ScorerConfig;
 import Common.State.GameState;
 
 /**
@@ -9,7 +10,7 @@ import Common.State.GameState;
  *
  *        { "quiet"___ : Boolean,
  *
- *        { "config-s" : RefereeStateConfig,
+ *        { "config-s" : ScorerConfig,
  *
  *        { "per-turn" : Natural (less than or equal to 6),
  *
@@ -18,14 +19,14 @@ import Common.State.GameState;
 public class RefereeConfig {
   private final GameState gameState;
   private final boolean quiet;
-  private final RefereeStateConfig refereeStateConfig;
+  private final ScorerConfig scorerConfig;
   private final int perTurn;
   private final boolean observe;
 
-  public RefereeConfig(GameState gameState, boolean quiet, RefereeStateConfig refereeStateConfig, int perTurn, boolean observe){
+  public RefereeConfig(GameState gameState, boolean quiet, ScorerConfig scorerConfig, int perTurn, boolean observe){
     this.gameState = gameState;
     this.quiet = quiet;
-    this.refereeStateConfig = refereeStateConfig;
+    this.scorerConfig = scorerConfig;
     this.perTurn = perTurn;
     this.observe = observe;
   }
@@ -38,8 +39,8 @@ public class RefereeConfig {
     return this.quiet;
   }
 
-  public RefereeStateConfig getRefereeStateConfig() {
-    return this.refereeStateConfig;
+  public ScorerConfig getRefereeStateConfig() {
+    return this.scorerConfig;
   }
 
   public int getPerTurn() {

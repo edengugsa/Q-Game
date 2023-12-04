@@ -1,13 +1,9 @@
 package Player.Strategy;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
-import java.util.Set;
 
 import Common.GameBoard.GameBoard;
 import Common.GameCommands.ExchangeCommand;
@@ -19,8 +15,6 @@ import Common.RuleBook.RuleBook;
 import Common.State.ActivePlayerKnowledge;
 import Common.Tiles.Coordinate;
 import Common.Tiles.Placement;
-import Common.Tiles.QColor;
-import Common.Tiles.QShape;
 import Common.Tiles.Tile;
 
 /**
@@ -128,7 +122,7 @@ public abstract class LexicoStrategy implements Strategy {
   /**
    * Sorts a list of potential coordinates based on this LexicoStrategy's sorting algorithm.
    */
-  protected abstract List<Coordinate> sort(List<Coordinate> Coordinate);
+  protected abstract void sort(List<Coordinate> Coordinate);
 
   private void configure(ActivePlayerKnowledge apk) {
     this.currentState = apk;
@@ -137,7 +131,6 @@ public abstract class LexicoStrategy implements Strategy {
     this.originalBoard = new GameBoard(apk.getBoard().getMap());
     this.mockBoard = new GameBoard(apk.getBoard().getMap());
   }
-
 
 
   protected final Comparator<Coordinate> CoordinateComparator =

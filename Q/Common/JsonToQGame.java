@@ -3,7 +3,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 import java.util.*;
 
@@ -42,20 +41,20 @@ import Player.Strategy.Strategy;
 import Player.playerTakeTurnException;
 import Player.playerWinException;
 import Referee.RefereeConfig;
-import Referee.RefereeStateConfig;
+import Common.Scorer.ScorerConfig;
 import Server.ServerConfig;
 
 public class JsonToQGame {
 
-    public static ClientConfig ClientConfigJSONToClientConfig(JsonObject o) {
-      return new ClientConfig(o.get("port").getAsInt(), o.get("host").getAsString(),
+    public static ClientConfig ClientConfigJSONToClientConfig(JsonObject o, int port) {
+      return new ClientConfig(port, o.get("host").getAsString(),
             o.get("wait").getAsInt(), o.get("quiet").getAsBoolean(),
               JActorsToPlayerList(o.get("players").getAsJsonArray()));
   }
 
-  public static ServerConfig ServerConfigJSONToServerConfig(JsonObject o) {
+  public static ServerConfig ServerConfigJSONToServerConfig(JsonObject o, int port) {
       try {
-        return new ServerConfig(o.get("server-tries").getAsInt(),
+        return new ServerConfig(port, o.get("server-tries").getAsInt(),
                 o.get("server-wait").getAsInt(), o.get("wait-for-signup").getAsInt(),
                 o.get("quiet").getAsBoolean(),
                 RefereeConfigJSONToRefereeConfig(o.get("ref-spec").getAsJsonObject()));
@@ -71,8 +70,8 @@ public class JsonToQGame {
             o.get("per-turn").getAsInt(), o.get("observe").getAsBoolean());
   }
 
-  public static RefereeStateConfig RefereeStateConfigJsonToRefereeStateConfig(JsonObject o) {
-      return new RefereeStateConfig(o.get("qbo").getAsInt(), o.get("fbo").getAsInt());
+  public static ScorerConfig RefereeStateConfigJsonToRefereeStateConfig(JsonObject o) {
+      return new ScorerConfig(o.get("qbo").getAsInt(), o.get("fbo").getAsInt());
   }
 
   /**

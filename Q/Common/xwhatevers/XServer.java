@@ -15,8 +15,8 @@ public class XServer {
     int port = Integer.parseInt(args[0]);
     JsonStreamParser parser = new JsonStreamParser(new BufferedReader(new InputStreamReader(System.in)));
 
-    ServerConfig serverConfig = JsonToQGame.ServerConfigJSONToServerConfig(parser.next().getAsJsonObject());
-    server s = new server(port, serverConfig);
+    ServerConfig serverConfig = JsonToQGame.ServerConfigJSONToServerConfig(parser.next().getAsJsonObject(), port);
+    server s = new server(serverConfig);
     System.out.println(QGameToJson.WinnersAndCheatersToJson(s.run()));
   }
 }

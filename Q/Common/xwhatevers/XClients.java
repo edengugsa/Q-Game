@@ -22,11 +22,11 @@ public class XClients {
     int port = Integer.parseInt(args[0]);
     JsonStreamParser parser = new JsonStreamParser(new BufferedReader(new InputStreamReader(System.in)));
 
-    ClientConfig cc = JsonToQGame.ClientConfigJSONToClientConfig(parser.next().getAsJsonObject());
+    ClientConfig cc = JsonToQGame.ClientConfigJSONToClientConfig(parser.next().getAsJsonObject(), port);
     ExecutorService executor = Executors.newCachedThreadPool();
 
     for (player p : cc.getPlayers()) {
-      client c = new client(cc.getHost(), port, p, cc.isQuiet());
+      client c = new client(cc.getHost(), cc.getPort(), p, cc.isQuiet());
       c.sendName();
       executor.execute(c::proxyRefereeReceiveInfoFromServer);
       TimeUtils.catchBreath(cc.getWait());

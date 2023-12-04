@@ -19,6 +19,6 @@
         ]
     ],
     "port": 45675,
-    "quiet": true,
-    "wait": 9
+    "quiet": false,
+    "wait": 2
 }

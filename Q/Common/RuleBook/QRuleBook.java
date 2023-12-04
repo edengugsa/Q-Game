@@ -65,8 +65,6 @@ public interface QRuleBook {
 
   List<Placement> getPlacementOptions(Tile t, GameBoard board);
 
-  int maxPlacementSize();
-
   List<Coordinate> getMatchingCoordinates(List<Placement> p, GameBoard board);
 
 }

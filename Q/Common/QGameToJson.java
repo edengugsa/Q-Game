@@ -2,63 +2,22 @@ package Common;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import java.util.*;
 
-import Common.GameBoard.GameBoard;
 import Common.State.ActivePlayerKnowledge;
 import Common.State.GameState;
 import Common.State.PlayerState;
-import Common.State.PlayerStateImpl;
 import Common.State.PublicPlayerState;
 import Common.Tiles.Coordinate;
-import Common.Tiles.Placement;
-import Common.Tiles.QColor;
-import Common.Tiles.QShape;
 import Common.Tiles.Tile;
-import Player.Strategy.BadAskForTilesStrategy;
-import Player.Strategy.NoFitStrategy;
-import Player.Strategy.NonAdjacentCoordinateStrategy;
-import Player.Strategy.NotALineStrategy;
-import Player.Strategy.TileNotOwnedStrategy;
-import Player.player;
-import Player.playerImpl;
-import Player.Strategy.DagStrategy;
-import Player.Strategy.LdasgStrategy;
-import Player.playerNewTilesException;
-import Player.playerSetupException;
-import Player.Strategy.Strategy;
-import Player.playerTakeTurnException;
-import Player.playerWinException;
 import Referee.WinnersAndCheaters;
-
 
 
 public class QGameToJson {
 
-  public static JsonArray NamesToJNames(List<String> names) {
-    JsonArray jNames = new JsonArray();
-    for (String name : names) {
-      jNames.add(name);
-    }
-    return jNames;
-  }
-
-  /**
-   *  JPub is an object with three fields:
-   *
-   *       { "map"      : JMap,
-   *
-   *         "tile*"    : Tile#,
-   *
-   *         "players"  : [JPlayer, Tile#, ..., Tile#] }
-   * @param apk
-   * @return
-   */
   public static JsonObject ActivePlayerKnowledgeToJPub(ActivePlayerKnowledge apk) {
     JsonObject jPub = new JsonObject();
 
@@ -116,7 +75,6 @@ public class QGameToJson {
 
   /**
    * Converts the given hashmap of Coordinates and Tiles to a JMap. Tiles is a non-empty hashmap!
-   * @param tiles
    */
   public static JsonArray HashMapToJMap(Map<Coordinate, Tile> tiles) {
 
@@ -169,8 +127,7 @@ public class QGameToJson {
   }
 
   public static JsonElement WinBooleanToJsonBool(Boolean win) {
-    JsonPrimitive winBool = new JsonPrimitive(win);
-    return winBool;
+    return new JsonPrimitive(win);
   }
 
   public static JsonObject PlayerStateToJPlayer(PlayerState ps) {

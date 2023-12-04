@@ -5,7 +5,6 @@ import java.util.List;
 
 import Common.RuleBook.QRuleBook;
 import Common.Tiles.Coordinate;
-import Common.Tiles.Placement;
 
 
 /**
@@ -32,13 +31,11 @@ public class LdasgStrategy extends LexicoStrategy {
     super();
   }
 
-
   /**
-   * @return a list of placements sorted by this LdasgStrategy's comparator. 
+   *
    */
-  protected List<Coordinate> sort(List<Coordinate> coordinates) {
+  protected void sort(List<Coordinate> coordinates) {
     Collections.sort(coordinates, this.neighborsComparator);
-    return coordinates;
   }
 
   /**

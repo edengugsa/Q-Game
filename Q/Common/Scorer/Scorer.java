@@ -7,14 +7,16 @@ import Common.Tiles.Placement;
 import Common.Tiles.QColor;
 import Common.Tiles.QShape;
 import Common.Tiles.Tile;
-import Referee.RefereeStateConfig;
 
 /**
  * Represents the rules and functionality for scoring a PlacementCommand.
  * </p>
- * 1 point is awarded per tile placed.
- * 1 point is awarded for each tile in a contiguous row and/or column of tiles that includes a placed tile.
- * 6 points are awarded for each completion of a "Q";
+ * A PlacementCommand earns points for:
+ * 1. its number of Placements
+ * 2. how many tiles it's contiguous to
+ * 3. if it creates a Q
+ * 4. if a Player placed all their Tiles.
+ * The points awarded for 4 and 5 are set with a ScorerConfig.
  * A "Q" is defined as...
  *    A contiguous sequence of tiles where each tile is distinct either by shape or by color,
  *    and all available colors and shapes are represented exactly once.
@@ -34,7 +36,7 @@ public class Scorer {
   // did the client who made this placement place ALL their tiles?
   private boolean placedAll;
 
-  public Scorer(RefereeStateConfig rsc) {
+  public Scorer(ScorerConfig rsc) {
     this.PTS_FOR_PLACING_ALL = rsc.getFinishBonus();
     this.Q_PTS = rsc.getQBonus();
     this.PTS_PER_CONTIG_TILE = 1;
@@ -45,7 +47,7 @@ public class Scorer {
    * Default constructor. Sets the number of points rewarded to default values.
    */
   public Scorer() {
-    this(new RefereeStateConfig(6, 6));
+    this(new ScorerConfig(6, 6));
   }
 
   /**

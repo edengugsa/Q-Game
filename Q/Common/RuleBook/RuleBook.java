@@ -27,6 +27,7 @@ import Common.Tiles.Tile;
  * by the same quality (shape or color).
  */
 public class RuleBook implements QRuleBook {
+  static final int TILES_PER_PLAYER = 6;
 
   GameBoard mock;
 
@@ -93,7 +94,7 @@ public class RuleBook implements QRuleBook {
 
   @Override
   public int tilesPerPlayer() {
-    return 6;
+    return this.TILES_PER_PLAYER;
   }
 
   /**
@@ -127,7 +128,6 @@ public class RuleBook implements QRuleBook {
     return true;
   }
 
-
   public boolean matchesNeighbors(GameBoard gameboard, Placement placement) {
     this.mock = gameboard;
     return this.matchesNeighbors(placement);
@@ -142,12 +142,6 @@ public class RuleBook implements QRuleBook {
   public List<Placement> getPlacementOptions(Tile t, GameBoard board) {
     return board.placementAdjacentOptions(t);
   }
-
-  @Override
-  public int maxPlacementSize() {
-    return 6;
-  }
-
 
   /**
    * Determines if a given placement on the map satisfies the matching rules

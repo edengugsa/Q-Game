@@ -44,6 +44,7 @@ public class Referee {
   private final List<String> disqualifiedPlayers;
   private List<observer> observers;
   int PLAYER_RESPONSE_TIMEOUT = 6;
+
   boolean isQuiet = true;
 
   public Referee(List<player> players, RefereeConfig rc) {

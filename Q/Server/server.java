@@ -40,8 +40,8 @@ public class server {
     this.listOfPlayerProxies = new ArrayList<>();
   }
 
-  public server(int port, ServerConfig config) {
-    this(port);
+  public server(ServerConfig config) {
+    this(config.port);
     this.SIGNUP_TIMEOUT = config.serverWait;
     this.MAX_NUM_SIGNUPS = config.serverTries;
     this.NAME_TIMEOUT = config.waitForSignup;

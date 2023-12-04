@@ -95,10 +95,12 @@ public class client {
     }
     catch (Exception e) {
       try {
+        DebugUtil.debug(isQuiet, this.player.name() + " received invalid Json from the Server: " + e.getMessage());
         this.socket.close();
       }
-      catch (IOException ignored) {}
-      DebugUtil.debug(isQuiet, this.player.name() + " could not receive information from the server: " + e.getMessage());
+      catch (IOException exc) {
+        DebugUtil.debug(isQuiet, this.player.name() + " could not receive information from the server: " + exc.getMessage());
+      }
     }
   }
 }

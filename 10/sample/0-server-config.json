@@ -1,6 +1,6 @@
 {
     "port": 45675,
-    "quiet": false,
+    "quiet": true,
     "ref-spec": {
         "config-s": {
             "fbo": 6,
@@ -8,7 +8,7 @@
         },
         "observe": false,
         "per-turn": 6,
-        "quiet": false,
+        "quiet": true,
         "state0": {
             "map": [
                 [
@@ -110,6 +110,36 @@
                         {
                             "color": "orange",
                             "shape": "circle"
+                        }
+                    ]
+                },
+                {
+                    "name": "D",
+                    "score": 0,
+                    "tile*": [
+                        {
+                            "color": "green",
+                            "shape": "8star"
+                        },
+                        {
+                            "color": "blue",
+                            "shape": "square"
+                        },
+                        {
+                            "color": "purple",
+                            "shape": "clover"
+                        },
+                        {
+                            "color": "purple",
+                            "shape": "clover"
+                        },
+                        {
+                            "color": "yellow",
+                            "shape": "diamond"
+                        },
+                        {
+                            "color": "yellow",
+                            "shape": "diamond"
                         }
                     ]
                 }
