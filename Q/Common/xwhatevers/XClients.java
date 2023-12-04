@@ -33,6 +33,7 @@ public class XClients {
     }
 
     executor.shutdown();
+    System.exit(0);
   }
 }
 
