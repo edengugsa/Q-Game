@@ -11,10 +11,18 @@ Indicate below each bullet which file/unit takes care of each task.
 The data representation of configurations clearly needs the following
 pieces of functionality. Explain how your chosen data representation 
 
-- implements creation within programs _and_ from JSON specs 
- https://github.khoury.northeastern.edu/CS4500-F23/surprising-lions/blob/a96c0f3c631bd07fac49f9d19ada7f4562e7edc8/Q/Server/server.java#L38-L50
+- implements creation within programs _and_ from JSON specs <br>
+We convert ServerConfig Json into a ServerConfig thats used in Server's constructor
+https://github.khoury.northeastern.edu/CS4500-F23/surprising-lions/blob/a96c0f3c631bd07fac49f9d19ada7f4562e7edc8/Q/Common/JsonToQGame.java#L55-L64
+ https://github.khoury.northeastern.edu/CS4500-F23/surprising-lions/blob/a96c0f3c631bd07fac49f9d19ada7f4562e7edc8/Q/Server/server.java#L42-L50
+ We convert RefereeStateConfig Json into a ScorerConfig used in Scorer's constructor
  https://github.khoury.northeastern.edu/CS4500-F23/surprising-lions/blob/a96c0f3c631bd07fac49f9d19ada7f4562e7edc8/Q/Common/Scorer/Scorer.java#L38-L51
+ https://github.khoury.northeastern.edu/CS4500-F23/surprising-lions/blob/a96c0f3c631bd07fac49f9d19ada7f4562e7edc8/Q/Common/JsonToQGame.java#L73-L75
+ We convert RefereeConfig Json into a RefereeConfig used in Referee's constructor
+ https://github.khoury.northeastern.edu/CS4500-F23/surprising-lions/blob/a96c0f3c631bd07fac49f9d19ada7f4562e7edc8/Q/Common/JsonToQGame.java#L67-L71
  https://github.khoury.northeastern.edu/CS4500-F23/surprising-lions/blob/a96c0f3c631bd07fac49f9d19ada7f4562e7edc8/Q/Referee/Referee.java#L49-L76
+ We convert ClientConfig Json into a ClientConfig used to configure a Client in XClients
+ https://github.khoury.northeastern.edu/CS4500-F23/surprising-lions/blob/a96c0f3c631bd07fac49f9d19ada7f4562e7edc8/Q/Common/JsonToQGame.java#L49-L53
  https://github.khoury.northeastern.edu/CS4500-F23/surprising-lions/blob/a96c0f3c631bd07fac49f9d19ada7f4562e7edc8/Q/Client/client.java#L27-L52
  https://github.khoury.northeastern.edu/CS4500-F23/surprising-lions/blob/a96c0f3c631bd07fac49f9d19ada7f4562e7edc8/Q/Common/xwhatevers/XClients.java#L24-L33
 
@@ -28,19 +36,20 @@ pieces of functionality. Explain how your chosen data representation
  https://github.khoury.northeastern.edu/CS4500-F23/surprising-lions/blob/a96c0f3c631bd07fac49f9d19ada7f4562e7edc8/Q/Common/Scorer/ScorerConfig.java#L15-L23
 
 - sets properties (what happens when the property shouldn't exist?) 
-  - We did not make setter methods for any the configuration classes. This is because the consr=tructor sets the fields for each class. We do not want to alter the configurations after they are set in the constructors.
+  - We did not make setters for the configuration classes. This is because the consrtructor sets the fields for each class. We do not want to alter the configurations after they are set in the constructors.
  https://github.khoury.northeastern.edu/CS4500-F23/surprising-lions/blob/a96c0f3c631bd07fac49f9d19ada7f4562e7edc8/Q/Client/ClientConfig.java#L16-L22
  https://github.khoury.northeastern.edu/CS4500-F23/surprising-lions/blob/a96c0f3c631bd07fac49f9d19ada7f4562e7edc8/Q/Referee/RefereeConfig.java#L26-L32
  https://github.khoury.northeastern.edu/CS4500-F23/surprising-lions/blob/a96c0f3c631bd07fac49f9d19ada7f4562e7edc8/Q/Common/Scorer/ScorerConfig.java#L11-L14
  https://github.khoury.northeastern.edu/CS4500-F23/surprising-lions/blob/a96c0f3c631bd07fac49f9d19ada7f4562e7edc8/Q/Server/ServerConfig.java#L18-L25
   - If the properties should not exist...
+Our code doesn't account for this. All the properties are set in the constructor so they are required by default.
 
 - unit tests for these pieces of functionality
   - We do not have unit tests for this functionality.
 
 Explain how the server, referee, and scoring functionalities are abstracted
 over their respective configurations.
-- Each component can be constructed by theur respective configurations.
+- All three of these component's constructors take in an instance of their respective confirgutaition class.
 
 Does the server touch the referee or scoring configuration, other than
 passing it on?
