@@ -117,7 +117,6 @@ public class server {
    * @return 0 upon completion
    */
   protected int signupPlayers() {
-//    this.listOfPlayerProxies = new ArrayList<>();
 
     while (this.listOfPlayerProxies.size() < MAX_NUM_PLAYERS) {
       Socket playerSocket;
