@@ -4,22 +4,12 @@ import Common.Scorer.ScorerConfig;
 import Common.State.GameState;
 
 /**
- * A RefereeConfig is an object with 5 fields:,
- *
- *        { "state0"__ : JState,
- *
- *        { "quiet"___ : Boolean,
- *
- *        { "config-s" : ScorerConfig,
- *
- *        { "per-turn" : Natural (less than or equal to 6),
- *
- *        { "observe"_ : Boolean }
+ * Represents a configuration to initialize and run a Referee.
  */
 public class RefereeConfig {
   private final GameState gameState;
   private final boolean quiet;
-  private final ScorerConfig scorerConfig;
+  private final ScorerConfig scorerConfig; // configures # of pts awarded per move
   private final int perTurn;
   private final boolean observe;
 

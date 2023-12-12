@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import Client.ClientConfig;
 
 import Common.DebugUtil;
 
@@ -40,14 +41,18 @@ public class client {
   /**
    * Creates a client that joins a Q Game on the given ip address and port number and makes
    * moves according to its client.
-   * @param ip address of server
-   * @param port number server
+   * @param cc to configure this client with parameters like having debug output, and what address
+   *           the server is located at.
    * @param player with a strategy that can take turns.
-   * @param isQuiet do we want debug output on standard error?
    */
-  public client(String ip, int port, Player.player player, boolean isQuiet) {
-    this(ip, port, player);
-    this.isQuiet = isQuiet;
+  public client(ClientConfig cc, Player.player player) {
+    this(cc.getHost(), cc.getPort(), player);
+    this.isQuiet = cc.isQuiet();
+  }
+
+  public void run() {
+    this.sendName();
+    this.proxyRefereeReceiveInfoFromServer();
   }
 
   /**

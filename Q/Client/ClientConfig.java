@@ -11,14 +11,12 @@ public class ClientConfig {
   final String host;
   final int wait;
   final boolean quiet;
-  final List<player> players;
 
-  public ClientConfig(int port, String host, int wait, boolean quiet, List<player> players) {
+  public ClientConfig(int port, String host, int wait, boolean quiet) {
     this.port = port;
     this.host = host;
     this.wait = wait;
     this.quiet = quiet;
-    this.players = players;
   }
   public int getPort() {
     return port;
@@ -36,7 +34,4 @@ public class ClientConfig {
     return quiet;
   }
 
-  public List<player> getPlayers() {
-    return players;
-  }
 }

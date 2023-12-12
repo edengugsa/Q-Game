@@ -45,11 +45,13 @@ import Common.Scorer.ScorerConfig;
 import Server.ServerConfig;
 
 public class JsonToQGame {
-
-    public static ClientConfig ClientConfigJSONToClientConfig(JsonObject o, int port) {
+  public static ClientConfig ClientConfigJSONToClientConfig(JsonObject o, int port) {
       return new ClientConfig(port, o.get("host").getAsString(),
-            o.get("wait").getAsInt(), o.get("quiet").getAsBoolean(),
-              JActorsToPlayerList(o.get("players").getAsJsonArray()));
+            o.get("wait").getAsInt(), o.get("quiet").getAsBoolean());
+  }
+
+  public static List<player> ClientConfigJSONToListPlayers(JsonObject o) {
+    return JActorsToPlayerList(o.get("players").getAsJsonArray());
   }
 
   public static ServerConfig ServerConfigJSONToServerConfig(JsonObject o, int port) {
