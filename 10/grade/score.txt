@@ -1,0 +1,16 @@
+Delivery
+5/5 pts: Deliverable 10/xclients exists with the right permissions
+5/5 pts: Deliverable 10/xserver exists with the right permissions
+5/5 pts: Deliverable Q/Planning/configurations.md exists
+5/5 pts: Delivery of test files
+
+Functionality
+150/150 pts: Your clients vs instructor tests and server (see clients.txt)
+140/150 pts: Your server vs instructor tests and clients (see server.txt)
+100/100 pts: Validating your tests vs instructor clients and server (see audit.txt)
+80/200 bonus points: Your server vs misbehaving clients (see bonus.txt)
+
+Inspection
+104/110 pts: See inspection.md
+
+Total: 594/530 pts
